@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: oklch(0.2 0.02 260);
+  --color-ink-700: oklch(0.42 0.03 260);
+  --color-ink-500: oklch(0.58 0.03 260);
+  --color-paper-50: oklch(0.985 0.005 90);
+  --color-paper-100: oklch(0.96 0.008 90);
+  --color-accent-600: oklch(0.5 0.14 250);
+  --color-danger-600: oklch(0.55 0.19 25);
+}

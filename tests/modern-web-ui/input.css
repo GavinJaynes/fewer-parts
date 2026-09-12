@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@source "./index.html";
+
+@theme {
+  --color-brand-600: oklch(0.48 0.15 260);
+}
+
+@utility measure-copy {
+  max-inline-size: 65ch;
+}

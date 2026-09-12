@@ -1,0 +1,9 @@
+{
+  "name": "modern-web-ui-draft-checks",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tailwindcss/cli": "4.3.3",
+    "tailwindcss": "4.3.3"
+  }
+}

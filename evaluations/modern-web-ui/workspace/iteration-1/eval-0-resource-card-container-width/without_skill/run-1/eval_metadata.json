@@ -1,0 +1,16 @@
+{
+  "eval_id": 0,
+  "eval_name": "resource-card-container-width",
+  "prompt": "Build a resource card component for this Tailwind v4 application (see README.md). The same component appears in the 300px sidebar and the 720px main column of index.html, sometimes on the same page. It has a title, a description, and an \"Open resource\" link. Content comes from users and can include long URLs and long titles. Keep the design quiet and readable. Target current stable Chrome, Edge, Firefox, and Safari, including mobile. Use no new runtime dependencies. Add at least one card to each column with realistic sample content, and make sure one of them has a long unbroken URL in its description so we can see how it copes.",
+  "assertions": [
+    "Card layout adapts to its container width (an @container ancestor plus container-query variants or a @container rule), not only to viewport breakpoints; compiled dist/output.css contains an @container rule",
+    "Long unbroken URL sample is present in a card and the compiled CSS applies a wrapping rule (overflow-wrap:anywhere, word-break, or equivalent) so it cannot widen the card; grid/flex children that hold text use min-width:0 where needed",
+    "Card uses semantic structure: an article or list item with a heading element for the title and a real <a href> for the Open resource link, with the title preceding the link in DOM order",
+    "No JavaScript layout measurement was added (no ResizeObserver, getBoundingClientRect, offsetWidth, or matchMedia for the card)",
+    "No new runtime dependencies: package.json dependencies and pnpm-lock.yaml are unchanged from the starter",
+    "pnpm run build succeeds and the final dist/output.css contains the card's utility classes (not stale)",
+    "Cards appear in both the aside (sidebar) column and the main column of index.html",
+    "NOTES.md states browser support for any feature newer than basic flex/grid (e.g. container queries, text-wrap: balance) with a named source such as MDN, Can I use, or Baseline",
+    "Transcript shows the result was checked in a browser at the narrow sidebar width (not only at a narrow viewport), or explicitly states that this was not verified"
+  ]
+}

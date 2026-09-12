@@ -1,0 +1,16 @@
+{
+  "eval_id": 1,
+  "eval_name": "autogrow-message-textarea",
+  "prompt": "In contact.html of this Tailwind v4 project (see README.md), make the Message textarea grow with its content up to a comfortable limit, stay editable and scrollable with long messages, and still permit manual resizing. Older browsers may keep an ordinary textarea. Preserve the existing form's submission logic and error messages. Explain the implementation and the fallback briefly.",
+  "assertions": [
+    "Primary growth mechanism is native CSS field-sizing: content (Tailwind field-sizing-content or equivalent CSS), not a JavaScript input listener that sets style.height",
+    "Growth is bounded by a minimum and a maximum height (min-h and max-h or equivalent) and no fixed height utility that would defeat auto growth",
+    "Textarea stays manually resizable: resize-y (or resize) is present and resize-none is not applied",
+    "Long content stays scrollable: overflow is auto/scroll (or default), not hidden, so text beyond the maximum height is reachable",
+    "Base experience without the enhancement is an ordinary usable textarea: rows or min-height gives a sensible starting size and no JavaScript is required for typing, resizing, or scrolling",
+    "Form behaviour is preserved: contact-form.js validators, submit handler, and setError logic are functionally unchanged, and label/for, aria-describedby, hint and error elements remain intact in contact.html",
+    "NOTES.md explains the implementation and the fallback and cites a named source (MDN, Can I use, Baseline, or Tailwind docs) for field-sizing support",
+    "pnpm run build succeeds and dist/output.css contains the field-sizing declaration",
+    "Transcript shows the textarea was exercised in a browser with empty, short, long, and deleted content (or explicitly states what was not verified)"
+  ]
+}

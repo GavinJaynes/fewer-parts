@@ -1,0 +1,19 @@
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+.pnpm-store/
+.pnpm-cache/
+dist/
+tests/**/index.html
+tests/**/output.css
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+.codex/
+.agents/
+.DS_Store
+Thumbs.db
+*.log

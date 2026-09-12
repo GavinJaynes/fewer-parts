@@ -1,0 +1,45 @@
+{
+  "skill_name": "modern-web-ui",
+  "evals": [
+    {
+      "id": 0,
+      "name": "resource-card-container-width",
+      "prompt": "Build a resource card component for this Tailwind v4 application (see README.md). The same component appears in the 300px sidebar and the 720px main column of index.html, sometimes on the same page. It has a title, a description, and an \"Open resource\" link. Content comes from users and can include long URLs and long titles. Keep the design quiet and readable. Target current stable Chrome, Edge, Firefox, and Safari, including mobile. Use no new runtime dependencies. Add at least one card to each column with realistic sample content, and make sure one of them has a long unbroken URL in its description so we can see how it copes.",
+      "expected_output": "A working Tailwind v4 implementation in the starter project plus NOTES.md",
+      "files": [
+        "workspace/starter"
+      ],
+      "expectations": [
+        "Card layout adapts to its container width (an @container ancestor plus container-query variants or a @container rule), not only to viewport breakpoints; compiled dist/output.css contains an @container rule",
+        "Long unbroken URL sample is present in a card and the compiled CSS applies a wrapping rule (overflow-wrap:anywhere, word-break, or equivalent) so it cannot widen the card; grid/flex children that hold text use min-width:0 where needed",
+        "Card uses semantic structure: an article or list item with a heading element for the title and a real <a href> for the Open resource link, with the title preceding the link in DOM order",
+        "No JavaScript layout measurement was added (no ResizeObserver, getBoundingClientRect, offsetWidth, or matchMedia for the card)",
+        "No new runtime dependencies: package.json dependencies and pnpm-lock.yaml are unchanged from the starter",
+        "pnpm run build succeeds and the final dist/output.css contains the card's utility classes (not stale)",
+        "Cards appear in both the aside (sidebar) column and the main column of index.html",
+        "NOTES.md states browser support for any feature newer than basic flex/grid (e.g. container queries, text-wrap: balance) with a named source such as MDN, Can I use, or Baseline",
+        "Transcript shows the result was checked in a browser at the narrow sidebar width (not only at a narrow viewport), or explicitly states that this was not verified"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "autogrow-message-textarea",
+      "prompt": "In contact.html of this Tailwind v4 project (see README.md), make the Message textarea grow with its content up to a comfortable limit, stay editable and scrollable with long messages, and still permit manual resizing. Older browsers may keep an ordinary textarea. Preserve the existing form's submission logic and error messages. Explain the implementation and the fallback briefly.",
+      "expected_output": "A working Tailwind v4 implementation in the starter project plus NOTES.md",
+      "files": [
+        "workspace/starter"
+      ],
+      "expectations": [
+        "Primary growth mechanism is native CSS field-sizing: content (Tailwind field-sizing-content or equivalent CSS), not a JavaScript input listener that sets style.height",
+        "Growth is bounded by a minimum and a maximum height (min-h and max-h or equivalent) and no fixed height utility that would defeat auto growth",
+        "Textarea stays manually resizable: resize-y (or resize) is present and resize-none is not applied",
+        "Long content stays scrollable: overflow is auto/scroll (or default), not hidden, so text beyond the maximum height is reachable",
+        "Base experience without the enhancement is an ordinary usable textarea: rows or min-height gives a sensible starting size and no JavaScript is required for typing, resizing, or scrolling",
+        "Form behaviour is preserved: contact-form.js validators, submit handler, and setError logic are functionally unchanged, and label/for, aria-describedby, hint and error elements remain intact in contact.html",
+        "NOTES.md explains the implementation and the fallback and cites a named source (MDN, Can I use, Baseline, or Tailwind docs) for field-sizing support",
+        "pnpm run build succeeds and dist/output.css contains the field-sizing declaration",
+        "Transcript shows the textarea was exercised in a browser with empty, short, long, and deleted content (or explicitly states what was not verified)"
+      ]
+    }
+  ]
+}

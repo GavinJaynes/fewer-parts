@@ -1,0 +1,100 @@
+{
+  "expectations": [
+    {
+      "text": "Primary growth mechanism is native CSS field-sizing: content (Tailwind field-sizing-content or equivalent CSS), not a JavaScript input listener that sets style.height",
+      "passed": true,
+      "evidence": "textarea class list includes field-sizing-content (gated or direct); dist/output.css contains 'field-sizing: content'; no JS sets style.height or reads scrollHeight (js_sets_height_on_input=false)"
+    },
+    {
+      "text": "Growth is bounded by a minimum and a maximum height (min-h and max-h or equivalent) and no fixed height utility that would defeat auto growth",
+      "passed": true,
+      "evidence": "min-h and max-h present, no fixed h-* utility (has_min_h, has_max_h true; has_fixed_h false)"
+    },
+    {
+      "text": "Textarea stays manually resizable: resize-y (or resize) is present and resize-none is not applied",
+      "passed": true,
+      "evidence": "resize-y present, resize-none absent (has_resize=true)"
+    },
+    {
+      "text": "Long content stays scrollable: overflow is auto/scroll (or default), not hidden, so text beyond the maximum height is reachable",
+      "passed": true,
+      "evidence": "No overflow-hidden; overflow-auto explicit or textarea default retained; agent observed scrollbar and scrollTop movement with 40 lines"
+    },
+    {
+      "text": "Base experience without the enhancement is an ordinary usable textarea: rows or min-height gives a sensible starting size and no JavaScript is required for typing, resizing, or scrolling",
+      "passed": true,
+      "evidence": "rows=\"4\" kept; no JavaScript required; without field-sizing the element is an ordinary bounded, resizable textarea"
+    },
+    {
+      "text": "Form behaviour is preserved: contact-form.js validators, submit handler, and setError logic are functionally unchanged, and label/for, aria-describedby, hint and error elements remain intact in contact.html",
+      "passed": true,
+      "evidence": "src/contact-form.js byte-identical to starter (contact_form_js_unchanged=true); label for=message, aria-describedby=\"message-hint message-error\", hint and error elements intact"
+    },
+    {
+      "text": "NOTES.md explains the implementation and the fallback and cites a named source (MDN, Can I use, Baseline, or Tailwind docs) for field-sizing support",
+      "passed": true,
+      "evidence": "NOTES.md explains implementation and fallback and cites MDN + Can I use (and more) for field-sizing support"
+    },
+    {
+      "text": "pnpm run build succeeds and dist/output.css contains the field-sizing declaration",
+      "passed": true,
+      "evidence": "pnpm run build re-run by grader succeeded; output.css contains field-sizing: content (css_changed_by_rebuild=false)"
+    },
+    {
+      "text": "Transcript shows the textarea was exercised in a browser with empty, short, long, and deleted content (or explicitly states what was not verified)",
+      "passed": true,
+      "evidence": "Transcript: empty 112px; 7 lines 186px; 40 lines capped 320px with scrollbar; form.reset() shrank a 306px field back to 112px (deleted content); manual drag to 266px; fallback simulated with field-sizing:fixed; mobile preset checked"
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 0,
+    "total": 9,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 37,
+    "errors_encountered": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 469.6,
+    "total_duration_seconds": 469.6
+  },
+  "claims": [
+    {
+      "claim": "field-sizing is Baseline Newly available since 2026-06-16 (Firefox 152)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Consistent across caniuse, browser-compat-data JSON and webstatus.dev API as cited; matches the other run's independent lookup"
+    },
+    {
+      "claim": "First-load computed values 114px/306px were an unexplained transient",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Those values equal the other textarea run's calc(4lh+1rem+2px)/calc(12lh+1rem+2px); both runs bound port 8847, so the first load almost certainly served the other run's page. Observation only; outputs unaffected"
+    },
+    {
+      "claim": "@supports gate prevents unsupported engines from seeing the declaration",
+      "type": "process",
+      "verified": true,
+      "evidence": "Emitted @supports (field-sizing:content) block confirmed in output.css. Note: the gate is redundant, since an unknown declaration is dropped anyway; the baseline run pointed this out"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Firefox/Safari not exercised",
+      "Post-manual-resize behaviour is Chromium behaviour, not spec-defined"
+    ],
+    "needs_review": [
+      "Unexplained first-load values were actually cross-talk from a port collision"
+    ],
+    "workarounds": [
+      "MDN compat table and webstatus.dev HTML did not render via fetch; used JSON endpoints",
+      "Pane did not deliver Ctrl+End/Enter; multi-line text set via DOM"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": ""
+  }
+}

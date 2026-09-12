@@ -1,0 +1,348 @@
+{
+  "metadata": {
+    "skill_name": "modern-web-ui",
+    "skill_path": "C:/projects/skills/skills/modern-web-ui",
+    "executor_model": "claude-fable-5-1 (subagents inherit session model)",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-09-03T05:37:26Z",
+    "evals_run": [
+      0,
+      1
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 335.1,
+        "tokens": 95999,
+        "tool_calls": 38,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Card layout adapts to its container width (an @container ancestor plus container-query variants or a @container rule), not only to viewport breakpoints; compiled dist/output.css contains an @container rule",
+          "passed": true,
+          "evidence": "index.html wraps each <article> in <li class=\"@container\"> / <article class=\"@container\"> with @md: variants; dist/output.css contains '@container (width >= 28rem)' (grade_mechanical: css_has_container_rule=true)"
+        },
+        {
+          "text": "Long unbroken URL sample is present in a card and the compiled CSS applies a wrapping rule (overflow-wrap:anywhere, word-break, or equivalent) so it cannot widen the card; grid/flex children that hold text use min-width:0 where needed",
+          "passed": true,
+          "evidence": "Long unbroken URL present in a card description; compiled CSS has 'overflow-wrap: anywhere' and 'min-width: 0'; text column uses minmax(0,1fr) (grade_mechanical: css_has_wrap_rule, css_has_min_width_0, long_url_present all true)"
+        },
+        {
+          "text": "Card uses semantic structure: an article or list item with a heading element for the title and a real <a href> for the Open resource link, with the title preceding the link in DOM order",
+          "passed": true,
+          "evidence": "<article> with h2/h3 title before an <a href> 'Open resource' link; heading level matches column context (grade_mechanical: heading_before_link_in_first_card=true)"
+        },
+        {
+          "text": "No JavaScript layout measurement was added (no ResizeObserver, getBoundingClientRect, offsetWidth, or matchMedia for the card)",
+          "passed": true,
+          "evidence": "No JS added; src/contact-form.js unchanged and no ResizeObserver/getBoundingClientRect/matchMedia in any script (no_js_measurement=true)"
+        },
+        {
+          "text": "No new runtime dependencies: package.json dependencies and pnpm-lock.yaml are unchanged from the starter",
+          "passed": true,
+          "evidence": "package.json dependencies and pnpm-lock.yaml identical to starter (deps_unchanged=true)"
+        },
+        {
+          "text": "pnpm run build succeeds and the final dist/output.css contains the card's utility classes (not stale)",
+          "passed": true,
+          "evidence": "pnpm run build re-run by grader succeeded; rebuilt output.css identical to committed one (css_changed_by_rebuild=false)"
+        },
+        {
+          "text": "Cards appear in both the aside (sidebar) column and the main column of index.html",
+          "passed": true,
+          "evidence": "Cards present inside both <aside> and <main> (card_in_aside=true, card_in_main=true)"
+        },
+        {
+          "text": "NOTES.md states browser support for any feature newer than basic flex/grid (e.g. container queries, text-wrap: balance) with a named source such as MDN, Can I use, or Baseline",
+          "passed": true,
+          "evidence": "NOTES.md support table cites caniuse.com URLs for container queries (106/110/16), overflow-wrap:anywhere, text-wrap balance/pretty, plus MDN Baseline status, looked up 2026-09-03"
+        },
+        {
+          "text": "Transcript shows the result was checked in a browser at the narrow sidebar width (not only at a narrow viewport), or explicitly states that this was not verified",
+          "passed": true,
+          "evidence": "Transcript: at 1280x900 sidebar cards measured 298px single-column while main cards 718px two-column on the same page; also 375 and 768 viewports; keyboard focus outline checked"
+        }
+      ],
+      "notes": [
+        "Firefox/Safari not exercised; text-pretty is a no-op in Firefox",
+        "MDN compat tables did not render via fetch; used Can I use instead",
+        "Port 8847 was shared with other tasks; moved to 8873 after a curl content-length check"
+      ],
+      "eval_name": "resource-card-container-width"
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 469.6,
+        "tokens": 105396,
+        "tool_calls": 37,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Primary growth mechanism is native CSS field-sizing: content (Tailwind field-sizing-content or equivalent CSS), not a JavaScript input listener that sets style.height",
+          "passed": true,
+          "evidence": "textarea class list includes field-sizing-content (gated or direct); dist/output.css contains 'field-sizing: content'; no JS sets style.height or reads scrollHeight (js_sets_height_on_input=false)"
+        },
+        {
+          "text": "Growth is bounded by a minimum and a maximum height (min-h and max-h or equivalent) and no fixed height utility that would defeat auto growth",
+          "passed": true,
+          "evidence": "min-h and max-h present, no fixed h-* utility (has_min_h, has_max_h true; has_fixed_h false)"
+        },
+        {
+          "text": "Textarea stays manually resizable: resize-y (or resize) is present and resize-none is not applied",
+          "passed": true,
+          "evidence": "resize-y present, resize-none absent (has_resize=true)"
+        },
+        {
+          "text": "Long content stays scrollable: overflow is auto/scroll (or default), not hidden, so text beyond the maximum height is reachable",
+          "passed": true,
+          "evidence": "No overflow-hidden; overflow-auto explicit or textarea default retained; agent observed scrollbar and scrollTop movement with 40 lines"
+        },
+        {
+          "text": "Base experience without the enhancement is an ordinary usable textarea: rows or min-height gives a sensible starting size and no JavaScript is required for typing, resizing, or scrolling",
+          "passed": true,
+          "evidence": "rows=\"4\" kept; no JavaScript required; without field-sizing the element is an ordinary bounded, resizable textarea"
+        },
+        {
+          "text": "Form behaviour is preserved: contact-form.js validators, submit handler, and setError logic are functionally unchanged, and label/for, aria-describedby, hint and error elements remain intact in contact.html",
+          "passed": true,
+          "evidence": "src/contact-form.js byte-identical to starter (contact_form_js_unchanged=true); label for=message, aria-describedby=\"message-hint message-error\", hint and error elements intact"
+        },
+        {
+          "text": "NOTES.md explains the implementation and the fallback and cites a named source (MDN, Can I use, Baseline, or Tailwind docs) for field-sizing support",
+          "passed": true,
+          "evidence": "NOTES.md explains implementation and fallback and cites MDN + Can I use (and more) for field-sizing support"
+        },
+        {
+          "text": "pnpm run build succeeds and dist/output.css contains the field-sizing declaration",
+          "passed": true,
+          "evidence": "pnpm run build re-run by grader succeeded; output.css contains field-sizing: content (css_changed_by_rebuild=false)"
+        },
+        {
+          "text": "Transcript shows the textarea was exercised in a browser with empty, short, long, and deleted content (or explicitly states what was not verified)",
+          "passed": true,
+          "evidence": "Transcript: empty 112px; 7 lines 186px; 40 lines capped 320px with scrollbar; form.reset() shrank a 306px field back to 112px (deleted content); manual drag to 266px; fallback simulated with field-sizing:fixed; mobile preset checked"
+        }
+      ],
+      "notes": [
+        "Firefox/Safari not exercised",
+        "Post-manual-resize behaviour is Chromium behaviour, not spec-defined",
+        "Unexplained first-load values were actually cross-talk from a port collision",
+        "MDN compat table and webstatus.dev HTML did not render via fetch; used JSON endpoints",
+        "Pane did not deliver Ctrl+End/Enter; multi-line text set via DOM"
+      ],
+      "eval_name": "autogrow-message-textarea"
+    },
+    {
+      "eval_id": 0,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 463.4,
+        "tokens": 93579,
+        "tool_calls": 32,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Card layout adapts to its container width (an @container ancestor plus container-query variants or a @container rule), not only to viewport breakpoints; compiled dist/output.css contains an @container rule",
+          "passed": true,
+          "evidence": "index.html wraps each <article> in <li class=\"@container\"> / <article class=\"@container\"> with @md: variants; dist/output.css contains '@container (width >= 28rem)' (grade_mechanical: css_has_container_rule=true)"
+        },
+        {
+          "text": "Long unbroken URL sample is present in a card and the compiled CSS applies a wrapping rule (overflow-wrap:anywhere, word-break, or equivalent) so it cannot widen the card; grid/flex children that hold text use min-width:0 where needed",
+          "passed": true,
+          "evidence": "Long unbroken URL present in a card description; compiled CSS has 'overflow-wrap: anywhere' and 'min-width: 0'; text column uses minmax(0,1fr) (grade_mechanical: css_has_wrap_rule, css_has_min_width_0, long_url_present all true)"
+        },
+        {
+          "text": "Card uses semantic structure: an article or list item with a heading element for the title and a real <a href> for the Open resource link, with the title preceding the link in DOM order",
+          "passed": true,
+          "evidence": "<article> with h2/h3 title before an <a href> 'Open resource' link; heading level matches column context (grade_mechanical: heading_before_link_in_first_card=true)"
+        },
+        {
+          "text": "No JavaScript layout measurement was added (no ResizeObserver, getBoundingClientRect, offsetWidth, or matchMedia for the card)",
+          "passed": true,
+          "evidence": "No JS added; src/contact-form.js unchanged and no ResizeObserver/getBoundingClientRect/matchMedia in any script (no_js_measurement=true)"
+        },
+        {
+          "text": "No new runtime dependencies: package.json dependencies and pnpm-lock.yaml are unchanged from the starter",
+          "passed": true,
+          "evidence": "package.json dependencies and pnpm-lock.yaml identical to starter (deps_unchanged=true)"
+        },
+        {
+          "text": "pnpm run build succeeds and the final dist/output.css contains the card's utility classes (not stale)",
+          "passed": true,
+          "evidence": "pnpm run build re-run by grader succeeded; rebuilt output.css identical to committed one (css_changed_by_rebuild=false)"
+        },
+        {
+          "text": "Cards appear in both the aside (sidebar) column and the main column of index.html",
+          "passed": true,
+          "evidence": "Cards present inside both <aside> and <main> (card_in_aside=true, card_in_main=true)"
+        },
+        {
+          "text": "NOTES.md states browser support for any feature newer than basic flex/grid (e.g. container queries, text-wrap: balance) with a named source such as MDN, Can I use, or Baseline",
+          "passed": true,
+          "evidence": "NOTES.md support table cites MDN @container page (Baseline Widely available Feb 2023) and mdn/browser-compat-data JSON for overflow-wrap anywhere, hyphens auto, text-wrap pretty"
+        },
+        {
+          "text": "Transcript shows the result was checked in a browser at the narrow sidebar width (not only at a narrow viewport), or explicitly states that this was not verified",
+          "passed": true,
+          "evidence": "Transcript: at 1280x900 aside 300px / main 720px measured via DOM; sidebar cards single-column, main cards two-column '541px 113px'; also 375 and 768 presets. Keyboard focus explicitly listed as not exercised"
+        }
+      ],
+      "notes": [
+        "Firefox/Safari not exercised",
+        "Keyboard focus styling not exercised interactively",
+        "Port 8847 collided with another task's server; identified own PID, stopped it, moved to 8819 after netstat + curl check"
+      ],
+      "eval_name": "resource-card-container-width"
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.889,
+        "passed": 8,
+        "failed": 1,
+        "total": 9,
+        "time_seconds": 241.4,
+        "tokens": 69473,
+        "tool_calls": 22,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Primary growth mechanism is native CSS field-sizing: content (Tailwind field-sizing-content or equivalent CSS), not a JavaScript input listener that sets style.height",
+          "passed": true,
+          "evidence": "textarea class list includes field-sizing-content (gated or direct); dist/output.css contains 'field-sizing: content'; no JS sets style.height or reads scrollHeight (js_sets_height_on_input=false)"
+        },
+        {
+          "text": "Growth is bounded by a minimum and a maximum height (min-h and max-h or equivalent) and no fixed height utility that would defeat auto growth",
+          "passed": true,
+          "evidence": "min-h and max-h present, no fixed h-* utility (has_min_h, has_max_h true; has_fixed_h false)"
+        },
+        {
+          "text": "Textarea stays manually resizable: resize-y (or resize) is present and resize-none is not applied",
+          "passed": true,
+          "evidence": "resize-y present, resize-none absent (has_resize=true)"
+        },
+        {
+          "text": "Long content stays scrollable: overflow is auto/scroll (or default), not hidden, so text beyond the maximum height is reachable",
+          "passed": true,
+          "evidence": "No overflow-hidden; overflow-auto explicit or textarea default retained; agent observed scrollbar and scrollTop movement with 40 lines"
+        },
+        {
+          "text": "Base experience without the enhancement is an ordinary usable textarea: rows or min-height gives a sensible starting size and no JavaScript is required for typing, resizing, or scrolling",
+          "passed": true,
+          "evidence": "rows=\"4\" kept; no JavaScript required; without field-sizing the element is an ordinary bounded, resizable textarea"
+        },
+        {
+          "text": "Form behaviour is preserved: contact-form.js validators, submit handler, and setError logic are functionally unchanged, and label/for, aria-describedby, hint and error elements remain intact in contact.html",
+          "passed": true,
+          "evidence": "src/contact-form.js byte-identical to starter (contact_form_js_unchanged=true); label for=message, aria-describedby=\"message-hint message-error\", hint and error elements intact"
+        },
+        {
+          "text": "NOTES.md explains the implementation and the fallback and cites a named source (MDN, Can I use, Baseline, or Tailwind docs) for field-sizing support",
+          "passed": true,
+          "evidence": "NOTES.md explains implementation and fallback and cites MDN + Can I use (and more) for field-sizing support"
+        },
+        {
+          "text": "pnpm run build succeeds and dist/output.css contains the field-sizing declaration",
+          "passed": true,
+          "evidence": "pnpm run build re-run by grader succeeded; output.css contains field-sizing: content (css_changed_by_rebuild=false)"
+        },
+        {
+          "text": "Transcript shows the textarea was exercised in a browser with empty, short, long, and deleted content (or explicitly states what was not verified)",
+          "passed": false,
+          "evidence": "Transcript reports 0/2/4 lines 114px, 6 lines 162px, 12 lines 306px, 40 lines 306px scrollable, and a manual drag on a one-line field afterwards (114px), which implies content was reduced and the height returned to the minimum. No explicit deleted-content check is reported and the omission is not listed under 'Not verified'. Indirect evidence only; graded strictly as not shown"
+        }
+      ],
+      "notes": [
+        "Firefox/Safari/Android not exercised; fallback path not run in a real non-supporting browser",
+        "POST path not exercised (no backend)",
+        "First measurement pass invalid because background tab had innerWidth 0; re-ran at 1280x720"
+      ],
+      "eval_name": "autogrow-message-textarea"
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 402.35,
+        "stddev": 95.1059,
+        "min": 335.1,
+        "max": 469.6
+      },
+      "tokens": {
+        "mean": 100697.5,
+        "stddev": 4698.5,
+        "min": 95999,
+        "max": 105396
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.9445,
+        "stddev": 0.0785,
+        "min": 0.889,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 352.4,
+        "stddev": 156.9777,
+        "min": 241.4,
+        "max": 463.4
+      },
+      "tokens": {
+        "mean": 81526,
+        "stddev": 12053.0,
+        "min": 69473,
+        "max": 93579
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.06",
+      "time_seconds": "+50.0",
+      "tokens": "+19172"
+    }
+  },
+  "notes": [
+    "Single run per configuration (n=1 per eval). Differences this small are within run-to-run variance; treat as a pilot, not a result.",
+    "Non-discriminating: all 17 mechanical assertions (container queries, overflow-wrap, no JS measurement, field-sizing, min/max bounds, resize-y, unchanged form JS, deps unchanged, build ok) passed in BOTH configurations. The baseline model already chose container queries and field-sizing: content unprompted.",
+    "The only failed assertion (baseline textarea run) is a verification-process check: no explicit deleted-content test was reported. Evidence for a pass was indirect (a later one-line measurement returned to the minimum height), so this is marginal.",
+    "Both runs in each pair independently reached the same support facts (container queries Baseline Widely available; field-sizing Baseline Newly available since June 2026, Chrome 123 / Firefox 152 / Safari 26.2) and cited MDN and Can I use.",
+    "Observable skill effects: with-skill runs read all three reference files first (~4 extra tool calls), used the supports-[field-sizing:content]: gate from patterns.md (redundant, since unknown declarations are dropped anyway, as the baseline noted), put @container on a wrapper <li> per the skill's 'an element cannot size-query itself' note (the baseline used @container on the article and queried the inner div, which is equally correct), and checked keyboard focus and contrast, which the baseline card run skipped.",
+    "Baseline touches the skill did not produce: lh-unit min/max heights that reproduce the rows=4 height exactly; hyphens-auto and max-w-prose on the card; an explicit note that no @supports gate is needed.",
+    "Cost: textarea with-skill used +36k tokens and +228s vs baseline; card with-skill used +2k tokens but finished 128s faster (baseline lost time to a port collision). Net time delta is dominated by environment noise.",
+    "Test-harness issue: two concurrent runs bound the same port (8847) and one with-skill run briefly observed the other run's page; outputs were unaffected but future runs should assign distinct ports per run.",
+    "Eval design: these two briefs did not discriminate because the baseline model already knows the features. Better discriminators would be the boundary checks in modern-web-ui-evaluation.md (Tailwind v3 repo, Safari 15.6 constraint, no-network, small-edit scope, existing carousel with focus management)."
+  ]
+}

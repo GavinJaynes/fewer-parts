@@ -1,0 +1,97 @@
+{
+  "expectations": [
+    {
+      "text": "Card layout adapts to its container width (an @container ancestor plus container-query variants or a @container rule), not only to viewport breakpoints; compiled dist/output.css contains an @container rule",
+      "passed": true,
+      "evidence": "index.html wraps each <article> in <li class=\"@container\"> / <article class=\"@container\"> with @md: variants; dist/output.css contains '@container (width >= 28rem)' (grade_mechanical: css_has_container_rule=true)"
+    },
+    {
+      "text": "Long unbroken URL sample is present in a card and the compiled CSS applies a wrapping rule (overflow-wrap:anywhere, word-break, or equivalent) so it cannot widen the card; grid/flex children that hold text use min-width:0 where needed",
+      "passed": true,
+      "evidence": "Long unbroken URL present in a card description; compiled CSS has 'overflow-wrap: anywhere' and 'min-width: 0'; text column uses minmax(0,1fr) (grade_mechanical: css_has_wrap_rule, css_has_min_width_0, long_url_present all true)"
+    },
+    {
+      "text": "Card uses semantic structure: an article or list item with a heading element for the title and a real <a href> for the Open resource link, with the title preceding the link in DOM order",
+      "passed": true,
+      "evidence": "<article> with h2/h3 title before an <a href> 'Open resource' link; heading level matches column context (grade_mechanical: heading_before_link_in_first_card=true)"
+    },
+    {
+      "text": "No JavaScript layout measurement was added (no ResizeObserver, getBoundingClientRect, offsetWidth, or matchMedia for the card)",
+      "passed": true,
+      "evidence": "No JS added; src/contact-form.js unchanged and no ResizeObserver/getBoundingClientRect/matchMedia in any script (no_js_measurement=true)"
+    },
+    {
+      "text": "No new runtime dependencies: package.json dependencies and pnpm-lock.yaml are unchanged from the starter",
+      "passed": true,
+      "evidence": "package.json dependencies and pnpm-lock.yaml identical to starter (deps_unchanged=true)"
+    },
+    {
+      "text": "pnpm run build succeeds and the final dist/output.css contains the card's utility classes (not stale)",
+      "passed": true,
+      "evidence": "pnpm run build re-run by grader succeeded; rebuilt output.css identical to committed one (css_changed_by_rebuild=false)"
+    },
+    {
+      "text": "Cards appear in both the aside (sidebar) column and the main column of index.html",
+      "passed": true,
+      "evidence": "Cards present inside both <aside> and <main> (card_in_aside=true, card_in_main=true)"
+    },
+    {
+      "text": "NOTES.md states browser support for any feature newer than basic flex/grid (e.g. container queries, text-wrap: balance) with a named source such as MDN, Can I use, or Baseline",
+      "passed": true,
+      "evidence": "NOTES.md support table cites MDN @container page (Baseline Widely available Feb 2023) and mdn/browser-compat-data JSON for overflow-wrap anywhere, hyphens auto, text-wrap pretty"
+    },
+    {
+      "text": "Transcript shows the result was checked in a browser at the narrow sidebar width (not only at a narrow viewport), or explicitly states that this was not verified",
+      "passed": true,
+      "evidence": "Transcript: at 1280x900 aside 300px / main 720px measured via DOM; sidebar cards single-column, main cards two-column '541px 113px'; also 375 and 768 presets. Keyboard focus explicitly listed as not exercised"
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 0,
+    "total": 9,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 32,
+    "errors_encountered": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 463.4,
+    "total_duration_seconds": 463.4
+  },
+  "claims": [
+    {
+      "claim": "No horizontal overflow at 375/768/1280",
+      "type": "quality",
+      "verified": true,
+      "evidence": "scrollWidth<=clientWidth for every card and description; document scrollWidth===clientWidth"
+    },
+    {
+      "claim": "Link 24px tall meets WCAG 2.5.8 minimum target size",
+      "type": "factual",
+      "verified": true,
+      "evidence": "2.5.8 (AA) minimum is 24x24 CSS px; py-0.5 on a text-sm inline-flex link yields 24px as measured"
+    },
+    {
+      "claim": "hyphens: auto works because page has lang=en",
+      "type": "factual",
+      "verified": true,
+      "evidence": "index.html has <html lang=\"en\">; Tailwind emits -webkit-hyphens and hyphens"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Firefox/Safari not exercised",
+      "Keyboard focus styling not exercised interactively"
+    ],
+    "needs_review": [],
+    "workarounds": [
+      "Port 8847 collided with another task's server; identified own PID, stopped it, moved to 8819 after netstat + curl check"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": ""
+  }
+}

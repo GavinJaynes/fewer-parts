@@ -1,0 +1,84 @@
+{
+  "checked_on": "2026-09-12",
+  "sources": [
+    "https://modern-css.com/",
+    "https://modern-css.com/ai/",
+    "https://modern-css.com/ai/css-rules/",
+    "https://modern-css.com/ai/prompts/",
+    "https://modern-css.com/AGENTS.md",
+    "https://modern-css.com/llms.txt",
+    "https://modern-css.com/llms-full.txt",
+    "https://modern-css.com/sitemap-index.xml",
+    "https://modern-css.com/sitemap-0.xml"
+  ],
+  "homepage_snippets": 111,
+  "full_text_entries": 85,
+  "missing_from_full_text": [
+    "https://modern-css.com/css-safe-center/",
+    "https://modern-css.com/css-shape-outside/",
+    "https://modern-css.com/container-style-queries/",
+    "https://modern-css.com/nth-child-without-counting-siblings/",
+    "https://modern-css.com/grid-layout-without-extra-wrappers/",
+    "https://modern-css.com/cjk-and-quote-spacing-without-manual-kerning/",
+    "https://modern-css.com/morphing-list-items-without-page-rerenders/",
+    "https://modern-css.com/auto-hiding-header-without-scroll-listeners/",
+    "https://modern-css.com/full-width-without-horizontal-scrollbar-overflow/",
+    "https://modern-css.com/grid-dividers-without-borders-or-pseudo-elements/",
+    "https://modern-css.com/scroll-triggered-animations-without-intersection-observer/",
+    "https://modern-css.com/sticky-rows-and-columns-without-javascript/",
+    "https://modern-css.com/css-type-scale-with-pow/",
+    "https://modern-css.com/organizing-css-with-cascade-layers/",
+    "https://modern-css.com/z-index-isolation/",
+    "https://modern-css.com/css-border-shape/",
+    "https://modern-css.com/pretty-paragraph-wrapping-without-orphan-words/",
+    "https://modern-css.com/animating-details-without-javascript-height/",
+    "https://modern-css.com/container-queries-without-size-conditions/",
+    "https://modern-css.com/high-contrast-support-without-broken-ui/",
+    "https://modern-css.com/centering-button-text-without-line-height-tweaks/",
+    "https://modern-css.com/larger-touch-targets-without-changing-element-size/",
+    "https://modern-css.com/floating-labels-without-javascript/",
+    "https://modern-css.com/video-player-states-without-javascript-events/",
+    "https://modern-css.com/centering-elements-with-flexbox/",
+    "https://modern-css.com/centering-elements-with-auto-margins/"
+  ],
+  "sitemap_urls": 954,
+  "sitemap_section_counts": [
+    {
+      "section": "ai",
+      "urls": 2
+    },
+    {
+      "section": "articles",
+      "urls": 7
+    },
+    {
+      "section": "blocks",
+      "urls": 46
+    },
+    {
+      "section": "category",
+      "urls": 10
+    },
+    {
+      "section": "reference",
+      "urls": 745
+    },
+    {
+      "section": "root-pages",
+      "urls": 134
+    },
+    {
+      "section": "tools",
+      "urls": 9
+    },
+    {
+      "section": "whats-new",
+      "urls": 1
+    }
+  ],
+  "limits": [
+    "URL inventory and export membership check, not a read or behavioral audit of every page.",
+    "Top-level landing pages are counted under root-pages; nested groups include category and index pages.",
+    "Live counts may change; this is a dated evaluation artifact, not a runtime catalog."
+  ]
+}

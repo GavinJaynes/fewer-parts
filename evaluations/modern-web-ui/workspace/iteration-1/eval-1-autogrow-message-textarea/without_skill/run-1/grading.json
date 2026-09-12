@@ -1,0 +1,97 @@
+{
+  "expectations": [
+    {
+      "text": "Primary growth mechanism is native CSS field-sizing: content (Tailwind field-sizing-content or equivalent CSS), not a JavaScript input listener that sets style.height",
+      "passed": true,
+      "evidence": "textarea class list includes field-sizing-content (gated or direct); dist/output.css contains 'field-sizing: content'; no JS sets style.height or reads scrollHeight (js_sets_height_on_input=false)"
+    },
+    {
+      "text": "Growth is bounded by a minimum and a maximum height (min-h and max-h or equivalent) and no fixed height utility that would defeat auto growth",
+      "passed": true,
+      "evidence": "min-h and max-h present, no fixed h-* utility (has_min_h, has_max_h true; has_fixed_h false)"
+    },
+    {
+      "text": "Textarea stays manually resizable: resize-y (or resize) is present and resize-none is not applied",
+      "passed": true,
+      "evidence": "resize-y present, resize-none absent (has_resize=true)"
+    },
+    {
+      "text": "Long content stays scrollable: overflow is auto/scroll (or default), not hidden, so text beyond the maximum height is reachable",
+      "passed": true,
+      "evidence": "No overflow-hidden; overflow-auto explicit or textarea default retained; agent observed scrollbar and scrollTop movement with 40 lines"
+    },
+    {
+      "text": "Base experience without the enhancement is an ordinary usable textarea: rows or min-height gives a sensible starting size and no JavaScript is required for typing, resizing, or scrolling",
+      "passed": true,
+      "evidence": "rows=\"4\" kept; no JavaScript required; without field-sizing the element is an ordinary bounded, resizable textarea"
+    },
+    {
+      "text": "Form behaviour is preserved: contact-form.js validators, submit handler, and setError logic are functionally unchanged, and label/for, aria-describedby, hint and error elements remain intact in contact.html",
+      "passed": true,
+      "evidence": "src/contact-form.js byte-identical to starter (contact_form_js_unchanged=true); label for=message, aria-describedby=\"message-hint message-error\", hint and error elements intact"
+    },
+    {
+      "text": "NOTES.md explains the implementation and the fallback and cites a named source (MDN, Can I use, Baseline, or Tailwind docs) for field-sizing support",
+      "passed": true,
+      "evidence": "NOTES.md explains implementation and fallback and cites MDN + Can I use (and more) for field-sizing support"
+    },
+    {
+      "text": "pnpm run build succeeds and dist/output.css contains the field-sizing declaration",
+      "passed": true,
+      "evidence": "pnpm run build re-run by grader succeeded; output.css contains field-sizing: content (css_changed_by_rebuild=false)"
+    },
+    {
+      "text": "Transcript shows the textarea was exercised in a browser with empty, short, long, and deleted content (or explicitly states what was not verified)",
+      "passed": false,
+      "evidence": "Transcript reports 0/2/4 lines 114px, 6 lines 162px, 12 lines 306px, 40 lines 306px scrollable, and a manual drag on a one-line field afterwards (114px), which implies content was reduced and the height returned to the minimum. No explicit deleted-content check is reported and the omission is not listed under 'Not verified'. Indirect evidence only; graded strictly as not shown"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 1,
+    "total": 9,
+    "pass_rate": 0.889
+  },
+  "execution_metrics": {
+    "total_tool_calls": 22,
+    "errors_encountered": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 241.4,
+    "total_duration_seconds": 241.4
+  },
+  "claims": [
+    {
+      "claim": "field-sizing is Baseline 2026 Newly available; Chrome 123 / Firefox 152 / Safari 26.2",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Matches the with-skill run's independent three-source lookup"
+    },
+    {
+      "claim": "No @supports block is needed because unknown declarations are dropped",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Standard CSS error handling; min/max-height and resize are universally supported"
+    },
+    {
+      "claim": "calc(4lh+1rem+2px) reproduces the rows=4 height exactly (114px)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Agent measured 114px both with field-sizing active and, in the other run, for the plain rows=4 fallback"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Firefox/Safari/Android not exercised; fallback path not run in a real non-supporting browser",
+      "POST path not exercised (no backend)"
+    ],
+    "needs_review": [],
+    "workarounds": [
+      "First measurement pass invalid because background tab had innerWidth 0; re-ran at 1280x720"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": ""
+  }
+}

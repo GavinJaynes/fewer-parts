@@ -1,0 +1,97 @@
+{
+  "expectations": [
+    {
+      "text": "Card layout adapts to its container width (an @container ancestor plus container-query variants or a @container rule), not only to viewport breakpoints; compiled dist/output.css contains an @container rule",
+      "passed": true,
+      "evidence": "index.html wraps each <article> in <li class=\"@container\"> / <article class=\"@container\"> with @md: variants; dist/output.css contains '@container (width >= 28rem)' (grade_mechanical: css_has_container_rule=true)"
+    },
+    {
+      "text": "Long unbroken URL sample is present in a card and the compiled CSS applies a wrapping rule (overflow-wrap:anywhere, word-break, or equivalent) so it cannot widen the card; grid/flex children that hold text use min-width:0 where needed",
+      "passed": true,
+      "evidence": "Long unbroken URL present in a card description; compiled CSS has 'overflow-wrap: anywhere' and 'min-width: 0'; text column uses minmax(0,1fr) (grade_mechanical: css_has_wrap_rule, css_has_min_width_0, long_url_present all true)"
+    },
+    {
+      "text": "Card uses semantic structure: an article or list item with a heading element for the title and a real <a href> for the Open resource link, with the title preceding the link in DOM order",
+      "passed": true,
+      "evidence": "<article> with h2/h3 title before an <a href> 'Open resource' link; heading level matches column context (grade_mechanical: heading_before_link_in_first_card=true)"
+    },
+    {
+      "text": "No JavaScript layout measurement was added (no ResizeObserver, getBoundingClientRect, offsetWidth, or matchMedia for the card)",
+      "passed": true,
+      "evidence": "No JS added; src/contact-form.js unchanged and no ResizeObserver/getBoundingClientRect/matchMedia in any script (no_js_measurement=true)"
+    },
+    {
+      "text": "No new runtime dependencies: package.json dependencies and pnpm-lock.yaml are unchanged from the starter",
+      "passed": true,
+      "evidence": "package.json dependencies and pnpm-lock.yaml identical to starter (deps_unchanged=true)"
+    },
+    {
+      "text": "pnpm run build succeeds and the final dist/output.css contains the card's utility classes (not stale)",
+      "passed": true,
+      "evidence": "pnpm run build re-run by grader succeeded; rebuilt output.css identical to committed one (css_changed_by_rebuild=false)"
+    },
+    {
+      "text": "Cards appear in both the aside (sidebar) column and the main column of index.html",
+      "passed": true,
+      "evidence": "Cards present inside both <aside> and <main> (card_in_aside=true, card_in_main=true)"
+    },
+    {
+      "text": "NOTES.md states browser support for any feature newer than basic flex/grid (e.g. container queries, text-wrap: balance) with a named source such as MDN, Can I use, or Baseline",
+      "passed": true,
+      "evidence": "NOTES.md support table cites caniuse.com URLs for container queries (106/110/16), overflow-wrap:anywhere, text-wrap balance/pretty, plus MDN Baseline status, looked up 2026-09-03"
+    },
+    {
+      "text": "Transcript shows the result was checked in a browser at the narrow sidebar width (not only at a narrow viewport), or explicitly states that this was not verified",
+      "passed": true,
+      "evidence": "Transcript: at 1280x900 sidebar cards measured 298px single-column while main cards 718px two-column on the same page; also 375 and 768 viewports; keyboard focus outline checked"
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 0,
+    "total": 9,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 38,
+    "errors_encountered": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 335.1,
+    "total_duration_seconds": 335.1
+  },
+  "claims": [
+    {
+      "claim": "No horizontal overflow at 375/768/1280",
+      "type": "quality",
+      "verified": true,
+      "evidence": "scrollWidth==clientWidth checks reported for cards, paragraphs, document"
+    },
+    {
+      "claim": "Contrast of accent-600 on white is 6.0:1",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Computed by the agent's own script (after correcting a gamma bug); not independently re-computed by grader"
+    },
+    {
+      "claim": "Link is a 34px-tall touch target on mobile",
+      "type": "factual",
+      "verified": true,
+      "evidence": "px-3 py-1.5 text-sm bordered pill; agent measured 34px at 375px"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Firefox/Safari not exercised; text-pretty is a no-op in Firefox"
+    ],
+    "needs_review": [],
+    "workarounds": [
+      "MDN compat tables did not render via fetch; used Can I use instead",
+      "Port 8847 was shared with other tasks; moved to 8873 after a curl content-length check"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": ""
+  }
+}

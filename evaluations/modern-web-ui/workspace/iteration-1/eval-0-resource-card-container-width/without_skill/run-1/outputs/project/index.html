@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acme Library</title>
+  <link rel="stylesheet" href="dist/output.css">
+</head>
+<body class="min-h-dvh bg-paper-50 text-ink-950">
+  <header class="border-b border-paper-100 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <a href="index.html" class="text-lg font-semibold">Acme Library</a>
+      <nav aria-label="Primary" class="flex gap-4 text-sm">
+        <a href="index.html" class="underline-offset-4 hover:underline" aria-current="page">Home</a>
+        <a href="contact.html" class="underline-offset-4 hover:underline">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!--
+    Resource card
+    =============
+    <article class="@container ..."> is a container-query root, so the card lays itself out
+    from the width it is actually given (300px sidebar, 720px main column, full width on
+    phones) rather than from the viewport. Below the @md container size (28rem) the title,
+    description and link stack; at @md and above the link moves up beside the title.
+
+    Everything inside is user content, so title and description use `wrap-anywhere`
+    (overflow-wrap: anywhere), which lets long URLs and long unbroken words break at any
+    point *and* is taken into account when the browser computes min-content width, so the
+    card can never force the column wider than it is.
+
+    Structure: heading (level depends on where the card sits) -> description -> link.
+    The link is described by the heading (aria-describedby) so several "Open resource"
+    links on one page are distinguishable to assistive tech.
+  -->
+
+  <div class="mx-auto grid max-w-6xl gap-8 px-6 py-8 lg:grid-cols-[300px_720px]">
+    <aside aria-label="Pinned resources" class="min-w-0 space-y-4">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-ink-500">Pinned</h2>
+
+      <article class="@container rounded-lg border border-ink-500/20 bg-white">
+        <div class="grid gap-x-6 gap-y-2 p-4 @md:grid-cols-[minmax(0,1fr)_auto] @md:p-5">
+          <h3 id="pinned-census-title"
+              class="wrap-anywhere text-base font-semibold text-pretty hyphens-auto @md:col-start-1 @md:row-start-1 @md:self-baseline @md:text-lg">
+            2019 census microdata (offline mirror)
+          </h3>
+          <p class="wrap-anywhere max-w-prose text-sm text-pretty text-ink-700 @md:col-start-1 @md:row-start-2 @md:text-base">
+            Household-level anonymised extract, kept on the shared drive for when the statistics portal is down.
+            Source: https://data.example.gov/statistics/census/2019/microdata/releases/v3/household-level-anonymised-extract-full.tar.gz
+            (about 1.2 GB, last checked in June).
+          </p>
+          <p class="@md:col-start-2 @md:row-start-1 @md:self-baseline">
+            <a href="https://data.example.gov/statistics/census/2019/microdata/releases/v3/household-level-anonymised-extract-full.tar.gz"
+               aria-describedby="pinned-census-title"
+               class="inline-flex items-center gap-1 rounded-sm py-0.5 text-sm font-medium text-accent-600 underline decoration-accent-600/40 underline-offset-4 hover:decoration-accent-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600">
+              Open resource
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+              </svg>
+            </a>
+          </p>
+        </div>
+      </article>
+
+      <article class="@container rounded-lg border border-ink-500/20 bg-white">
+        <div class="grid gap-x-6 gap-y-2 p-4 @md:grid-cols-[minmax(0,1fr)_auto] @md:p-5">
+          <h3 id="pinned-retention-title"
+              class="wrap-anywhere text-base font-semibold text-pretty hyphens-auto @md:col-start-1 @md:row-start-1 @md:self-baseline @md:text-lg">
+            Guidelines for the retention and disposal of departmental correspondence, minutes and working papers (2024 revision)
+          </h3>
+          <p class="wrap-anywhere max-w-prose text-sm text-pretty text-ink-700 @md:col-start-1 @md:row-start-2 @md:text-base">
+            Which records to keep, for how long, and who signs off on disposal. Applies to every team from 1 April 2024.
+          </p>
+          <p class="@md:col-start-2 @md:row-start-1 @md:self-baseline">
+            <a href="https://intranet.example.org/records/retention-guidelines-2024.pdf"
+               aria-describedby="pinned-retention-title"
+               class="inline-flex items-center gap-1 rounded-sm py-0.5 text-sm font-medium text-accent-600 underline decoration-accent-600/40 underline-offset-4 hover:decoration-accent-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600">
+              Open resource
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+              </svg>
+            </a>
+          </p>
+        </div>
+      </article>
+    </aside>
+
+    <main class="min-w-0 space-y-4">
+      <h1 class="text-2xl font-semibold">Recently added</h1>
+
+      <article class="@container rounded-lg border border-ink-500/20 bg-white">
+        <div class="grid gap-x-6 gap-y-2 p-4 @md:grid-cols-[minmax(0,1fr)_auto] @md:p-5">
+          <h2 id="recent-booking-title"
+              class="wrap-anywhere text-base font-semibold text-pretty hyphens-auto @md:col-start-1 @md:row-start-1 @md:self-baseline @md:text-lg">
+            Reading room booking form
+          </h2>
+          <p class="wrap-anywhere max-w-prose text-sm text-pretty text-ink-700 @md:col-start-1 @md:row-start-2 @md:text-base">
+            Reserve a desk in the reading room for up to two weeks at a time. Bookings open at 09:00 each Monday for the following fortnight.
+          </p>
+          <p class="@md:col-start-2 @md:row-start-1 @md:self-baseline">
+            <a href="https://intranet.example.org/forms/reading-room-booking"
+               aria-describedby="recent-booking-title"
+               class="inline-flex items-center gap-1 rounded-sm py-0.5 text-sm font-medium text-accent-600 underline decoration-accent-600/40 underline-offset-4 hover:decoration-accent-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600">
+              Open resource
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+              </svg>
+            </a>
+          </p>
+        </div>
+      </article>
+
+      <!-- The same resource as the first pinned card, so both widths can be compared on one page. -->
+      <article class="@container rounded-lg border border-ink-500/20 bg-white">
+        <div class="grid gap-x-6 gap-y-2 p-4 @md:grid-cols-[minmax(0,1fr)_auto] @md:p-5">
+          <h2 id="recent-census-title"
+              class="wrap-anywhere text-base font-semibold text-pretty hyphens-auto @md:col-start-1 @md:row-start-1 @md:self-baseline @md:text-lg">
+            2019 census microdata (offline mirror)
+          </h2>
+          <p class="wrap-anywhere max-w-prose text-sm text-pretty text-ink-700 @md:col-start-1 @md:row-start-2 @md:text-base">
+            Household-level anonymised extract, kept on the shared drive for when the statistics portal is down.
+            Source: https://data.example.gov/statistics/census/2019/microdata/releases/v3/household-level-anonymised-extract-full.tar.gz
+            (about 1.2 GB, last checked in June).
+          </p>
+          <p class="@md:col-start-2 @md:row-start-1 @md:self-baseline">
+            <a href="https://data.example.gov/statistics/census/2019/microdata/releases/v3/household-level-anonymised-extract-full.tar.gz"
+               aria-describedby="recent-census-title"
+               class="inline-flex items-center gap-1 rounded-sm py-0.5 text-sm font-medium text-accent-600 underline decoration-accent-600/40 underline-offset-4 hover:decoration-accent-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600">
+              Open resource
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+              </svg>
+            </a>
+          </p>
+        </div>
+      </article>
+
+      <article class="@container rounded-lg border border-ink-500/20 bg-white">
+        <div class="grid gap-x-6 gap-y-2 p-4 @md:grid-cols-[minmax(0,1fr)_auto] @md:p-5">
+          <h2 id="recent-ill-title"
+              class="wrap-anywhere text-base font-semibold text-pretty hyphens-auto @md:col-start-1 @md:row-start-1 @md:self-baseline @md:text-lg">
+            Interlibrary loan policy
+          </h2>
+          <p class="wrap-anywhere max-w-prose text-sm text-pretty text-ink-700 @md:col-start-1 @md:row-start-2 @md:text-base">
+            How to request items we do not hold, typical turnaround times, and what to do when a loan is overdue.
+          </p>
+          <p class="@md:col-start-2 @md:row-start-1 @md:self-baseline">
+            <a href="https://intranet.example.org/policies/interlibrary-loans"
+               aria-describedby="recent-ill-title"
+               class="inline-flex items-center gap-1 rounded-sm py-0.5 text-sm font-medium text-accent-600 underline decoration-accent-600/40 underline-offset-4 hover:decoration-accent-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600">
+              Open resource
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+              </svg>
+            </a>
+          </p>
+        </div>
+      </article>
+    </main>
+  </div>
+</body>
+</html>
