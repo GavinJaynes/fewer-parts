@@ -17,3 +17,6 @@ tests/**/output.css
 .DS_Store
 Thumbs.db
 *.log
+
+# Astro generated files
+website/.astro/

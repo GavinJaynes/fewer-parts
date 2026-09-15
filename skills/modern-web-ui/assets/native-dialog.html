@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Native modal dialog</title>
+<style id="recipe">
+dialog { max-inline-size: min(28rem, calc(100% - 2rem)); }
+dialog::backdrop { background: rgb(18 30 48 / 45%); }
+</style>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:28px;font:14px/1.5 system-ui;color:#182334;background:#f2f5f9;text-align:center}.tile{padding:30px 0}.symbol{font-size:32px;color:#3866e8}h2{font-size:18px;margin:8px 0}p{color:#647186;margin:8px 0 20px}button{font:inherit;font-weight:600;background:#202c42;color:white;border:0;border-radius:8px;padding:11px 20px;cursor:pointer}button:focus-visible{outline:3px solid #3866e8;outline-offset:4px}dialog{border:1px solid #ccd5e2;border-radius:16px;padding:24px;text-align:start;box-shadow:0 20px 70px #18233430}dialog p{color:#43536b}dialog form{text-align:end}
+</style>
+<div class="tile"><span class="symbol" aria-hidden="true">▣</span><h2>A moment of focus</h2><p>A native dialog, ready for the keyboard.</p><button id="open" type="button">Open dialog</button></div>
+<dialog aria-labelledby="title"><h2 id="title">You're in the dialog.</h2><p>Press Escape or close to return to the page.</p><form method="dialog"><button autofocus>Close dialog</button></form></dialog>
+<script>
+const trigger = document.querySelector('#open');
+const dialog = document.querySelector('dialog');
+if (typeof dialog.showModal === 'function') {
+  trigger.addEventListener('click', () => dialog.showModal());
+  dialog.addEventListener('close', () => trigger.focus());
+} else {
+  trigger.disabled = true;
+  trigger.textContent = 'Dialog preview unavailable';
+}
+</script></html>

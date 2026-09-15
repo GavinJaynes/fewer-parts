@@ -1,0 +1,45 @@
+<!-- Tailwind CSS v4. Utilities style the form; the native URL API owns parsing. -->
+<label for="url" class="block font-semibold text-slate-900">Try a URL</label>
+<input
+  id="url"
+  type="text"
+  inputmode="url"
+  value="https://example.com/hello"
+  spellcheck="false"
+  aria-describedby="url-hint"
+  class="mt-2 w-full rounded-lg border border-slate-300 bg-white p-3 text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+>
+
+<div class="mt-5 rounded-xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere]" role="status">
+  <p id="status" class="font-semibold text-slate-900">Enter a URL to inspect it.</p>
+  <p id="parts" class="mt-1 text-slate-600"></p>
+</div>
+<p id="url-hint" class="mt-4 text-sm text-slate-600">
+  Parsing checks structure. It does not establish that a destination is safe.
+</p>
+
+<script>
+  function parseURL(value) {
+    if (typeof URL.canParse === 'function' && !URL.canParse(value)) return null;
+    try {
+      return new URL(value);
+    } catch {
+      return null;
+    }
+  }
+
+  const input = document.querySelector('#url');
+  const status = document.querySelector('#status');
+  const parts = document.querySelector('#parts');
+
+  function update() {
+    const url = parseURL(input.value);
+    status.textContent = url ? 'Parsable URL' : 'Not an absolute URL';
+    parts.textContent = url
+      ? `${url.protocol} · ${url.hostname || '(no host)'} · ${url.pathname}`
+      : 'Try https://example.com/hello';
+  }
+
+  input.addEventListener('input', update);
+  update();
+</script>

@@ -1,4 +1,4 @@
 interface:
   display_name: "Modern Web UI"
-  short_description: "Live Modern CSS patterns adapted to your project"
-  default_prompt: "Use $modern-web-ui to consult the live Modern CSS collection and build this interface with suitable native patterns, adapting them to the project's styling system and browser targets."
+  short_description: "Build and review modern, Tailwind-first web UI"
+  default_prompt: "Use $modern-web-ui to build, modernize, or audit/review this web UI using the project's styling system, suitable native HTML and web APIs, and live compatibility sources."

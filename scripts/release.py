@@ -27,7 +27,8 @@ def skill_files(folder):
     for path in sorted(folder.rglob("*")):
         require(not path.is_symlink(), f"Symlinks are not packaged: {path}")
         if path.is_file():
-            require(path.suffix in {".md", ".yaml"}, f"Unexpected skill asset: {path}")
+            allowed = path.suffix in {".md", ".yaml"} or (path.suffix == ".html" and path.relative_to(folder).parts[0] == "assets")
+            require(allowed, f"Unexpected skill asset: {path}")
             require(not any(part.startswith(".") for part in path.relative_to(folder).parts), f"Hidden skill file: {path}")
             files.append(path)
     return files

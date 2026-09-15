@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Native URL parsing</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:28px;font:14px/1.5 system-ui;color:#182334;background:#f2f5f9}label{display:block;font-weight:600;margin-bottom:10px}input{font:inherit;width:100%;padding:13px;border:1px solid #c9d3e2;border-radius:8px;background:white}input:focus-visible{outline:3px solid #3866e8;outline-offset:3px}.result{margin-top:18px;background:white;border:1px solid #dce2eb;border-radius:12px;padding:16px;overflow-wrap:anywhere}#status{font-weight:600;margin:0 0 6px}#parts{color:#647186;margin:0}.hint{color:#647186;font-size:13px;margin-top:16px}
+</style>
+<label for="url">Try a URL</label><input id="url" type="text" inputmode="url" value="https://example.com/hello" spellcheck="false" aria-describedby="hint">
+<div class="result" role="status"><p id="status">Enter a URL to inspect it.</p><p id="parts"></p></div>
+<p class="hint" id="hint">Parsing checks structure. It does not establish that a destination is safe.</p>
+<script>
+// Works with URL.canParse, with try/catch as an older-browser fallback.
+function parseURL(value) {
+  if (typeof URL.canParse === 'function' && !URL.canParse(value)) return null;
+  try { return new URL(value); } catch { return null; }
+}
+const input = document.querySelector('#url');
+function update() {
+  const url = parseURL(input.value);
+  document.querySelector('#status').textContent = url ? 'Parsable URL' : 'Not an absolute URL';
+  document.querySelector('#parts').textContent = url ? `${url.protocol} · ${url.hostname || '(no host)'} · ${url.pathname}` : 'Try https://example.com/hello';
+}
+input.addEventListener('input', update);
+update();
+</script></html>

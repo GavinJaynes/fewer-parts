@@ -1,0 +1,50 @@
+---
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title: string;
+  description: string;
+  type?: "article" | "website";
+}
+
+const { title, description, type = "website" } = Astro.props;
+---
+
+<meta charset="UTF-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<meta content={description} name="description" />
+<meta content={title} property="og:title" />
+<meta content={description} property="og:description" />
+<meta content={type} property="og:type" />
+<link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+<meta content={Astro.generator} name="generator" />
+<title>{title}</title>
+<ClientRouter />
+
+<script>
+  document.addEventListener("click", async (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const button = target.closest<HTMLButtonElement>("[data-copy]");
+    if (!button) return;
+
+    const sourceId = button.getAttribute("aria-controls");
+    const source = sourceId ? document.getElementById(sourceId) : null;
+    if (!source) return;
+
+    const status = document.querySelector<HTMLOutputElement>("#copy-status");
+    const originalLabel = button.textContent ?? "Copy";
+
+    try {
+      await navigator.clipboard.writeText(source.textContent ?? "");
+      button.textContent = "Copied";
+      if (status) status.textContent = "Copied to clipboard.";
+      window.setTimeout(() => (button.textContent = originalLabel), 1800);
+    } catch {
+      button.textContent = "Select to copy";
+      if (status)
+        status.textContent = "Copy unavailable. Select the visible text.";
+    }
+  });
+</script>

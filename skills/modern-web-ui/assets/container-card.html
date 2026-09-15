@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Container-aware card</title>
+<style id="recipe">
+.card-container { container-type: inline-size; }
+.card { display: grid; gap: 1rem; }
+@container (min-width: 320px) {
+  .card { grid-template-columns: 4rem 1fr; align-items: center; }
+}
+</style>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:28px;font:14px/1.5 system-ui;color:#182334;background:#f2f5f9}label{display:block;margin-bottom:10px}input{width:100%;accent-color:#3866e8}.card-container{max-width:100%;margin:24px auto 0}.card{background:white;border:1px solid #dce2eb;border-radius:14px;padding:18px;box-shadow:0 10px 25px #1e32500a}.icon{display:grid;place-items:center;width:56px;height:56px;background:#e4edff;border-radius:12px;color:#2f5ccc;font-size:24px}.card h2{font-size:16px;margin:0}.card p{margin:4px 0 0;color:#647186}input:focus-visible{outline:3px solid #3866e8;outline-offset:4px}
+</style>
+<label for="width">Container width <output id="value">100%</output></label>
+<input id="width" type="range" min="55" max="100" value="100">
+<div class="card-container"><article class="card"><span class="icon" aria-hidden="true">↗</span><div><h2>Room to adapt</h2><p>Same component.<br>A different amount of space.</p></div></article></div>
+<script>
+// Demo control changes the container; CSS handles its layout.
+const slider = document.querySelector('#width');
+slider.addEventListener('input', () => {
+  document.querySelector('.card-container').style.width = slider.value + '%';
+  document.querySelector('#value').value = slider.value + '%';
+});
+</script></html>

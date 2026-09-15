@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Selection-aware cards</title>
+<style id="recipe">
+.option:has(input:checked) {
+  border-color: #3866e8;
+  background: #edf3ff;
+}
+.option:has(input:focus-visible) {
+  outline: 3px solid #3866e8;
+  outline-offset: 3px;
+}
+</style>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:28px;font:14px/1.5 system-ui;color:#182334;background:#f2f5f9}fieldset{border:0;padding:0;margin:0}legend{margin-bottom:16px;font-weight:600}.option{display:flex;align-items:center;gap:14px;padding:16px;margin-bottom:12px;border:1px solid #ccd5e2;border-radius:12px;background:white;cursor:pointer}.option span{flex:1}.option strong{display:block;font-weight:600}.option small{font-size:13px;color:#647186}input{accent-color:#3866e8;width:18px;height:18px}input:focus-visible{outline:2px solid #3866e8;outline-offset:2px}
+</style>
+<fieldset><legend>Choose your workspace</legend>
+<label class="option"><input type="radio" name="workspace" value="personal" checked><span><strong>Personal</strong><small>A little space for your ideas</small></span></label>
+<label class="option"><input type="radio" name="workspace" value="team"><span><strong>Team</strong><small>Bring everyone together</small></span></label>
+</fieldset>
+<!-- Native radios own selection and keyboard behavior. No JavaScript needed. -->
+</html>

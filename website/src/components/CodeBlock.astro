@@ -1,0 +1,27 @@
+---
+/* eslint-disable astro/no-set-html-directive -- TanStack Highlight escapes all source text. */
+import { highlightHtml } from "../lib/highlight";
+
+interface Props {
+  id: string;
+  source: string;
+  label?: string;
+}
+
+const { id, source, label = "HTML" } = Astro.props;
+const highlighted = highlightHtml(source);
+---
+
+<div class="code-panel">
+  <div class="code-toolbar">
+    <span>
+      <i aria-hidden="true"></i>
+      {label}
+    </span>
+    <button aria-controls={id} data-copy type="button">
+      Copy code
+    </button>
+  </div>
+  <!-- TanStack Highlight escapes source before returning this markup. -->
+  <div class="highlighted-code" id={id} set:html={highlighted} />
+</div>

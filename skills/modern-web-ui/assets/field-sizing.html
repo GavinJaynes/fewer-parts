@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content-sized textarea · Modern Web UI</title>
+<style id="recipe">
+/* Component base: usable without field-sizing support. */
+.content-field {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: 7rem;
+  max-block-size: 18rem;
+  overflow: auto;
+  resize: vertical;
+  font: inherit;
+}
+@supports (field-sizing: content) {
+  .content-field { field-sizing: content; }
+}
+</style>
+<style>
+/* Showcase presentation; not required by the component. */
+:root { color-scheme: light; font: 17px/1.55 system-ui, sans-serif; color: #202b25; background: #f5f4ee; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: clamp(1rem, 5vw, 4rem); }
+main { max-inline-size: 64rem; margin-inline: auto; }
+.eyebrow { font-size: .75rem; letter-spacing: .13em; text-transform: uppercase; color: #486151; }
+h1 { font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1.08; letter-spacing: -.04em; max-inline-size: 16ch; margin-block: 1rem; }
+.intro { max-inline-size: 56ch; color: #4c5e52; }
+.badge { display: inline-block; font-size: .8rem; padding: .3rem .7rem; background: #e2ebdc; border-radius: 2rem; }
+.layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 2rem; margin-block-start: 2rem; }
+.panel { padding: clamp(1rem, 3vw, 2rem); border: 1px solid #ccd5ca; border-radius: 1rem; background: #fff; min-inline-size: 0; }
+h2 { margin-block-start: 0; font-size: 1.15rem; }
+label[for="message"] { display: block; font-weight: 650; margin-block-end: .5rem; }
+textarea { display: block; padding: .8rem; border: 1px solid #7b907e; border-radius: .5rem; background: #fcfdf9; color: inherit; }
+.controls { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: 1rem; }
+button { font: inherit; font-size: .85rem; color: #243d2d; background: #edf3e9; border: 1px solid #acbfa8; border-radius: .4rem; padding: .5rem .7rem; cursor: pointer; }
+button:hover { background: #dce9d5; }
+:focus-visible { outline: 3px solid #276ac5; outline-offset: 3px; }
+.hint { color: #4c5e52; font-size: .85rem; }
+input[type="checkbox"] { accent-color: #315b35; }
+pre { overflow: auto; background: #f5f7f1; padding: 1rem; border-radius: .5rem; font-size: .78rem; }
+a { color: #245d3b; }
+footer { margin-block-start: 2rem; font-size: .8rem; }
+/* Explicit fallback simulation, not component code. */
+.force-fallback .content-field { field-sizing: fixed; }
+@media (max-width: 48rem) { .layout { grid-template-columns: 1fr; } }
+</style>
+<main>
+  <p class="eyebrow">Modern Web UI / Recipe 01</p>
+  <h1>A little more room for your words.</h1>
+  <p class="intro">A textarea that grows as you type and shrinks when you delete. At its height limit, the content scrolls.</p>
+  <span class="badge">field-sizing · Newly Available in June 2026</span>
+  <div class="layout">
+    <section class="panel" aria-labelledby="demo-heading">
+      <h2 id="demo-heading">Try it</h2>
+      <!-- Component markup. Showcase controls below are optional. -->
+      <label for="message">Your message</label>
+      <textarea class="content-field" id="message" rows="4" aria-describedby="field-help" placeholder="Start with a few words…"></textarea>
+      <p class="hint" id="field-help">Type, paste, or delete text. You can also resize the field manually.</p>
+      <div class="controls">
+        <button type="button" data-action="short">Short text</button>
+        <button type="button" data-action="long">Long text</button>
+        <button type="button" data-action="word">Unbroken text</button>
+        <button type="button" data-action="clear">Clear</button>
+      </div>
+      <label><input type="checkbox" id="fallback"> Use fallback</label>
+      <p class="hint" role="status" id="support">Without demo JavaScript, the field still works. Native autosizing depends on your browser.</p>
+    </section>
+    <section class="panel" aria-labelledby="code-heading">
+      <h2 id="code-heading">The component CSS</h2>
+      <p class="hint">This preview reads the CSS used by the field above. No measurement script is needed.</p>
+      <pre><code id="source">Enable JavaScript to display the recipe source, or view this file's source.</code></pre>
+      <p class="hint">The fallback preserves editing, manual resizing, and scrolling. It does not provide automatic growth.</p>
+    </section>
+  </div>
+  <footer>Support checked 14 September 2026 · <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/field-sizing">Live documentation and compatibility</a></footer>
+</main>
+<script>
+// Showcase controls only; CSS performs the sizing.
+const field = document.querySelector('#message');
+const fallback = document.querySelector('#fallback');
+const support = document.querySelector('#support');
+document.querySelector('#source').textContent = document.querySelector('#recipe').textContent.trim();
+function updateSupport() {
+  document.documentElement.classList.toggle('force-fallback', fallback.checked);
+  support.textContent = fallback.checked
+    ? 'Fallback preview: manual resizing and scrolling remain available.'
+    : CSS.supports('field-sizing', 'content')
+      ? 'Your browser reports field-sizing support. Try adding and deleting text.'
+      : 'Your browser uses the fallback: manual resizing and scrolling.';
+}
+fallback.addEventListener('change', updateSupport);
+document.querySelectorAll('[data-action]').forEach(button => {
+  button.addEventListener('click', () => {
+    const samples = {
+      short: 'A small thought, with room to grow.',
+      long: Array(12).fill('A good interface makes space for a longer thought. Add details, edit them, then clear the field to watch it settle back.').join('\n\n'),
+      word: 'LongUnbrokenText'.repeat(60),
+      clear: ''
+    };
+    field.value = samples[button.dataset.action];
+    field.scrollTop = 0;
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+});
+updateSupport();
+</script>
+</html>

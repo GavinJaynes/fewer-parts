@@ -1,0 +1,59 @@
+<section aria-labelledby="heading" class="hero" data-cloud-hero>
+  <div aria-hidden="true" class="hero-scene">
+    <div class="hero-fallback"></div>
+    <canvas data-cloud-canvas></canvas>
+    <div class="hero-atmosphere"></div>
+  </div>
+
+  <div class="hero-copy">
+    <p class="eyebrow">CSS + HTML + WEB APIs</p>
+    <h1 id="heading">
+      More of the web.
+      <br />
+      <span>Less of the workaround.</span>
+    </h1>
+  </div>
+
+  <div class="hero-aside">
+    <p>
+      Small, native patterns for thoughtful interfaces. Try them here. Bring
+      them to your coding agent.
+    </p>
+    <a class="text-link" href="#install">
+      Meet your new skill <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+
+  <a class="hero-scroll" href="#examples">
+    <span>Scroll to explore</span>
+    <i aria-hidden="true"></i>
+  </a>
+
+  <p aria-hidden="true" class="hero-renderer">
+    <span class="hero-renderer-live">Live WebGPU atmosphere</span>
+    <span class="hero-renderer-fallback">Atmospheric study</span>
+  </p>
+</section>
+
+<script>
+  import { mountCloudHero } from "../scripts/cloud-hero";
+
+  let dispose: (() => void) | undefined;
+
+  const setup = async () => {
+    dispose?.();
+    dispose = undefined;
+
+    const hero = document.querySelector<HTMLElement>("[data-cloud-hero]");
+    if (!hero) return;
+
+    try {
+      dispose = await mountCloudHero(hero);
+    } catch (error) {
+      console.warn("The cloud hero is using its static fallback.", error);
+    }
+  };
+
+  document.addEventListener("astro:page-load", setup);
+  document.addEventListener("astro:before-swap", () => dispose?.());
+</script>

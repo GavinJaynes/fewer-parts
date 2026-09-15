@@ -1,0 +1,34 @@
+<!-- Tailwind CSS v4. Container queries are built in. -->
+<label for="width" class="block text-sm font-medium text-slate-900">
+  Container width <output id="value">100%</output>
+</label>
+<input
+  id="width"
+  type="range"
+  min="55"
+  max="100"
+  value="100"
+  class="mt-2 w-full accent-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+>
+
+<div data-demo-container class="@container mt-6 max-w-full">
+  <article class="grid min-w-0 gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm @[320px]:grid-cols-[4rem_minmax(0,1fr)] @[320px]:items-center">
+    <span aria-hidden="true" class="grid size-14 place-items-center rounded-xl bg-blue-50 text-2xl text-blue-700">↗</span>
+    <div class="min-w-0">
+      <h2 class="font-semibold text-slate-900">Room to adapt</h2>
+      <p class="mt-1 text-sm text-slate-600">Same component. A different amount of space.</p>
+    </div>
+  </article>
+</div>
+
+<script>
+  // Demo control only; the Tailwind container variants handle the card layout.
+  const slider = document.querySelector('#width');
+  const container = document.querySelector('[data-demo-container]');
+  const output = document.querySelector('#value');
+
+  slider.addEventListener('input', () => {
+    container.style.width = `${slider.value}%`;
+    output.value = `${slider.value}%`;
+  });
+</script>

@@ -1,0 +1,75 @@
+// Requires Playwright available to Node and a running website preview.
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const { readFileSync } = require('node:fs');
+const { resolve } = require('node:path');
+
+(async () => {
+  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || 'chrome', headless: true });
+  try {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 1100 }, permissions: ['clipboard-read', 'clipboard-write'] });
+    const page = await context.newPage();
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    const base = process.env.SHOWCASE_URL || 'http://127.0.0.1:4321';
+    await page.goto(base);
+    assert.equal(await page.locator('.gallery iframe').count(), 5);
+    const frame = id => page.locator(`#${id} iframe`).contentFrame();
+    const field = frame('field-sizing').getByRole('textbox', { name: 'Your message' });
+    const empty = await field.evaluate(el => el.offsetHeight);
+    await field.fill('Long content\n'.repeat(30));
+    assert(await field.evaluate(el => el.offsetHeight) > empty);
+    await field.fill('Short');
+    assert.equal(await field.evaluate(el => el.offsetHeight), empty);
+    await frame('field-sizing').getByLabel('Use fallback').check();
+    assert.equal(await field.evaluate(el => getComputedStyle(el).fieldSizing), 'fixed');
+    const slider = frame('container-card').getByRole('slider');
+    const columns = () => frame('container-card').locator('.card').evaluate(el => getComputedStyle(el).gridTemplateColumns);
+    const wide = await columns();
+    await slider.fill('55');
+    const narrow = await columns();
+    assert.notEqual(wide, narrow);
+    assert.equal(narrow.split(' ').length, 1, 'Narrow container should have one column');
+    const options = frame('has-selection');
+    const originalColor = await options.locator('.option').first().evaluate(el => getComputedStyle(el).backgroundColor);
+    await options.getByRole('radio', { name: /Team/ }).check();
+    assert.equal(await options.locator('.option').nth(1).evaluate(el => getComputedStyle(el).backgroundColor), originalColor);
+    const modal = frame('native-dialog');
+    await modal.getByRole('button', { name: 'Open dialog' }).click();
+    assert(await modal.getByRole('dialog').isVisible());
+    await page.keyboard.press('Escape');
+    assert.equal(await modal.getByRole('dialog').isVisible(), false);
+    assert(await modal.getByRole('button', { name: 'Open dialog' }).evaluate(el => el === document.activeElement));
+    const parser = frame('url-parser');
+    await parser.getByRole('textbox').fill('not a url');
+    assert.equal(await parser.locator('#status').textContent(), 'Not an absolute URL');
+    await parser.getByRole('textbox').fill('https://example.com/path');
+    assert.equal(await parser.locator('#status').textContent(), 'Parsable URL');
+    // Also exercise the parser's explicit older-browser branch.
+    await parser.getByRole('textbox').evaluate(() => { URL.canParse = undefined; });
+    await parser.getByRole('textbox').fill('https://example.com/fallback');
+    assert.equal(await parser.locator('#status').textContent(), 'Parsable URL');
+    await parser.getByRole('textbox').fill('bad');
+    assert.equal(await parser.locator('#status').textContent(), 'Not an absolute URL');
+    const source = page.locator('#has-selection details');
+    await source.locator('summary').click();
+    const expected = readFileSync(resolve(__dirname, '../../skills/modern-web-ui/assets/tailwind-has-selection.html'), 'utf8').replace(/\r\n/g, '\n');
+    assert.equal(await source.locator('pre code').textContent(), expected);
+    await source.getByRole('button', { name: 'Copy code' }).click();
+    assert.equal((await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n'), expected);
+    await source.locator('summary').click();
+    const download = await page.request.get(`${base}/downloads/modern-web-ui.zip`);
+    assert.equal(download.status(), 200);
+    assert.deepEqual(await download.body(), readFileSync(resolve(__dirname, '../../dist/modern-web-ui.zip')));
+    await page.getByRole('button', { name: 'Copy prompt' }).click();
+    assert((await page.evaluate(() => navigator.clipboard.readText())).startsWith('Use $modern-web-ui'));
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({ path: resolve(__dirname, '../../dist/showcase-desktop.png'), fullPage: true });
+    await page.setViewportSize({ width: 390, height: 844 });
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'No mobile page overflow');
+    await page.screenshot({ path: resolve(__dirname, '../../dist/showcase-mobile.png'), fullPage: true });
+    assert.deepEqual(errors, []);
+    console.log(`Passed in ${browser.version()}: five demos, fallback paths, modal dismissal/focus, source copy, prompt copy, archive equality, responsive layout. Screenshots saved in dist.`);
+    await context.close();
+  } finally { await browser.close(); }
+})().catch(error => { console.error(error); process.exitCode = 1; });
