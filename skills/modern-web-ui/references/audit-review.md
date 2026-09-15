@@ -58,7 +58,21 @@ Order findings by practical value and user risk. For each finding, include:
 
 Do not derive a single mathematical priority number from these fields. Use judgment to group findings as **Now**, **Next**, or **Later**. Include strengths worth preserving so the report does not encourage unnecessary rewrites.
 
-Make repository evidence clickable when the host supports local file links. In Codex on Windows, use an absolute Markdown target with a leading slash and an optional one-based line number, for example `[Nav.tsx](/C:/projects/app/src/components/Nav.tsx:39)`, not `[Nav.tsx](C:/projects/app/src/components/Nav.tsx:39)`. Wrap a target containing spaces in angle brackets.
+Make repository evidence clickable when the host supports local file links. In Codex on Windows, use an absolute Markdown target with a leading slash and an optional one-based line number.
+
+Correct:
+
+```markdown
+[Nav.tsx](/C:/projects/app/src/components/Nav.tsx:39)
+```
+
+Incorrect:
+
+```markdown
+[Nav.tsx](C:/projects/app/src/components/Nav.tsx:39)
+```
+
+Wrap a target containing spaces in angle brackets.
 
 ## Standard report
 
