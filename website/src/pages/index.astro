@@ -1,19 +1,33 @@
 ---
 import CloudHero from "../components/CloudHero.astro";
+import CodeBlock from "../components/CodeBlock.astro";
 import SiteHead from "../components/SiteHead.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { auditReport } from "../lib/audit-report";
 import { recipes } from "../lib/recipes";
+import { transformations } from "../lib/transformations";
 import "../styles/site.css";
 const installPrompt =
   "Use $modern-web-ui to build this interface with Tailwind where the project permits it, plus suitable native HTML and web APIs. Preserve the design and check the Tailwind version and browser targets.";
 // Nav "Examples" opens the recipe index, which lands on the first example.
 const examplesHref = `/recipes/${recipes[0].id}/`;
+const coverage = [
+  "Layout and containment",
+  "Selectors and state",
+  "Logical properties",
+  "Forms and controls",
+  "Dialogs and overlays",
+  "Colour and theming",
+  "Motion and reduced motion",
+  "Native web APIs",
+];
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <SiteHead
-      description="Try modern CSS and native web API recipes. Explore the code, check browser support, and give your coding agent the Modern Web UI skill."
+      description="A skill for coding agents: build interfaces on modern CSS, native HTML, and web APIs, or audit the UI you already have. Runnable demos, before-and-after code, and a scored review."
       title="Modern Web UI — Native patterns for better interfaces"
     />
   </head>
@@ -21,36 +35,22 @@ const examplesHref = `/recipes/${recipes[0].id}/`;
     <a class="skip" href="#examples">
       Skip to examples
     </a>
-    <header class="site-header">
-      <a
-        aria-label="Modern Web UI home"
-        class="brand"
-        href="/"
-        transition:name="site-brand"
-      >
-        <span aria-hidden="true" class="brand-mark">
-          m
-        </span>
-        modern web ui<span class="edition">/ skill</span>
-      </a>
-      <nav aria-label="Main navigation">
-        <a href={examplesHref}>
-          Examples <span>{recipes.length}</span>
-        </a>
-        <a href="#approach">The approach</a>
-        <a class="nav-install" href="#install">
-          Get the skill <span aria-hidden="true">↗</span>
-        </a>
-      </nav>
-    </header>
+    <SiteHeader
+      installHref="#install"
+      links={[
+        { href: examplesHref, label: "Examples" },
+        { href: "#before-after", label: "Before & after" },
+        { href: "#audit", label: "Audit" },
+      ]}
+    />
     <main>
       <CloudHero />
       <section aria-labelledby="examples-heading" id="examples">
         <div class="section-bar">
           <h2 id="examples-heading">
-            The collection <span>01—0{recipes.length}</span>
+            See them running <span>{recipes.length} RUNNABLE DEMOS</span>
           </h2>
-          <p>Real code. Ready to explore.</p>
+          <p>A sample of the range, live in the page.</p>
         </div>
         <div class="gallery">
           {recipes.map((recipe, i) => (
@@ -98,16 +98,23 @@ const examplesHref = `/recipes/${recipes[0].id}/`;
             <span aria-hidden="true" class="note-symbol">
               {"{ }"}
             </span>
-            <p class="eyebrow">A SMALL COLLECTION, KEPT CURRENT</p>
+            <p class="eyebrow">THE DEMOS ARE THE SAMPLE</p>
             <h3>
-              The platform keeps moving.
+              {recipes.length} runnable here.
               <br />
-              So do the possibilities.
+              The platform in the skill.
             </h3>
             <p>
-              These are the first recipes. The skill also consults live Modern
-              CSS and MDN references to find the right pattern for your task.
+              These ship as assets you can open. Everything else the skill
+              reaches by reading Modern CSS, MDN, and Can I use while it works,
+              then matching the pattern to your framework, your tokens, and your
+              browser targets.
             </p>
+            <ul class="coverage">
+              {coverage.map((area) => (
+                <li>{area}</li>
+              ))}
+            </ul>
             <a class="text-link" href="https://modern-css.com/cheatsheet/">
               Explore the Modern CSS cheatsheet{" "}
               <span aria-hidden="true">↗</span>
@@ -119,6 +126,180 @@ const examplesHref = `/recipes/${recipes[0].id}/`;
           check your browser targets and the exact features you use. Newly
           available recipes preserve a usable base.{" "}
           <a href="https://web.dev/baseline">About Baseline ↗</a>
+        </p>
+      </section>
+      <section aria-labelledby="transform-heading" id="before-after">
+        <div class="section-bar">
+          <h2 id="transform-heading">
+            Before and after <span>WHAT IT CHANGES</span>
+          </h2>
+          <p>Choose a feature to see the replacement.</p>
+        </div>
+        <fieldset class="switcher">
+          <legend class="sr-only">Choose a feature</legend>
+          {transformations.map((item, i) => (
+            <Fragment>
+              <label class="switch">
+                <input
+                  aria-label={item.feature}
+                  checked={i === 0}
+                  class="sr-only"
+                  name="pattern"
+                  type="radio"
+                  value={item.id}
+                />
+                <span>{item.feature}</span>
+              </label>
+              <article class="pair">
+                <div class="pair-head">
+                  <h3>{item.title}</h3>
+                  <p>{item.summary}</p>
+                  {item.demo ? (
+                    <a class="text-link" href={`/recipes/${item.id}/`}>
+                      Try the live demo <span aria-hidden="true">→</span>
+                    </a>
+                  ) : (
+                    <p class="pair-tag">
+                      No demo on this site. Still in range.
+                    </p>
+                  )}
+                </div>
+                <div class="pair-code">
+                  <CodeBlock
+                    id={`before-${item.id}`}
+                    label={item.before.label}
+                    lang={item.before.lang}
+                    source={item.before.source}
+                  />
+                  <CodeBlock
+                    id={`after-${item.id}`}
+                    label={item.after.label}
+                    lang={item.after.lang}
+                    source={item.after.source}
+                  />
+                </div>
+                <p class="pair-note">{item.note}</p>
+              </article>
+            </Fragment>
+          ))}
+        </fieldset>
+        <p class="support-note">
+          Compatibility is decided per project. The skill checks the exact
+          syntax or API member against your declared targets before it proposes
+          any of this, and keeps a usable base when a feature is new.
+        </p>
+      </section>
+      <section aria-labelledby="audit-heading" class="audit" id="audit">
+        <div class="audit-intro">
+          <p class="eyebrow">THE OTHER MODE</p>
+          <h2 id="audit-heading">
+            Or point it at the code
+            <br />
+            you already have.
+          </h2>
+          <p>
+            Ask for an audit or a review and the skill reads the repository
+            instead of writing to it. It establishes scope and your browser
+            targets first, scores the dimensions it could actually assess, then
+            ranks findings with file evidence, effort, and compatibility risk.
+            Nothing changes unless you ask for the fixes separately.
+          </p>
+          <div class="audit-prompt">
+            <p id="audit-prompt-text">{auditReport.prompt}</p>
+            <button
+              aria-controls="audit-prompt-text"
+              data-copy
+              id="copy-audit-prompt"
+              type="button"
+            >
+              Copy prompt
+            </button>
+          </div>
+        </div>
+        <div class="report">
+          <div class="report-bar">
+            <span class="preview-label">
+              <i aria-hidden="true"></i>Sample report
+            </span>
+            <p>{auditReport.scope}</p>
+          </div>
+          <div class="report-score">
+            <div>
+              <span class="eyebrow">UI MODERNIZATION SCORE</span>
+              <strong>
+                {auditReport.score}
+                <i>/ 5</i>
+              </strong>
+            </div>
+            <div>
+              <span class="eyebrow">COVERAGE CONFIDENCE</span>
+              <strong class="coverage-value">{auditReport.coverage}</strong>
+            </div>
+            <p>{auditReport.summary}</p>
+          </div>
+          <div class="scorecard-scroll">
+            <table class="scorecard">
+              <caption class="sr-only">Scored dimensions</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Dimension</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Evidence</th>
+                </tr>
+              </thead>
+              <tbody>
+                {auditReport.scorecard.map((row) => (
+                  <tr>
+                    <th scope="row">{row.dimension}</th>
+                    <td>
+                      <span class="score">{row.score}</span>
+                      <span class="score-max">/ 5</span>
+                    </td>
+                    <td>{row.note}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <ol class="findings">
+            {auditReport.findings.map((finding) => (
+              <li>
+                <div class="finding-top">
+                  <span class:list={["group", finding.group.toLowerCase()]}>
+                    {finding.group}
+                  </span>
+                  <code>{finding.id}</code>
+                  <h3>{finding.title}</h3>
+                </div>
+                <p class="evidence">
+                  <code>{finding.evidence}</code>
+                </p>
+                <p>{finding.direction}</p>
+                <ul class="measures">
+                  <li>Impact {finding.impact}/5</li>
+                  <li>Effort {finding.effort}</li>
+                  <li>Compat risk {finding.risk}</li>
+                  <li>Confidence {finding.confidence}</li>
+                </ul>
+              </li>
+            ))}
+          </ol>
+          <div class="report-tail">
+            <div>
+              <h3>Strengths to preserve</h3>
+              <p>{auditReport.strengths}</p>
+            </div>
+            <div>
+              <h3>Verification gaps</h3>
+              <p>{auditReport.gaps}</p>
+            </div>
+          </div>
+        </div>
+        <p class="support-note">
+          An illustrative excerpt: the project and the scores are invented, the
+          structure is the one the skill follows. The number describes UI
+          modernization against your stated constraints — not code quality,
+          accessibility conformance, or performance overall.
         </p>
       </section>
       <section
@@ -166,8 +347,9 @@ const examplesHref = `/recipes/${recipes[0].id}/`;
             into your project.
           </h2>
           <p>
-            A small skill with live references and the same runnable recipes you
-            see here. Framework-aware, with no MCP server or API key required.
+            One skill, two modes: build with it, or hand it the UI you already
+            have. It reads live references while it works, adapts to your
+            styling system, and needs no MCP server or API key.
           </p>
           <a class="download" download href="/downloads/modern-web-ui.zip">
             Download the skill <span aria-hidden="true">↓</span>

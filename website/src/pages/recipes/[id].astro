@@ -1,6 +1,7 @@
 ---
 import CodeBlock from "../../components/CodeBlock.astro";
 import SiteHead from "../../components/SiteHead.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
 import { recipes } from "../../lib/recipes";
 import { notesFor, stageWidthFor } from "../../lib/recipe-notes";
 import "../../styles/site.css";
@@ -34,25 +35,10 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
     <a class="skip" href="#demo">
       Skip to the demo
     </a>
-    <header class="site-header">
-      <a
-        aria-label="Modern Web UI home"
-        class="brand"
-        href="/"
-        transition:name="site-brand"
-      >
-        <span aria-hidden="true" class="brand-mark">
-          m
-        </span>
-        modern web ui<span class="edition">/ skill</span>
-      </a>
-      <nav aria-label="Main navigation">
-        <a href="/#examples">All examples</a>
-        <a class="nav-install" href="/#install">
-          Get the skill <span aria-hidden="true">↗</span>
-        </a>
-      </nav>
-    </header>
+    <SiteHeader
+      installHref="/#install"
+      links={[{ href: "/#examples", label: "All examples" }]}
+    />
 
     <div class="shell">
       <nav aria-labelledby="collection-heading" class="side">
@@ -360,25 +346,6 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
         margin: 0 auto 13px;
         color: #5c6a7d;
         gap: 20px;
-      }
-
-      .preview-label {
-        display: inline-flex;
-        align-items: center;
-        font:
-          600 11px/1 ui-monospace,
-          monospace;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        gap: 8px;
-      }
-
-      .preview-label i {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #2c9b66;
-        box-shadow: 0 0 0 4px rgb(44 155 102 / 12%);
       }
 
       .stage .interaction {

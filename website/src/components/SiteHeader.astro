@@ -1,0 +1,82 @@
+---
+interface Props {
+  installHref: string;
+  links: { href: string; label: string }[];
+}
+
+const { installHref, links } = Astro.props;
+---
+
+<header class="site-header">
+  <a
+    aria-label="Modern Web UI home"
+    class="brand"
+    href="/"
+    transition:name="site-brand"
+  >
+    <span aria-hidden="true" class="brand-mark">
+      m
+    </span>
+    modern web ui<span class="edition">/ skill</span>
+  </a>
+
+  <button
+    aria-label="Open menu"
+    class="nav-toggle"
+    popovertarget="site-menu"
+    type="button"
+  >
+    <span aria-hidden="true"></span>
+  </button>
+
+  {
+    /*
+      One nav element at every width. Below 700px the popover attribute makes it
+      an off-canvas drawer; above it, author styles put display and position back
+      and it is an ordinary flex row. Two sets of markup would be the obvious way
+      to do this and the wrong one — the links would drift apart.
+    */
+  }
+  <nav
+    aria-label="Main navigation"
+    class="site-nav"
+    id="site-menu"
+    popover="auto"
+  >
+    <button
+      aria-label="Close menu"
+      class="nav-close"
+      popovertarget="site-menu"
+      popovertargetaction="hide"
+      type="button"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+    {links.map((link) => <a href={link.href}>{link.label}</a>)}
+    <a class="nav-install" href={installHref}>
+      Get the skill <span aria-hidden="true">↗</span>
+    </a>
+  </nav>
+</header>
+
+<script>
+  // Light dismiss covers taps outside the drawer, but a link inside it navigates
+  // without closing anything, so an in-page anchor would leave the menu sitting
+  // over the section it just jumped to. One delegated listener on the document
+  // handles every page, including after a view transition swaps the body.
+  const closeMenuOnNavigate = (event: MouseEvent) => {
+    const target = event.target as Element | null;
+    const link = target?.closest("a");
+    if (!link) return;
+
+    const menu = document.querySelector<HTMLElement>("#site-menu");
+    if (!menu?.contains(link)) return;
+    // Guard the call as well as the selector: :popover-open throws on browsers
+    // that do not know the pseudo-class, which are the same ones that fall back
+    // to the inline nav and never open a drawer in the first place.
+    if (typeof menu.hidePopover !== "function") return;
+    if (menu.matches(":popover-open")) menu.hidePopover();
+  };
+
+  document.addEventListener("click", closeMenuOnNavigate);
+</script>

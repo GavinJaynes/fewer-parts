@@ -1,15 +1,17 @@
 ---
 /* eslint-disable astro/no-set-html-directive -- TanStack Highlight escapes all source text. */
-import { highlightHtml } from "../lib/highlight";
+import { type CodeLanguage, highlightCode } from "../lib/highlight";
 
 interface Props {
+  /** Target of the toolbar's copy button; must be unique on the page. */
   id: string;
   source: string;
   label?: string;
+  lang?: CodeLanguage;
 }
 
-const { id, source, label = "HTML" } = Astro.props;
-const highlighted = highlightHtml(source);
+const { id, source, label = "HTML", lang = "html" } = Astro.props;
+const highlighted = highlightCode(source, lang);
 ---
 
 <div class="code-panel">
