@@ -1,4 +1,8 @@
-@layer base, layout, components;
+/* Astro puts the ClientRouter's default transition animations in its own
+   `astro` layer. Naming it first fixes the order: without this it is appended
+   after these layers and wins, so every animation written here for a named
+   transition is silently overridden by Astro's 180ms fade. */
+@layer astro, base, layout, components;
 
 @layer base {
   :root {
@@ -65,6 +69,31 @@
     animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
+  /* Recipe to recipe, the two titles pair and sit in the same place, so this
+     group only ever crossfades where it stands. Nothing on the gallery shares
+     the name: a title that flew in from whichever card was clicked arrived
+     from a different direction every time, which reads as noise rather than
+     continuity. */
+  ::view-transition-group(recipe-title) {
+    animation-duration: 340ms;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* Arriving from anywhere else the title is `:only-child` in its image pair.
+     It rises a little further than the page behind it and settles last - the
+     same move every time, whichever link was followed. */
+  /* stylelint-disable selector-no-unmatchable -- the old and new images are
+     real children of ::view-transition-image-pair, so :only-child is how the
+     spec exposes an unpaired one. The rule does not model these pseudos. */
+  ::view-transition-new(recipe-title):only-child {
+    animation: 400ms 70ms cubic-bezier(0.2, 0.8, 0.2, 1) both title-in;
+  }
+
+  ::view-transition-old(recipe-title):only-child {
+    animation: 150ms cubic-bezier(0.4, 0, 1, 1) both page-out;
+  }
+  /* stylelint-enable selector-no-unmatchable */
+
   @keyframes page-out {
     to {
       opacity: 0;
@@ -76,6 +105,13 @@
     from {
       opacity: 0;
       transform: translateY(9px);
+    }
+  }
+
+  @keyframes title-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
     }
   }
 
@@ -1151,6 +1187,7 @@
     }
 
     .findings > li,
+    .legend,
     .report-score,
     .report-tail {
       padding-inline: 14px;
@@ -1685,20 +1722,67 @@
     color: var(--muted);
   }
 
-  .score {
-    display: inline-flex;
-    width: 24px;
-    height: 24px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    background: #eef2f8;
-    font-weight: 650;
+  .score-cell {
+    width: 84px;
   }
 
-  .score-max {
-    margin-left: 5px;
-    color: #9aa5b5;
+  /* One unbreakable chip: the numeral and its denominator are a single line
+     box, so a squeezed column can no longer break between them. The tint says
+     what the score means in the rubric and is redundant with the digit. */
+  .score {
+    display: inline-flex;
+    align-items: baseline;
+    padding: 4px 10px;
+    border-radius: 7px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+    gap: 1px;
+    white-space: nowrap;
+  }
+
+  .score i {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    opacity: 0.66;
+  }
+
+  .band-low {
+    background: #fbe9e2;
+    color: #8f3818;
+  }
+
+  .band-mid {
+    background: #f9efd6;
+    color: #6f4e10;
+  }
+
+  .band-high {
+    background: #e2f0e8;
+    color: #1d6244;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 12px 20px;
+    border-top: 1px solid var(--line);
+    background: #fbfcfe;
+    color: var(--muted);
+    font-size: 12px;
+    gap: 8px 18px;
+  }
+
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .legend i {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
   }
 
   .findings {

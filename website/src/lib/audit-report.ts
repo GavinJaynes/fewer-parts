@@ -22,6 +22,20 @@ export interface Finding {
  * the limits of the pass. The project, files, and scores are invented for the
  * page; the structure is the one in references/audit-review.md.
  */
+export type ScoreBand = "high" | "low" | "mid";
+
+/**
+ * The 0-5 rubric in references/audit-review.md, banded for display: 2 and
+ * below is a gap worth acting on, 3 is sound, 4 and above is strong. The tint
+ * this drives is redundant with the numeral it sits behind.
+ */
+export const bandFor = function bandFor(score: number): ScoreBand {
+  if (score >= 4) {
+    return "high";
+  }
+  return score === 3 ? "mid" : "low";
+};
+
 export const auditReport = {
   prompt:
     "Audit this project's UI with $modern-web-ui. Read-only — no changes yet.",

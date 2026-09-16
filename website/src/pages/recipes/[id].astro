@@ -45,7 +45,13 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
         <p class="eyebrow" id="collection-heading">
           THE COLLECTION
         </p>
-        <ul>
+        {/*
+            The two state attributes are only ever written by the drag script,
+            never by the build, and are declared here as the element's own
+            record of the states it can be in - which is also what lets the
+            unused-selector rule see that the CSS keyed off them is live.
+          */}
+        <ul data-dragging={undefined} data-overflowing={undefined} data-rail>
           {recipes.map((entry, index) => (
             <li class:list={["side-item", { current: entry.id === recipe.id }]}>
               <a
@@ -71,9 +77,7 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
             <p class="eyebrow">
               {recipe.category} · {ordinal} of {total}
             </p>
-            <h1 transition:name={`recipe-title-${recipe.id}`}>
-              {recipe.title}
-            </h1>
+            <h1 transition:name="recipe-title">{recipe.title}</h1>
             <p class="lede">{recipe.description}</p>
           </div>
           <div class="detail-meta">
@@ -207,7 +211,65 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
     </div>
     <output class="sr-only" id="copy-status"></output>
 
+    <script>
+      import { mountDragRail, revealCurrent } from "../../scripts/drag-rail";
+
+      let dispose: (() => void) | undefined;
+
+      const setup = () => {
+        dispose?.();
+        dispose = undefined;
+
+        const rail = document.querySelector<HTMLElement>("[data-rail]");
+        if (!rail) return;
+
+        dispose = mountDragRail(rail);
+        revealCurrent(rail);
+      };
+
+      document.addEventListener("astro:page-load", setup);
+      document.addEventListener("astro:before-swap", () => dispose?.());
+    </script>
     <style>
+      /* The sub-nav's scroll affordance, with no JavaScript in it. Registering
+         the two lengths is what makes them animatable at all; a scroll-progress
+         timeline then grows each fade only while there is still list hidden
+         past that edge, so a strip pushed hard against its end reads as ended
+         rather than as holding something back. With no overflow there is no
+         timeline, the animations never apply, and both lengths rest at the 0px
+         they were registered with. */
+      @property --rail-fade-start {
+        syntax: "<length>";
+        inherits: false;
+        initial-value: 0px;
+      }
+
+      @property --rail-fade-end {
+        syntax: "<length>";
+        inherits: false;
+        initial-value: 0px;
+      }
+
+      @keyframes rail-fade-start {
+        from {
+          --rail-fade-start: 0px;
+        }
+
+        to {
+          --rail-fade-start: var(--rail-fade);
+        }
+      }
+
+      @keyframes rail-fade-end {
+        from {
+          --rail-fade-end: var(--rail-fade);
+        }
+
+        to {
+          --rail-fade-end: 0px;
+        }
+      }
+
       .shell {
         display: grid;
         grid-template-columns: 232px minmax(0, 1fr);
@@ -560,11 +622,52 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
         }
 
         .side ul {
+          --rail-fade: 28px;
+
           grid-auto-flow: column;
           grid-auto-columns: minmax(160px, 1fr);
           gap: 8px;
           overflow-x: auto;
           padding-bottom: 6px;
+          overscroll-behavior-inline: contain;
+        }
+
+        /* The scrollbar is the only thing currently saying the strip scrolls,
+           so it goes away exactly where the thing replacing it is understood
+           and not one browser earlier. */
+        @supports (animation-timeline: scroll()) {
+          .side ul {
+            padding-bottom: 2px;
+            scrollbar-width: none;
+            animation:
+              rail-fade-start linear both,
+              rail-fade-end linear both;
+            animation-range:
+              0px var(--rail-fade),
+              calc(100% - var(--rail-fade)) 100%;
+            animation-timeline: scroll(self inline);
+            mask-image: linear-gradient(
+              to right,
+              transparent 0,
+              #000 var(--rail-fade-start),
+              #000 calc(100% - var(--rail-fade-end)),
+              transparent 100%
+            );
+          }
+        }
+
+        /* Set by the drag script, and only once the list really is wider than
+           its box - the cursor should not promise movement that is not there.
+           The rule matches the markup as authored, so it cannot see either
+           attribute; both are added at runtime. */
+        .side ul[data-overflowing] {
+          cursor: grab;
+        }
+
+        .side ul[data-dragging],
+        .side ul[data-dragging] a {
+          cursor: grabbing;
+          user-select: none;
         }
 
         .side-item a {

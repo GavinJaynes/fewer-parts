@@ -3,7 +3,7 @@ import CloudHero from "../components/CloudHero.astro";
 import CodeBlock from "../components/CodeBlock.astro";
 import SiteHead from "../components/SiteHead.astro";
 import SiteHeader from "../components/SiteHeader.astro";
-import { auditReport } from "../lib/audit-report";
+import { auditReport, bandFor } from "../lib/audit-report";
 import { recipes } from "../lib/recipes";
 import { transformations } from "../lib/transformations";
 import "../styles/site.css";
@@ -71,7 +71,7 @@ const coverage = [
               </div>
               <div class="recipe-info">
                 <p class="interaction">{recipe.action}</p>
-                <h3 transition:name={`recipe-title-${recipe.id}`}>
+                <h3>
                   <a href={`/recipes/${recipe.id}/`}>{recipe.title}</a>
                 </h3>
                 <p>{recipe.description}</p>
@@ -251,9 +251,13 @@ const coverage = [
                 {auditReport.scorecard.map((row) => (
                   <tr>
                     <th scope="row">{row.dimension}</th>
-                    <td>
-                      <span class="score">{row.score}</span>
-                      <span class="score-max">/ 5</span>
+                    <td class="score-cell">
+                      <span
+                        class:list={["score", `band-${bandFor(row.score)}`]}
+                      >
+                        {row.score}
+                        <i>/5</i>
+                      </span>
                     </td>
                     <td>{row.note}</td>
                   </tr>
@@ -261,6 +265,19 @@ const coverage = [
               </tbody>
             </table>
           </div>
+          <p class="legend">
+            <span>
+              <i aria-hidden="true" class="band-low"></i>0–2 · gaps worth acting
+              on
+            </span>
+            <span>
+              <i aria-hidden="true" class="band-mid"></i>3 · sound, mixed
+              patterns
+            </span>
+            <span>
+              <i aria-hidden="true" class="band-high"></i>4–5 · strong
+            </span>
+          </p>
           <ol class="findings">
             {auditReport.findings.map((finding) => (
               <li>
