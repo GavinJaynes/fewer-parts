@@ -26,9 +26,15 @@ export default [
       },
     },
     rules: {
-      // A scrollable <pre> needs tabindex="0" to be reachable by keyboard.
-      // That is the accessible pattern here, not a violation of it.
-      "astro/jsx-a11y/no-noninteractive-tabindex": ["error", { tags: ["pre"] }],
+      // A scroll container holding nothing focusable is unreachable by keyboard
+      // unless it takes focus itself, so the named <section> wrapping the
+      // scorecard carries tabindex="0" deliberately. The <pre> in a code panel
+      // needs the same thing, but its tabindex is injected in lib/highlight.ts
+      // because the markup comes from the highlighter, not from a component.
+      "astro/jsx-a11y/no-noninteractive-tabindex": [
+        "error",
+        { tags: ["section"] },
+      ],
       // Astro compiles <script> in a .astro file rather than injecting a
       // string. Revisit if this site ever ships a Content-Security-Policy.
       "astro/no-unsafe-inline-scripts": "off",
@@ -41,6 +47,29 @@ export default [
       // Alphabetising them reads worse than the order a human chose.
       "sort-keys": "off",
     },
+  },
+  {
+    // The loader's default export is also published under its own name, so
+    // importing it as `wgslVitePlugin` trips no-named-as-default and importing
+    // it as anything else trips no-rename-default. The two rules cannot both
+    // be satisfied by this package; matching the upstream name is the more
+    // useful of the two.
+    files: ["astro.config.mjs"],
+    rules: { "import-x/no-named-as-default": "off" },
+  },
+  {
+    // The hero canvas is decoration inside an aria-hidden wrapper: it has no
+    // control semantics and nothing to label. jsx-a11y treats every canvas as
+    // a control and cannot see the hidden ancestor, so every way of satisfying
+    // one of its rules here breaks another.
+    files: ["src/components/CloudHero.astro"],
+    rules: { "astro/jsx-a11y/control-has-associated-label": "off" },
+  },
+  {
+    // Astro requires this exact filename for its ambient types; renaming it
+    // to satisfy the rule would break the convention it documents.
+    files: ["src/env.d.ts"],
+    rules: { "unicorn/name-replacements": "off" },
   },
   {
     // Astro's file-based API routes must export a function named GET.

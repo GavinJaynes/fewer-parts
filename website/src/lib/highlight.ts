@@ -17,5 +17,11 @@ export const highlightCode = function highlightCode(
   source: string,
   lang: CodeLanguage
 ): string {
-  return highlighter.highlightToHtml(source, { lang, lineNumbers: true });
+  // The generated `<pre>` scrolls in both axes and holds nothing focusable, so
+  // it has to take focus itself or a keyboard cannot reach code past the fold.
+  // Newer engines focus any scroll container without being asked; this costs
+  // them nothing and covers the ones that do not.
+  return highlighter
+    .highlightToHtml(source, { lang, lineNumbers: true })
+    .replace(/<pre\b/u, '<pre tabindex="0"');
 };

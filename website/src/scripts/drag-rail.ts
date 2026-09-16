@@ -39,6 +39,10 @@ const overflowOf = (rail: HTMLElement) =>
 
 export const mountDragRail = (rail: HTMLElement): (() => void) => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  // One controller for the five listeners below, so the teardown cannot drift
+  // out of step with the registrations the way a hand-paired list does.
+  const listeners = new AbortController();
+  const { signal } = listeners;
 
   let pointerId: number | null = null;
   let startX = 0;
@@ -189,21 +193,17 @@ export const mountDragRail = (rail: HTMLElement): (() => void) => {
   const observer = new ResizeObserver(syncOverflow);
   observer.observe(rail);
 
-  rail.addEventListener("pointerdown", onPointerDown);
-  rail.addEventListener("pointermove", onPointerMove);
-  rail.addEventListener("pointerup", onPointerUp);
-  rail.addEventListener("pointercancel", onPointerUp);
-  rail.addEventListener("click", onClick, { capture: true });
+  rail.addEventListener("pointerdown", onPointerDown, { signal });
+  rail.addEventListener("pointermove", onPointerMove, { signal });
+  rail.addEventListener("pointerup", onPointerUp, { signal });
+  rail.addEventListener("pointercancel", onPointerUp, { signal });
+  rail.addEventListener("click", onClick, { capture: true, signal });
   syncOverflow();
 
   return () => {
     stopGlide();
     observer.disconnect();
-    rail.removeEventListener("pointerdown", onPointerDown);
-    rail.removeEventListener("pointermove", onPointerMove);
-    rail.removeEventListener("pointerup", onPointerUp);
-    rail.removeEventListener("pointercancel", onPointerUp);
-    rail.removeEventListener("click", onClick, { capture: true });
+    listeners.abort();
   };
 };
 

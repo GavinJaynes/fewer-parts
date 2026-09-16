@@ -22,29 +22,75 @@ const { title, description, type = "website" } = Astro.props;
 <ClientRouter />
 
 <script>
+  // The label is read once and parked on the element. Reading it live meant a
+  // second press inside the restore window captured "Copied" as the original,
+  // and the button never found its way back to "Copy code".
+  const labelOf = (button: HTMLButtonElement) => {
+    button.dataset.label ??= button.textContent?.trim() ?? "Copy";
+    return button.dataset.label;
+  };
+
+  // Keyed by button, so two copy controls on one page keep their own timers and
+  // a repeated press restarts its own rather than stacking a second restore.
+  const restores = new WeakMap<HTMLButtonElement, number>();
+
+  const flash = (
+    button: HTMLButtonElement,
+    message: string,
+    announcement: string,
+    holdMs: number
+  ) => {
+    const label = labelOf(button);
+    const status = document.querySelector<HTMLOutputElement>("#copy-status");
+
+    button.textContent = message;
+    if (status) {
+      status.textContent = announcement;
+    }
+
+    window.clearTimeout(restores.get(button));
+    restores.set(
+      button,
+      window.setTimeout(() => {
+        button.textContent = label;
+        // Cleared as well as restored: leaving the last result in the live
+        // region means an identical second copy announces nothing at all.
+        if (status) {
+          status.textContent = "";
+        }
+      }, holdMs)
+    );
+  };
+
   document.addEventListener("click", async (event) => {
     const target = event.target;
-    if (!(target instanceof Element)) return;
+    if (!(target instanceof Element)) {
+      return;
+    }
 
     const button = target.closest<HTMLButtonElement>("[data-copy]");
-    if (!button) return;
+    if (!button) {
+      return;
+    }
 
     const sourceId = button.getAttribute("aria-controls");
     const source = sourceId ? document.getElementById(sourceId) : null;
-    if (!source) return;
-
-    const status = document.querySelector<HTMLOutputElement>("#copy-status");
-    const originalLabel = button.textContent ?? "Copy";
+    if (!source) {
+      return;
+    }
 
     try {
       await navigator.clipboard.writeText(source.textContent ?? "");
-      button.textContent = "Copied";
-      if (status) status.textContent = "Copied to clipboard.";
-      window.setTimeout(() => (button.textContent = originalLabel), 1800);
+      flash(button, "Copied", "Copied to clipboard.", 1800);
     } catch {
-      button.textContent = "Select to copy";
-      if (status)
-        status.textContent = "Copy unavailable. Select the visible text.";
+      // Held longer than the success flash: this one is an instruction the
+      // reader has to act on, not an acknowledgement they can ignore.
+      flash(
+        button,
+        "Select to copy",
+        "Copy unavailable. Select the visible text.",
+        5000
+      );
     }
   });
 </script>

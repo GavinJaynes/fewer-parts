@@ -1,4 +1,5 @@
 ---
+import BaselineBadge from "../../components/BaselineBadge.astro";
 import CodeBlock from "../../components/CodeBlock.astro";
 import SiteHead from "../../components/SiteHead.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
@@ -32,8 +33,8 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
     />
   </head>
   <body>
-    <a class="skip" href="#demo">
-      Skip to the demo
+    <a class="skip" href="#content">
+      Skip to content
     </a>
     <SiteHeader
       installHref="/#install"
@@ -71,7 +72,7 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
         </ul>
       </nav>
 
-      <main class="detail">
+      <main class="detail" id="content">
         <section class="detail-head">
           <div>
             <p class="eyebrow">
@@ -82,14 +83,7 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
           </div>
           <div class="detail-meta">
             <code>{recipe.feature}</code>
-            <span
-              class:list={[
-                "support",
-                { newly: recipe.status === "Newly available" },
-              ]}
-            >
-              {recipe.status}
-            </span>
+            <BaselineBadge status={recipe.status} />
             {notes.docs && (
               <a class="text-link" href={notes.docs.href}>
                 {notes.docs.label} <span aria-hidden="true">↗</span>
@@ -270,459 +264,465 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
         }
       }
 
-      .shell {
-        display: grid;
-        grid-template-columns: 232px minmax(0, 1fr);
-        gap: 56px;
-        align-items: start;
-        max-width: 1440px;
-        margin-inline: auto;
-        padding-inline: clamp(20px, 4.5vw, 72px);
-        border-top: 1px solid var(--line);
-      }
-
-      /* site.css styles bare `nav` as a horizontal flex row; this one stacks. */
-      .side {
-        position: sticky;
-        top: 24px;
-        display: block;
-        padding-block: 34px 0;
-        font-size: inherit;
-        font-weight: 400;
-      }
-
-      .side .eyebrow {
-        margin-bottom: 14px;
-      }
-
-      .side ul {
-        display: grid;
-        gap: 2px;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .side-item a {
-        display: grid;
-        grid-template-columns: 24px 1fr;
-        gap: 10px;
-        padding: 10px 12px;
-        border-left: 2px solid transparent;
-        border-radius: 8px;
-      }
-
-      .side-item a:hover {
-        background: #f4f7fb;
-      }
-
-      .side-num {
-        font:
-          11px/1.6 ui-monospace,
-          monospace;
-        color: #9aa5b5;
-      }
-
-      .side-text strong {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        line-height: 1.35;
-      }
-
-      .side-text code {
-        display: block;
-        margin-top: 3px;
-        font-size: 11px;
-        color: var(--muted);
-      }
-
-      .side-item.current a {
-        background: #eef3fd;
-        border-left-color: var(--blue);
-      }
-
-      .side-item.current .side-text strong {
-        color: #1c3f8f;
-      }
-
-      .side-item.current .side-num {
-        color: var(--blue);
-      }
-
-      .detail {
-        max-width: none;
-        margin-inline: 0;
-        padding-block: 44px 80px;
-        padding-inline: 0;
-      }
-
-      .detail-head {
-        display: grid;
-        grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-        gap: 40px;
-        align-items: end;
-        padding-bottom: 36px;
-      }
-
-      .detail-head h1 {
-        font-size: clamp(30px, 3.2vw, 50px);
-        font-weight: 560;
-        line-height: 1.1;
-        letter-spacing: -0.045em;
-      }
-
-      .lede {
-        max-width: 46ch;
-        margin-top: 14px;
-        color: var(--muted);
-      }
-
-      .detail-meta {
-        display: grid;
-        justify-items: end;
-        justify-self: end;
-        gap: 12px;
-        padding-bottom: 6px;
-        text-align: right;
-      }
-
-      .detail-meta code {
-        font-size: 15px;
-      }
-
-      .stage {
-        padding: clamp(14px, 2vw, 22px);
-        border: 1px solid #d9e0e9;
-        border-radius: 18px;
-        margin-bottom: 64px;
-        background: #e9eef5;
-        box-shadow: 0 22px 54px rgb(23 36 57 / 9%);
-      }
-
-      .stage-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        max-width: min(100%, var(--stage, 700px));
-        margin: 0 auto 13px;
-        color: #5c6a7d;
-        gap: 20px;
-      }
-
-      .stage .interaction {
-        font-size: 12px;
-        text-align: right;
-      }
-
-      .stage-frame {
-        max-width: min(100%, var(--stage, 700px));
-        margin-inline: auto;
-        overflow: hidden;
-        border: 1px solid #cbd4df;
-        border-radius: 11px;
-        background: #f2f5f9;
-        box-shadow:
-          0 1px 2px rgb(23 36 57 / 6%),
-          0 12px 28px rgb(23 36 57 / 8%);
-      }
-
-      .stage-frame iframe {
-        display: block;
-        width: 100%;
-        height: clamp(380px, 52vh, 540px);
-        border: 0;
-      }
-
-      .detail-body {
-        display: grid;
-        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.8fr);
-        gap: clamp(36px, 6vw, 80px);
-        padding-block: 54px 64px;
-        border-top: 1px solid var(--line);
-      }
-
-      .detail-body h2 {
-        margin-bottom: 16px;
-        font-size: 18px;
-        font-weight: 620;
-        letter-spacing: -0.02em;
-      }
-
-      .explanation > .eyebrow {
-        margin-bottom: 12px;
-      }
-
-      .why {
-        max-width: 58ch;
-        margin-bottom: 36px;
-        color: #3d4b5f;
-        font-size: clamp(17px, 1.5vw, 20px);
-        line-height: 1.55;
-      }
-
-      .decisions {
-        display: grid;
-        gap: 10px;
-        margin: 0;
-        padding-left: 18px;
-      }
-
-      .decisions li {
-        font-size: 14px;
-        line-height: 1.6;
-        color: var(--muted);
-      }
-
-      .provenance {
-        margin-top: 14px;
-        font-size: 12px;
-        color: #7a8699;
-      }
-
-      .implementation {
-        display: grid;
-        align-content: start;
-        gap: 0;
-        border-top: 1px solid var(--line);
-      }
-
-      .implementation > div {
-        display: grid;
-        grid-template-columns: 28px 1fr;
-        padding-block: 21px;
-        border-bottom: 1px solid var(--line);
-        column-gap: 12px;
-      }
-
-      .implementation > div > span {
-        color: #8d99aa;
-        font:
-          11px/1.6 ui-monospace,
-          monospace;
-      }
-
-      .implementation h2 {
-        margin-bottom: 5px;
-        font-size: 14px;
-      }
-
-      .implementation p {
-        grid-column: 2;
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .docs-card {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        padding: 18px 20px;
-        border-radius: 10px;
-        margin-top: 22px;
-        background: #edf3ff;
-        color: #1c3f8f;
-        gap: 3px 16px;
-      }
-
-      .docs-card span {
-        font-size: 11px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .docs-card strong {
-        font-size: 14px;
-        font-weight: 620;
-      }
-
-      .docs-card i {
-        grid-column: 2;
-        grid-row: 1 / 3;
-        align-self: center;
-        font-style: normal;
-      }
-
-      .docs-card:hover {
-        background: #e2ebfd;
-      }
-
-      .source-section {
-        min-width: 0;
-        padding-block: 54px 12px;
-        border-top: 1px solid var(--line);
-      }
-
-      .standalone-source {
-        margin-top: 24px;
-      }
-
-      .source-heading {
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        gap: 24px;
-      }
-
-      .source-heading .eyebrow {
-        margin-bottom: 9px;
-      }
-
-      .source-heading h2 {
-        font-size: clamp(24px, 2.5vw, 34px);
-        font-weight: 560;
-        letter-spacing: -0.035em;
-      }
-
-      .source-heading > p {
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .detail-next {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        margin-top: 64px;
-        border-top: 1px solid var(--line);
-        border-bottom: 1px solid var(--line);
-      }
-
-      .detail-next a {
-        display: grid;
-        padding-block: 28px;
-        gap: 5px;
-      }
-
-      .detail-next .next {
-        padding-left: 30px;
-        border-left: 1px solid var(--line);
-        text-align: right;
-      }
-
-      .detail-next strong {
-        font-size: 24px;
-        font-weight: 550;
-        letter-spacing: -0.03em;
-      }
-
-      .detail-next a:hover strong {
-        color: var(--blue);
-      }
-
-      @media (max-width: 1000px) {
+      /* These page styles were unlayered, which put every one of them ahead of
+         the whole of site.css whatever their specificity. Declaring the layer
+         they belong to puts them back under the same rules as everything else. */
+      @layer components {
         .shell {
-          grid-template-columns: minmax(0, 1fr);
-          gap: 0;
+          display: grid;
+          grid-template-columns: 14.5rem minmax(0, 1fr);
+          gap: 56px;
+          align-items: start;
+          max-width: var(--page-max);
+          margin-inline: auto;
+          padding-inline: var(--page-gutter);
+          border-top: 1px solid var(--line);
         }
 
         .side {
-          position: static;
-          min-width: 0;
-          padding-block: 26px 0;
+          position: sticky;
+          top: var(--top-clearance);
+          padding-block: 34px 0;
+        }
+
+        .side .eyebrow {
+          margin-bottom: 14px;
         }
 
         .side ul {
-          --rail-fade: 28px;
-
-          grid-auto-flow: column;
-          grid-auto-columns: minmax(160px, 1fr);
-          gap: 8px;
-          overflow-x: auto;
-          padding-bottom: 6px;
-          overscroll-behavior-inline: contain;
-        }
-
-        /* The scrollbar is the only thing currently saying the strip scrolls,
-           so it goes away exactly where the thing replacing it is understood
-           and not one browser earlier. */
-        @supports (animation-timeline: scroll()) {
-          .side ul {
-            padding-bottom: 2px;
-            scrollbar-width: none;
-            animation:
-              rail-fade-start linear both,
-              rail-fade-end linear both;
-            animation-range:
-              0px var(--rail-fade),
-              calc(100% - var(--rail-fade)) 100%;
-            animation-timeline: scroll(self inline);
-            mask-image: linear-gradient(
-              to right,
-              transparent 0,
-              #000 var(--rail-fade-start),
-              #000 calc(100% - var(--rail-fade-end)),
-              transparent 100%
-            );
-          }
-        }
-
-        /* Set by the drag script, and only once the list really is wider than
-           its box - the cursor should not promise movement that is not there.
-           The rule matches the markup as authored, so it cannot see either
-           attribute; both are added at runtime. */
-        .side ul[data-overflowing] {
-          cursor: grab;
-        }
-
-        .side ul[data-dragging],
-        .side ul[data-dragging] a {
-          cursor: grabbing;
-          user-select: none;
+          display: grid;
+          gap: 2px;
+          margin: 0;
+          padding: 0;
+          list-style: none;
         }
 
         .side-item a {
-          border-bottom: 2px solid transparent;
-          border-left: 0;
+          display: grid;
+          grid-template-columns: 1.5rem 1fr;
+          gap: 10px;
+          padding: 10px 12px;
+          border-left: 2px solid transparent;
+          border-radius: 8px;
+        }
+
+        .side-item a:hover {
+          background: #f4f7fb;
+        }
+
+        .side-num {
+          font:
+            0.6875rem/1.6 ui-monospace,
+            monospace;
+          /* --muted rather than --quiet: the row tints under hover and for the
+           current item are dark enough to put --quiet below the floor. */
+          color: var(--muted);
+        }
+
+        .side-text strong {
+          display: block;
+          font-size: 0.8125rem;
+          font-weight: 600;
+          line-height: 1.35;
+        }
+
+        .side-text code {
+          display: block;
+          margin-top: 3px;
+          font-size: 0.6875rem;
+          color: var(--muted);
         }
 
         .side-item.current a {
-          border-bottom-color: var(--blue);
+          background: #eef3fd;
+          border-left-color: var(--blue);
         }
 
-        .detail-head,
-        .detail-body {
-          grid-template-columns: minmax(0, 1fr);
-          gap: 24px;
+        .side-item.current .side-text strong {
+          color: #1c3f8f;
+        }
+
+        .side-item.current .side-num {
+          color: var(--blue);
+        }
+
+        .detail {
+          max-width: none;
+          margin-inline: 0;
+          padding-block: 44px 80px;
+          padding-inline: 0;
+        }
+
+        .detail-head {
+          display: grid;
+          grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+          gap: 40px;
+          align-items: end;
+          padding-bottom: 36px;
+        }
+
+        .detail-head h1 {
+          font-size: clamp(1.875rem, 3.2vw, 3.125rem);
+          font-weight: 560;
+          line-height: 1.1;
+          letter-spacing: -0.045em;
+        }
+
+        .lede {
+          max-width: 46ch;
+          margin-top: 14px;
+          color: var(--muted);
         }
 
         .detail-meta {
-          justify-items: start;
-          justify-self: start;
-          text-align: left;
+          display: grid;
+          justify-items: end;
+          justify-self: end;
+          gap: 12px;
+          padding-bottom: 6px;
+          text-align: right;
         }
-      }
 
-      @media (max-width: 620px) {
-        .detail {
-          padding-block: 32px 56px;
+        .detail-meta code {
+          font-size: 0.9375rem;
         }
 
         .stage {
-          margin-inline: -8px;
-          margin-bottom: 44px;
+          padding: clamp(14px, 2vw, 22px);
+          border: 1px solid #d9e0e9;
+          border-radius: 18px;
+          margin-bottom: 64px;
+          background: #e9eef5;
+          box-shadow: 0 22px 54px rgb(23 36 57 / 9%);
         }
 
-        .stage-bar,
-        .source-heading {
-          align-items: start;
-          flex-direction: column;
-          gap: 7px;
+        .stage-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          max-width: min(100%, var(--stage, 700px));
+          margin: 0 auto 13px;
+          color: #5c6a7d;
+          gap: 20px;
         }
 
+        /* The stage tint is dark enough that --muted lands at 4.3:1 on it. The
+         bar already picks a colour that clears the floor here; inherit it. */
         .stage .interaction {
-          text-align: left;
+          color: inherit;
+          font-size: 0.75rem;
+          text-align: right;
+        }
+
+        .stage-frame {
+          max-width: min(100%, var(--stage, 700px));
+          margin-inline: auto;
+          overflow: hidden;
+          border: 1px solid #cbd4df;
+          border-radius: 11px;
+          background: #f2f5f9;
+          box-shadow:
+            0 1px 2px rgb(23 36 57 / 6%),
+            0 12px 28px rgb(23 36 57 / 8%);
         }
 
         .stage-frame iframe {
-          height: 430px;
+          display: block;
+          width: 100%;
+          height: clamp(380px, 52vh, 540px);
+          border: 0;
         }
 
-        .detail-next strong {
-          font-size: 18px;
+        .detail-body {
+          display: grid;
+          grid-template-columns: minmax(0, 1.35fr) minmax(17.5rem, 0.8fr);
+          gap: clamp(36px, 6vw, 80px);
+          padding-block: 54px 64px;
+          border-top: 1px solid var(--line);
+        }
+
+        .detail-body h2 {
+          margin-bottom: 16px;
+          font-size: 1.125rem;
+          font-weight: 620;
+          letter-spacing: -0.02em;
+        }
+
+        .explanation > .eyebrow {
+          margin-bottom: 12px;
+        }
+
+        .why {
+          max-width: 58ch;
+          margin-bottom: 36px;
+          color: #3d4b5f;
+          font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+          line-height: 1.55;
+        }
+
+        .decisions {
+          display: grid;
+          gap: 10px;
+          margin: 0;
+          padding-left: 18px;
+        }
+
+        .decisions li {
+          font-size: 0.875rem;
+          line-height: 1.6;
+          color: var(--muted);
+        }
+
+        .provenance {
+          margin-top: 14px;
+          font-size: 0.75rem;
+          color: var(--quiet);
+        }
+
+        .implementation {
+          display: grid;
+          align-content: start;
+          gap: 0;
+          border-top: 1px solid var(--line);
+        }
+
+        .implementation > div {
+          display: grid;
+          grid-template-columns: 1.75rem 1fr;
+          padding-block: 21px;
+          border-bottom: 1px solid var(--line);
+          column-gap: 12px;
+        }
+
+        .implementation > div > span {
+          color: var(--quiet);
+          font:
+            0.6875rem/1.6 ui-monospace,
+            monospace;
+        }
+
+        .implementation h2 {
+          margin-bottom: 5px;
+          font-size: 0.875rem;
+        }
+
+        .implementation p {
+          grid-column: 2;
+          color: var(--muted);
+          font-size: 0.8125rem;
+        }
+
+        .docs-card {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          padding: 18px 20px;
+          border-radius: 10px;
+          margin-top: 22px;
+          background: #edf3ff;
+          color: #1c3f8f;
+          gap: 3px 16px;
+        }
+
+        .docs-card span {
+          font-size: 0.6875rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .docs-card strong {
+          font-size: 0.875rem;
+          font-weight: 620;
+        }
+
+        .docs-card i {
+          grid-column: 2;
+          grid-row: 1 / 3;
+          align-self: center;
+          font-style: normal;
+        }
+
+        .docs-card:hover {
+          background: #e2ebfd;
+        }
+
+        .source-section {
+          min-width: 0;
+          padding-block: 54px 12px;
+          border-top: 1px solid var(--line);
+        }
+
+        .standalone-source {
+          margin-top: 24px;
+        }
+
+        .source-heading {
+          display: flex;
+          align-items: end;
+          justify-content: space-between;
+          margin-bottom: 20px;
+          gap: 24px;
+        }
+
+        .source-heading .eyebrow {
+          margin-bottom: 9px;
+        }
+
+        .source-heading h2 {
+          font-size: clamp(1.5rem, 2.5vw, 2.125rem);
+          font-weight: 560;
+          letter-spacing: -0.035em;
+        }
+
+        .source-heading > p {
+          color: var(--muted);
+          font-size: 0.75rem;
+        }
+
+        .detail-next {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          margin-top: 64px;
+          border-top: 1px solid var(--line);
+          border-bottom: 1px solid var(--line);
+        }
+
+        .detail-next a {
+          display: grid;
+          padding-block: 28px;
+          gap: 5px;
         }
 
         .detail-next .next {
-          padding-left: 18px;
+          padding-left: 30px;
+          border-left: 1px solid var(--line);
+          text-align: right;
+        }
+
+        .detail-next strong {
+          font-size: 1.5rem;
+          font-weight: 550;
+          letter-spacing: -0.03em;
+        }
+
+        .detail-next a:hover strong {
+          color: var(--blue);
+        }
+
+        @media (width <= 1000px) {
+          .shell {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 0;
+          }
+
+          .side {
+            position: static;
+            min-width: 0;
+            padding-block: 26px 0;
+          }
+
+          .side ul {
+            --rail-fade: 28px;
+
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(10rem, 1fr);
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            overscroll-behavior-inline: contain;
+          }
+
+          /* The scrollbar is the only thing currently saying the strip scrolls,
+           so it goes away exactly where the thing replacing it is understood
+           and not one browser earlier. */
+          @supports (animation-timeline: scroll()) {
+            .side ul {
+              padding-bottom: 2px;
+              scrollbar-width: none;
+              animation:
+                rail-fade-start linear both,
+                rail-fade-end linear both;
+              animation-range:
+                0px var(--rail-fade),
+                calc(100% - var(--rail-fade)) 100%;
+              animation-timeline: scroll(self inline);
+              mask-image: linear-gradient(
+                to right,
+                transparent 0,
+                #000 var(--rail-fade-start),
+                #000 calc(100% - var(--rail-fade-end)),
+                transparent 100%
+              );
+            }
+          }
+
+          /* Set by the drag script, and only once the list really is wider than
+           its box - the cursor should not promise movement that is not there.
+           The rule matches the markup as authored, so it cannot see either
+           attribute; both are added at runtime. */
+          .side ul[data-overflowing] {
+            cursor: grab;
+          }
+
+          .side ul[data-dragging],
+          .side ul[data-dragging] a {
+            cursor: grabbing;
+            user-select: none;
+          }
+
+          .side-item a {
+            border-bottom: 2px solid transparent;
+            border-left: 0;
+          }
+
+          .side-item.current a {
+            border-bottom-color: var(--blue);
+          }
+
+          .detail-head,
+          .detail-body {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 24px;
+          }
+
+          .detail-meta {
+            justify-items: start;
+            justify-self: start;
+            text-align: left;
+          }
+        }
+
+        @media (width <= 620px) {
+          .detail {
+            padding-block: 32px 56px;
+          }
+
+          .stage {
+            margin-inline: -8px;
+            margin-bottom: 44px;
+          }
+
+          .stage-bar,
+          .source-heading {
+            align-items: start;
+            flex-direction: column;
+            gap: 7px;
+          }
+
+          .stage .interaction {
+            text-align: left;
+          }
+
+          .stage-frame iframe {
+            height: 430px;
+          }
+
+          .detail-next strong {
+            font-size: 1.125rem;
+          }
+
+          .detail-next .next {
+            padding-left: 18px;
+          }
         }
       }
     </style>

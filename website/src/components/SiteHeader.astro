@@ -29,14 +29,12 @@ const { installHref, links } = Astro.props;
     <span aria-hidden="true"></span>
   </button>
 
-  {
-    /*
+  {/*
       One nav element at every width. Below 700px the popover attribute makes it
       an off-canvas drawer; above it, author styles put display and position back
       and it is an ordinary flex row. Two sets of markup would be the obvious way
       to do this and the wrong one — the links would drift apart.
-    */
-  }
+    */}
   <nav
     aria-label="Main navigation"
     class="site-nav"
@@ -52,7 +50,9 @@ const { installHref, links } = Astro.props;
     >
       <span aria-hidden="true">×</span>
     </button>
-    {links.map((link) => <a href={link.href}>{link.label}</a>)}
+    {links.map((link) => (
+      <a href={link.href}>{link.label}</a>
+    ))}
     <a class="nav-install" href={installHref}>
       Get the skill <span aria-hidden="true">↗</span>
     </a>

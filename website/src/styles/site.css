@@ -8,8 +8,14 @@
   :root {
     background: #fff;
     color: #192230;
+
+    /* Pinned, not adaptive. Every surface, scrim and syntax colour below is a
+       light-theme value, so letting the UA render form controls, scrollbars and
+       spellcheck underlines dark would put them on the wrong ground. A real
+       dark theme is a palette decision, not a declaration. */
+    color-scheme: light;
     font:
-      16px/1.55 Inter,
+      1rem/1.55 Inter,
       ui-sans-serif,
       system-ui,
       -apple-system,
@@ -19,17 +25,32 @@
     font-synthesis: none;
 
     --muted: #627084;
+
+    /* The lightest grey that still clears 4.5:1 on white. Small labels,
+       numerals and column headers want to sit further back than --muted; at
+       this size that distance is all the contrast floor will give. Hierarchy
+       below this point comes from size and letter-spacing, not lightness. */
+    --quiet: #69758a;
     --line: #e3e7ed;
     --blue: #2458d3;
+
+    /* Inherited, so a dark panel restates it once for everything inside.
+       The blue ring is 6.2:1 on white and 1.7:1 on the hero. */
+    --focus-ring: var(--blue);
     --page-gutter: clamp(20px, 4.5vw, 72px);
-    --header-space: clamp(86px, 6vw, 96px);
+    --page-max: 1440px;
+
+    /* Clearance from the top of the viewport, shared by the sticky sub-nav and
+       by scroll-padding so an anchored heading lands in the same place. */
+    --top-clearance: 24px;
+    --header-space: clamp(5.375rem, 6vw, 6rem);
     --section-gap: clamp(40px, 4vw, 64px);
     --th-background: #fbfcfe;
     --th-token: #24292f;
     --th-attr: #0550ae;
     --th-code-inline: #953800;
     --th-command: #8250df;
-    --th-comment: #6e7781;
+    --th-comment: #68727e;
     --th-deleted: #cf222e;
     --th-function: #8250df;
     --th-heading: #0550ae;
@@ -56,12 +77,37 @@
     margin: 0;
   }
 
+  /* Forward, the page being left recedes a little as it goes: the small scale
+     down is what separates this from a crossfade, and it is deliberately below
+     the threshold where anyone would name it. The arriving page carries the
+     move. */
   ::view-transition-old(root) {
-    animation: 150ms cubic-bezier(0.4, 0, 1, 1) both page-out;
+    transform-origin: center;
+    animation: 180ms cubic-bezier(0.4, 0, 1, 1) both page-recede;
   }
 
   ::view-transition-new(root) {
-    animation: 360ms 45ms cubic-bezier(0.2, 0.8, 0.2, 1) both page-in;
+    transform-origin: center;
+    animation: 380ms 40ms cubic-bezier(0.2, 0.8, 0.2, 1) both page-advance;
+  }
+
+  /* Back is not the forward move reversed. The router sets the direction on
+     the document element before the transition starts, so the whole thing is
+     a pair of overrides and no script.
+
+     Two details do the work. The old snapshot is lifted above the new one
+     inside their image pair, so the page being left is pulled away rather
+     than dissolved into its replacement. And the page underneath does not
+     fade in - it is already there, at full opacity, settling the last of the
+     way back up to size. A reveal, not a crossfade. That asymmetry is the
+     whole reason back feels like back. */
+  :root[data-astro-transition="back"]::view-transition-old(root) {
+    z-index: 1;
+    animation: 260ms cubic-bezier(0.3, 0, 0.8, 1) both page-withdraw;
+  }
+
+  :root[data-astro-transition="back"]::view-transition-new(root) {
+    animation: 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both page-reveal;
   }
 
   ::view-transition-group(site-brand) {
@@ -108,6 +154,34 @@
     }
   }
 
+  @keyframes page-recede {
+    to {
+      opacity: 0;
+      transform: scale(0.99) translateY(-6px);
+    }
+  }
+
+  @keyframes page-advance {
+    from {
+      opacity: 0;
+      transform: scale(0.985) translateY(10px);
+    }
+  }
+
+  @keyframes page-withdraw {
+    to {
+      opacity: 0;
+      transform: scale(0.955) translateY(12px);
+    }
+  }
+
+  /* No opacity here on purpose. See the reveal note above. */
+  @keyframes page-reveal {
+    from {
+      transform: scale(0.97);
+    }
+  }
+
   @keyframes title-in {
     from {
       opacity: 0;
@@ -133,9 +207,17 @@
   button:focus-visible,
   a:focus-visible,
   summary:focus-visible,
-  pre:focus-visible {
-    outline: 3px solid var(--blue);
+  [tabindex]:focus-visible {
+    outline: 3px solid var(--focus-ring);
     outline-offset: 5px;
+  }
+
+  /* Both scroll containers sit inside a box that clips at its own rounded
+     border, so their ring is drawn inside the padding instead of 5px outside
+     it, where it would be cut off. */
+  .scorecard-scroll:focus-visible,
+  .highlighted-code pre:focus-visible {
+    outline-offset: -3px;
   }
 
   h1,
@@ -154,7 +236,7 @@
   }
 
   html {
-    scroll-padding-top: 24px;
+    scroll-padding-top: var(--top-clearance);
   }
 
   ::selection {
@@ -167,6 +249,7 @@
     .site-nav[popover]::backdrop,
     .hero canvas,
     .hero-scroll i::after,
+    .recipe-go,
     ::view-transition-group(*),
     ::view-transition-old(*),
     ::view-transition-new(*) {
@@ -180,7 +263,7 @@
   .site-header,
   main,
   body > footer {
-    max-width: 1440px;
+    max-width: var(--page-max);
     margin-inline: auto;
     padding-inline: var(--page-gutter);
   }
@@ -193,20 +276,23 @@
     gap: 24px;
   }
 
-  nav {
+  /* Scoped to the header menu. As a bare `nav` these three rules also reached
+     the recipe sub-nav and the previous/next pager, where the span rule below
+     greyed out every item title. */
+  .site-nav {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 550;
     gap: 30px;
   }
 
-  nav a:hover {
+  .site-nav a:hover {
     color: var(--blue);
   }
 
-  nav a > span {
-    color: #7d8797;
+  .site-nav a > span {
+    color: var(--quiet);
     margin-inline-start: 5px;
   }
 
@@ -350,9 +436,9 @@
   }
 
   .hero h1 {
-    max-width: 880px;
+    max-width: 55rem;
     color: #f4f7fd;
-    font-size: clamp(48px, 5.5vw, 82px);
+    font-size: clamp(3rem, 5.5vw, 5.125rem);
     font-weight: 570;
     letter-spacing: -0.062em;
     line-height: 1.02;
@@ -365,7 +451,7 @@
   }
 
   .hero-aside {
-    width: min(100%, 310px);
+    width: min(100%, 19.375rem);
     color: #eaf0fb;
     grid-area: aside;
     place-self: center end;
@@ -375,7 +461,7 @@
   .hero-aside p {
     margin-bottom: 20px;
     color: rgb(231 238 252 / 92%);
-    font-size: 15px;
+    font-size: 0.9375rem;
     text-shadow: 0 1px 20px rgb(10 19 42 / 55%);
   }
 
@@ -385,7 +471,7 @@
     align-self: end;
     color: rgb(224 232 248 / 72%);
     font:
-      10px/1 ui-monospace,
+      0.625rem/1 ui-monospace,
       monospace;
     gap: 14px;
     grid-area: scroll;
@@ -414,7 +500,7 @@
   .hero-renderer {
     color: rgb(224 232 248 / 46%);
     font:
-      10px/1 ui-monospace,
+      0.625rem/1 ui-monospace,
       monospace;
     grid-area: renderer;
     letter-spacing: 0.08em;
@@ -447,143 +533,267 @@
   }
 
   .section-bar h2 {
-    font-size: 15px;
+    font-size: 0.9375rem;
     font-weight: 600;
   }
 
   .section-bar h2 span {
     margin-left: 16px;
-    color: #7a8699;
+    color: var(--quiet);
     font:
-      12px ui-monospace,
+      0.75rem ui-monospace,
       monospace;
   }
 
   .section-bar p {
     color: var(--muted);
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
+  /* Noughts and crosses, drawn at the crossings and nowhere else. The cards
+     have no box of their own and the board has no continuous rules either -
+     only a short cross wherever two of its lines would have met, which the eye
+     joins up on its own. Four hairlines become six small marks. */
   .gallery {
+    --board-gap: clamp(38px, 5.8vw, 88px);
+
+    /* How far each arm reaches from the crossing it is centred on. */
+    --mark: clamp(36px, 6.4vw, 98px);
+    --mark-ink: #ccd5e3;
+
     display: grid;
-    gap: 24px;
+    gap: var(--board-gap);
+
+    /* An interior crossing sits in the middle of a gap with half of one clear
+       of the content on either side. The crossings along the top and bottom
+       edges have no gap to sit in, so the board carries one: without this they
+       are drawn hard against the first label and the last badge. */
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-block: calc(var(--board-gap) / 2);
   }
 
-  .recipe {
-    overflow: hidden;
+  .gallery > * {
+    position: relative;
     min-width: 0;
-    align-self: start;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    background: #fff;
+  }
+
+  /* One mark is one box with two 1px gradient strokes laid through it, down
+     the middle and across it - which is how a single pseudo-element can draw a
+     whole cross, and so how one tile can carry two of them. The box is centred
+     on the column boundary to the tile's left; where it sits vertically is
+     what the rules below decide. */
+  .gallery > *::before,
+  .gallery > *::after {
+    position: absolute;
+    width: calc(var(--mark) * 2);
+    height: calc(var(--mark) * 2);
+    background-image:
+      linear-gradient(var(--mark-ink), var(--mark-ink)),
+      linear-gradient(var(--mark-ink), var(--mark-ink));
+    background-repeat: no-repeat;
+    background-size:
+      1px 100%,
+      100% 1px;
+    content: "";
+    inset-inline-start: calc(var(--board-gap) / -2 - var(--mark));
+    pointer-events: none;
+  }
+
+  /* `::before` takes the crossing along this tile's top edge, which is the
+     middle of the gap above it - a full cross, all four arms. */
+  .gallery > *::before {
+    background-position: center, center;
+    inset-block-start: calc(var(--board-gap) / -2 - var(--mark));
+  }
+
+  .gallery > *::after {
+    content: none;
+  }
+
+  /* Which tile sits on which edge of the board is the one thing that depends
+     on how many columns there are, so each count keeps its rules inside its
+     own width range - here and in the two blocks further down. These select by
+     position and the narrower ones select by `*`, so an unbounded rule here
+     would out-specify them and go on describing a three-column board on a
+     phone. */
+  @media (width > 1150px) {
+    /* On the first row the crossing is the top of the board, so the mark loses
+       the arm that would point off it and the cross becomes a T. */
+    .gallery > :nth-child(-n + 3)::before {
+      height: var(--mark);
+      background-position: center, top;
+      inset-block-start: calc(var(--board-gap) / -2);
+    }
+
+    /* `::after` is the foot of the board, so only the last row draws one: the
+       same T inverted. `:nth-last-child` stands in for a last-row selector CSS
+       does not have, which holds while the tiles fill the board - five recipes
+       and the note do, at three columns and at two. */
+    .gallery > :nth-last-child(-n + 3)::after {
+      height: var(--mark);
+      background-position: center, bottom;
+      content: "";
+      inset-block-end: calc(var(--board-gap) / -2);
+    }
+
+    /* The first column has no boundary on its left for a mark to sit on. Last,
+       so it beats the last-row rule above for the tile they both match. */
+    .gallery > :nth-child(3n + 1)::before,
+    .gallery > :nth-child(3n + 1)::after {
+      content: none;
+    }
+  }
+
+  /* The note is the one cell with no demo in it, so it has no top edge to line
+     up with. Its box still has to fill the row - the marks on its left are
+     placed off the corners of it - so it is the type inside that centres. */
+  .collection-note {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* A column, so the meta row can be pushed to the bottom of whichever tile is
+     tallest in the row rather than floating wherever the description ends.
+     Also the container the frame below sizes itself against. */
+  .recipe {
+    display: flex;
+    flex-direction: column;
+    container: recipe / inline-size;
   }
 
   .recipe-top {
     display: flex;
     align-items: center;
-    padding: 15px 18px;
-    border-bottom: 1px solid var(--line);
-    font-size: 14px;
+    margin-bottom: 13px;
+    font-size: 0.875rem;
     gap: 10px;
   }
 
-  .recipe-number {
-    color: #8692a5;
-    font:
-      12px ui-monospace,
-      monospace;
-  }
-
   .recipe-top code {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
 
   .category {
     margin-left: auto;
-    color: var(--muted);
-    font-size: 12px;
+    color: var(--quiet);
+    font:
+      0.6875rem ui-monospace,
+      monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
+  /* With the card gone this panel is the only edge left in a tile, and every
+     demo paints the same #f2f5f9 behind itself, so it reads as one surface
+     whether or not its content reaches the corners. */
   .demo {
+    overflow: hidden;
+    border-radius: 14px;
     background: #f2f5f9;
   }
 
   .demo iframe {
     display: block;
     width: 100%;
-    height: 320px;
+    height: 356px;
     border: 0;
   }
 
+  /* A frame is a fixed height and the page inside it reflows, so how tall it
+     has to be depends on how wide the tile is - not on how wide the window is,
+     which is a different question once the board changes column count. Below
+     this the deepest demo's four buttons take a second row and its support
+     note takes a third line. The tile answers for its own contents, which is
+     the argument the @container recipe two tiles over is making. */
+  @container recipe (width < 22rem) {
+    .demo iframe {
+      height: 430px;
+    }
+  }
+
   .recipe-info {
-    padding: 21px;
-  }
-
-  .recipe-info h3 {
-    margin-bottom: 9px;
-    font-size: 19px;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-  }
-
-  .recipe-info h3 a:hover {
-    color: var(--blue);
-  }
-
-  .recipe-info > p:not(.interaction) {
-    min-height: 66px;
-    color: var(--muted);
-    font-size: 14px;
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-top: 19px;
   }
 
   .interaction {
-    margin-bottom: 10px;
-    color: #64738a;
-    font-size: 12px;
+    margin-bottom: 11px;
+    color: var(--quiet);
+    font:
+      0.6875rem/1.4 ui-monospace,
+      monospace;
+  }
+
+  .recipe-info h3 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 9px;
+    font-size: 1.1875rem;
+    font-weight: 600;
+    gap: 14px;
+    letter-spacing: -0.025em;
+  }
+
+  /* The caption block is the link target and the demo above it deliberately is
+     not: a live control should answer the pointer itself rather than navigate
+     away from the page. `Support & docs` sits inside the same block, so it is
+     raised back over this one. */
+  .recipe-info h3 a::after {
+    position: absolute;
+    content: "";
+    inset: 0;
+  }
+
+  .recipe:has(.recipe-info:hover) h3 a {
+    color: var(--blue);
+  }
+
+  .recipe-go {
+    color: var(--blue);
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1;
+    transition: translate 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .recipe:has(.recipe-info:hover) .recipe-go {
+    translate: 4px;
+  }
+
+  .recipe-info > p:not(.interaction) {
+    color: var(--muted);
+    font-size: 0.875rem;
   }
 
   .recipe-meta {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    margin-top: 21px;
-    font-size: 12px;
+    padding-top: 21px;
+    margin-top: auto;
+    font-size: 0.75rem;
     gap: 10px;
+  }
+
+  .recipe-meta a {
+    position: relative;
   }
 
   .recipe-meta a:hover {
     text-decoration: underline;
   }
 
-  .view-example {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 14px;
-    border-top: 1px solid var(--line);
-    margin-top: 20px;
-    color: var(--blue);
-    font-size: 13px;
-    font-weight: 600;
-  }
-
-  .view-example:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .view-example span {
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1;
-  }
-
   .support-note {
-    max-width: 900px;
+    max-width: 56.25rem;
     margin-top: 24px;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
 
   .support-note a {
@@ -621,6 +831,7 @@
     flex: 1 0 100%;
     order: 1;
     margin-top: 14px;
+    container: pair / inline-size;
     gap: 22px;
   }
 
@@ -652,7 +863,7 @@
     display: grid;
     min-width: 0;
     gap: 16px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 
   .audit {
@@ -669,7 +880,7 @@
   }
 
   .audit h2 {
-    font-size: clamp(27px, 2.9vw, 40px);
+    font-size: clamp(1.6875rem, 2.9vw, 2.5rem);
     font-weight: 550;
     letter-spacing: -0.04em;
     line-height: 1.15;
@@ -679,7 +890,7 @@
     max-width: 52ch;
     margin-top: 20px;
     color: var(--muted);
-    font-size: 15px;
+    font-size: 0.9375rem;
   }
 
   .report {
@@ -689,22 +900,24 @@
     border-radius: 16px;
     background: #fff;
     box-shadow: 0 18px 44px rgb(23 36 57 / 7%);
+    container: report / inline-size;
   }
 
   .report-bar {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: start;
     justify-content: space-between;
     padding: 13px 20px;
     border-bottom: 1px solid var(--line);
     background: #fbfcfe;
-    gap: 16px;
+    gap: 6px;
   }
 
   .report-bar p {
     color: var(--muted);
-    font-size: 12px;
-    text-align: right;
+    font-size: 0.75rem;
+    text-align: left;
   }
 
   /* Flex, not grid: the summary takes its own row without its intrinsic width
@@ -712,7 +925,7 @@
   .report-score {
     display: flex;
     flex-wrap: wrap;
-    padding: 22px 20px;
+    padding: 22px 14px;
     border-bottom: 1px solid var(--line);
     gap: 18px 44px;
   }
@@ -722,7 +935,7 @@
     max-width: 62ch;
     flex: 1 0 100%;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   .scorecard-scroll {
@@ -731,10 +944,10 @@
 
   .report-tail {
     display: grid;
-    padding: 22px 20px;
+    padding: 22px 14px;
     background: #fbfcfe;
     gap: 22px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 
   .approach {
@@ -747,7 +960,7 @@
   }
 
   .approach h2 {
-    font-size: 30px;
+    font-size: 1.875rem;
     font-weight: 550;
     letter-spacing: -0.035em;
   }
@@ -759,21 +972,21 @@
   }
 
   .principles span {
-    color: #8290a5;
+    color: var(--quiet);
     font:
-      12px ui-monospace,
+      0.75rem ui-monospace,
       monospace;
   }
 
   .principles h3 {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     margin-block: 16px 9px;
   }
 
   .principles p {
     color: var(--muted);
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   .install {
@@ -788,29 +1001,25 @@
   }
 
   .install h2 {
-    font-size: clamp(30px, 3.4vw, 46px);
+    font-size: clamp(1.875rem, 3.4vw, 2.875rem);
     font-weight: 550;
     letter-spacing: -0.04em;
     line-height: 1.15;
   }
 
   .install > div > p:not(.eyebrow) {
-    max-width: 390px;
+    max-width: 24.375rem;
     color: #b7c6db;
     margin-block: 22px;
   }
 
   .install h3 {
-    font-size: 17px;
+    font-size: 1.0625rem;
     font-weight: 550;
   }
 
-  .install .eyebrow {
-    color: #9fb9e6;
-  }
-
   .install-steps p {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   .install-steps pre {
@@ -826,7 +1035,7 @@
     max-width: none;
     margin-top: 20px;
     color: #99aac2;
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 
   body > footer {
@@ -840,16 +1049,55 @@
   footer p {
     margin-left: auto;
     color: var(--muted);
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 
   footer > a:last-child {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
 
   @media (width <=1150px) {
-    .gallery {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Two columns, so the board is re-cut: a tile that carried a mark at three
+       columns may sit on the outside edge at two, and each rule is restated in
+       full rather than adjusted.
+
+       The lower bound is load-bearing. These select tiles by position and the
+       one-column block below selects them as `*`, so without it they would
+       keep a specificity advantage over rules written for a narrower screen
+       and go on drawing a two-column board on a phone. */
+    @media (width > 700px) {
+      .gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .gallery > *::before {
+        height: calc(var(--mark) * 2);
+        background-position: center, center;
+        content: "";
+        inset-block-start: calc(var(--board-gap) / -2 - var(--mark));
+      }
+
+      .gallery > :nth-child(-n + 2)::before {
+        height: var(--mark);
+        background-position: center, top;
+        inset-block-start: calc(var(--board-gap) / -2);
+      }
+
+      .gallery > *::after {
+        content: none;
+      }
+
+      .gallery > :nth-last-child(-n + 2)::after {
+        height: var(--mark);
+        background-position: center, bottom;
+        content: "";
+        inset-block-end: calc(var(--board-gap) / -2);
+      }
+
+      .gallery > :nth-child(2n + 1)::before,
+      .gallery > :nth-child(2n + 1)::after {
+        content: none;
+      }
     }
 
     .hero {
@@ -858,7 +1106,7 @@
     }
 
     .hero h1 {
-      font-size: clamp(48px, 6.2vw, 70px);
+      font-size: clamp(3rem, 6.2vw, 4.375rem);
     }
 
     .approach,
@@ -877,7 +1125,7 @@
        the fold. Collapsing them into the drawer buys that back and lets the
        header return to one fixed row. */
     :root {
-      --header-space: 64px;
+      --header-space: 4rem;
     }
 
     .site-header {
@@ -890,8 +1138,8 @@
 
     .nav-toggle {
       display: grid;
-      width: 42px;
-      height: 42px;
+      width: 2.625rem;
+      height: 2.625rem;
       padding: 0;
       border: 1px solid var(--line);
       border-radius: 9px;
@@ -931,7 +1179,7 @@
     .site-nav[popover] {
       position: fixed;
       display: flex;
-      width: min(80vw, 320px);
+      width: min(80vw, 20rem);
       max-width: none;
       height: 100%;
       max-height: none;
@@ -945,7 +1193,7 @@
       margin: 0;
       background: #fff;
       border-inline-start: 1px solid var(--line);
-      font-size: 16px;
+      font-size: 1rem;
       gap: 2px;
       inset: 0 0 0 auto;
       opacity: 0;
@@ -993,7 +1241,7 @@
     .site-nav a {
       padding: 14px 0;
       border-bottom: 1px solid var(--line);
-      font-size: 16px;
+      font-size: 1rem;
     }
 
     .site-nav .nav-install {
@@ -1006,15 +1254,15 @@
 
     .nav-close {
       display: block;
-      width: 36px;
-      height: 36px;
+      width: 2.25rem;
+      height: 2.25rem;
       align-self: flex-end;
       padding: 0;
       border: 0;
       margin-bottom: 4px;
       background: none;
       color: var(--muted);
-      font-size: 24px;
+      font-size: 1.5rem;
       line-height: 1;
     }
 
@@ -1045,7 +1293,7 @@
         padding: 0;
         border: 0;
         background: none;
-        font-size: 13px;
+        font-size: 0.8125rem;
         gap: 18px;
         opacity: 1;
         translate: none;
@@ -1054,7 +1302,7 @@
       .site-nav a {
         padding: 0;
         border-bottom: 0;
-        font-size: 13px;
+        font-size: 0.8125rem;
       }
 
       .site-nav .nav-install {
@@ -1081,13 +1329,13 @@
     }
 
     .hero-aside {
-      width: min(100%, 350px);
+      width: min(100%, 21.875rem);
       justify-self: start;
       transform: none;
     }
 
     .hero h1 {
-      font-size: clamp(42px, 12.5vw, 58px);
+      font-size: clamp(2.625rem, 12.5vw, 3.625rem);
       line-height: 1.04;
     }
 
@@ -1118,8 +1366,41 @@
       color: rgb(230 237 252 / 74%);
     }
 
+    /* One column, so there are no crossings left: nothing runs vertically for a
+       horizontal line to meet. What is left of each mark is its crossbar, set
+       against the left edge where the type starts. */
     .gallery {
       grid-template-columns: 1fr;
+      padding-block: 0;
+    }
+
+    .gallery > *::before {
+      height: 1px;
+      background-position:
+        -1px 0,
+        0 0;
+      content: "";
+      inset-block-start: calc(var(--board-gap) / -2);
+      inset-inline-start: 0;
+    }
+
+    .gallery > :first-child::before {
+      content: none;
+    }
+
+    .gallery > *::after {
+      content: none;
+    }
+
+    /* The title wraps at this width, and an arrow pinned to the right of a
+       two-line heading reads as belonging to neither line. Inline, it trails
+       the last word instead. */
+    .recipe-info h3 {
+      display: block;
+    }
+
+    .recipe-go {
+      margin-left: 9px;
     }
 
     .section-bar p {
@@ -1133,7 +1414,7 @@
     .principles > div {
       display: grid;
       gap: 5px 12px;
-      grid-template-columns: 30px 1fr;
+      grid-template-columns: 1.875rem 1fr;
     }
 
     .principles h3 {
@@ -1157,40 +1438,6 @@
     .audit {
       gap: 32px;
       padding-block: 34px 0;
-    }
-
-    .pair-code,
-    .report-tail {
-      grid-template-columns: 1fr;
-    }
-
-    .report-bar {
-      flex-direction: column;
-      align-items: start;
-      gap: 6px;
-    }
-
-    .report-bar p {
-      text-align: left;
-    }
-
-    /* The row header and the note both need room to read; below this width the
-       table gets a scroller of its own rather than a squeezed third column. */
-    .scorecard {
-      min-width: 520px;
-      font-size: 12.5px;
-    }
-
-    .scorecard th,
-    .scorecard td {
-      padding: 10px 14px;
-    }
-
-    .findings > li,
-    .legend,
-    .report-score,
-    .report-tail {
-      padding-inline: 14px;
     }
 
     .install {
@@ -1218,7 +1465,7 @@
   .brand {
     display: flex;
     align-items: center;
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 650;
     gap: 12px;
     letter-spacing: -0.045em;
@@ -1227,23 +1474,23 @@
 
   .brand-mark {
     display: flex;
-    width: 36px;
-    height: 32px;
+    width: 2.25rem;
+    height: 2rem;
     align-items: center;
     justify-content: center;
     border-radius: 7px;
     background: #192439;
     color: #fff;
     font:
-      700 21px/1 ui-monospace,
+      700 1.3125rem/1 ui-monospace,
       monospace;
     letter-spacing: 0;
   }
 
   .edition {
     margin-left: 4px;
-    color: #8793a5;
-    font-size: 14px;
+    color: var(--quiet);
+    font-size: 0.875rem;
     font-weight: 400;
     letter-spacing: 0;
   }
@@ -1258,13 +1505,13 @@
     margin-bottom: 18px;
     color: var(--muted);
     font:
-      11px/1.5 ui-monospace,
+      0.6875rem/1.5 ui-monospace,
       monospace;
     letter-spacing: 0.12em;
   }
 
   .text-link {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
   }
 
@@ -1278,12 +1525,22 @@
     text-underline-offset: 4px;
   }
 
-  /* The hero runs light type on a dark sky. These live in this layer, not in
-     `layout` with the rest of the hero, because .eyebrow and .text-link are
+  /* The two dark panels. These live in this layer, not in `layout` with the
+     rest of the hero and the install block, because .eyebrow and .text-link are
      declared here and a later layer beats any specificity from an earlier one. */
+  .hero,
+  .install {
+    --focus-ring: #fff;
+  }
+
   .hero .eyebrow {
     color: rgb(226 233 249 / 76%);
     text-shadow: 0 1px 16px rgb(10 19 42 / 60%);
+  }
+
+  /* Flat panel, no render behind it, so this one needs no shadow. */
+  .install .eyebrow {
+    color: #9fb9e6;
   }
 
   .hero .text-link {
@@ -1295,18 +1552,65 @@
     color: rgb(255 255 255 / 72%);
   }
 
-  .support {
-    padding: 4px 8px;
+  /* The sky behind these two links is a live render, so the ring cannot be
+     judged against one colour. The shadow sits behind the outline and wider
+     than it, putting a dark halo on both sides of the white - which holds over
+     the bright cloud tops as well as over the scrims. */
+  .hero a:focus-visible {
+    box-shadow: 0 0 0 10px rgb(9 17 38 / 72%);
+  }
+
+  /* The chip used to code "newly available" as amber, which reads as a warning
+     and is not what Baseline means by it. With the official mark alongside, the
+     two have to agree: green for widely, blue for newly, as Baseline draws them. */
+  .baseline {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px 4px 6px;
     border-radius: 5px;
-    background: #edf6ef;
-    color: #286044;
-    font-size: 11px;
+    gap: 6px;
     white-space: nowrap;
   }
 
-  .support.newly {
-    background: #fcf2dd;
-    color: #815219;
+  .baseline > span {
+    font-size: 0.6875rem;
+  }
+
+  .baseline strong {
+    font-weight: 620;
+  }
+
+  /* 36x20 is the artwork's own aspect ratio; scaled here to sit on a chip. */
+  .baseline-icon {
+    width: 1.35rem;
+    height: 0.75rem;
+    flex: none;
+  }
+
+  .baseline.widely {
+    background: #edf6ef;
+    color: #286044;
+  }
+
+  .baseline.widely .front {
+    fill: #1ea446;
+  }
+
+  .baseline.widely .back {
+    fill: #c4eed0;
+  }
+
+  .baseline.newly {
+    background: #e8f0fe;
+    color: #174ea6;
+  }
+
+  .baseline.newly .front {
+    fill: #1b6ef3;
+  }
+
+  .baseline.newly .back {
+    fill: #a8c7fa;
   }
 
   .source {
@@ -1319,7 +1623,7 @@
     display: flex;
     justify-content: space-between;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 550;
     list-style: none;
   }
@@ -1329,7 +1633,7 @@
   }
 
   .source summary > span {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 400;
     line-height: 1;
   }
@@ -1345,7 +1649,7 @@
   .code-caption {
     margin-top: 13px;
     color: var(--muted);
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
 
   .code-panel {
@@ -1367,7 +1671,7 @@
 
   .code-toolbar {
     display: flex;
-    min-height: 44px;
+    min-height: 2.75rem;
     align-items: center;
     justify-content: space-between;
     padding: 8px 10px 8px 16px;
@@ -1375,7 +1679,7 @@
     background: #f5f7fa;
     color: #647084;
     font:
-      11px/1 ui-monospace,
+      0.6875rem/1 ui-monospace,
       monospace;
     letter-spacing: 0.06em;
   }
@@ -1400,7 +1704,7 @@
     background: #fff;
     color: #344156;
     font:
-      600 11px/1 ui-sans-serif,
+      600 0.6875rem/1 ui-sans-serif,
       system-ui,
       sans-serif;
   }
@@ -1419,7 +1723,7 @@
     margin: 0;
     background: var(--th-background);
     color: var(--th-token);
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 1.65;
     tab-size: 2;
   }
@@ -1529,15 +1833,10 @@
     display: inline-block;
     width: 3.7em;
     padding-right: 1.2em;
-    color: #a0a9b7;
+    color: var(--quiet);
     content: attr(data-line);
     text-align: right;
     user-select: none;
-  }
-
-  .collection-note {
-    align-self: center;
-    padding: 40px 28px;
   }
 
   .note-symbol {
@@ -1545,13 +1844,13 @@
     margin-bottom: 34px;
     color: #9cb3dc;
     font:
-      36px/1.2 ui-monospace,
+      2.25rem/1.2 ui-monospace,
       monospace;
   }
 
   .collection-note h3 {
     margin-bottom: 18px;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 500;
     letter-spacing: -0.03em;
     line-height: 1.3;
@@ -1560,11 +1859,11 @@
   .collection-note > p:not(.eyebrow) {
     margin-bottom: 25px;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   .collection-note .text-link {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
 
   .coverage {
@@ -1581,7 +1880,7 @@
     border: 1px solid var(--line);
     border-radius: 999px;
     color: #55627a;
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 
   .switch > span {
@@ -1593,7 +1892,7 @@
     color: #3d4b5f;
     cursor: pointer;
     font:
-      12px/1.5 ui-monospace,
+      0.75rem/1.5 ui-monospace,
       SFMono-Regular,
       Consolas,
       monospace;
@@ -1611,12 +1910,12 @@
   }
 
   .switch input:focus-visible + span {
-    outline: 3px solid var(--blue);
+    outline: 3px solid var(--focus-ring);
     outline-offset: 3px;
   }
 
   .pair-head h3 {
-    font-size: 19px;
+    font-size: 1.1875rem;
     font-weight: 600;
     letter-spacing: -0.025em;
   }
@@ -1624,7 +1923,7 @@
   .pair-head p {
     max-width: 68ch;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   .pair-head .pair-tag {
@@ -1632,20 +1931,20 @@
     border: 1px dashed #c3cede;
     border-radius: 999px;
     color: #55627a;
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 
   .pair-note {
     max-width: 78ch;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
 
   .preview-label {
     display: inline-flex;
     align-items: center;
     font:
-      600 11px/1 ui-monospace,
+      600 0.6875rem/1 ui-monospace,
       monospace;
     gap: 8px;
     letter-spacing: 0.08em;
@@ -1673,7 +1972,7 @@
   .report-score strong {
     display: block;
     margin-top: 7px;
-    font-size: 34px;
+    font-size: 2.125rem;
     font-weight: 560;
     letter-spacing: -0.03em;
     line-height: 1;
@@ -1681,33 +1980,37 @@
 
   .report-score strong i {
     margin-left: 6px;
-    color: #8d99aa;
-    font-size: 14px;
+    color: var(--quiet);
+    font-size: 0.875rem;
     font-style: normal;
   }
 
   .report-score .coverage-value {
-    font-size: 21px;
+    font-size: 1.3125rem;
   }
 
+  /* The row header and the evidence column both need room to read. Below the
+     width the container query names, the table keeps its own scroller rather
+     than squeezing the third column to nothing. */
   .scorecard {
     width: 100%;
+    min-width: 32.5rem;
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: 0.7813rem;
   }
 
   .scorecard th,
   .scorecard td {
-    padding: 12px 20px;
+    padding: 10px 14px;
     border-bottom: 1px solid var(--line);
     text-align: left;
     vertical-align: top;
   }
 
   .scorecard thead th {
-    color: #7a8699;
+    color: var(--quiet);
     font:
-      600 11px/1.6 ui-monospace,
+      600 0.6875rem/1.6 ui-monospace,
       monospace;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -1723,7 +2026,7 @@
   }
 
   .score-cell {
-    width: 84px;
+    width: 5.25rem;
   }
 
   /* One unbreakable chip: the numeral and its denominator are a single line
@@ -1741,7 +2044,7 @@
   }
 
   .score i {
-    font-size: 11px;
+    font-size: 0.6875rem;
     font-style: normal;
     font-weight: 500;
     opacity: 0.66;
@@ -1765,11 +2068,11 @@
   .legend {
     display: flex;
     flex-wrap: wrap;
-    padding: 12px 20px;
+    padding: 12px 14px;
     border-top: 1px solid var(--line);
     background: #fbfcfe;
     color: var(--muted);
-    font-size: 12px;
+    font-size: 0.75rem;
     gap: 8px 18px;
   }
 
@@ -1792,7 +2095,7 @@
   }
 
   .findings > li {
-    padding: 19px 20px;
+    padding: 19px 14px;
     border-bottom: 1px solid var(--line);
   }
 
@@ -1804,13 +2107,13 @@
   }
 
   .finding-top h3 {
-    flex: 1 1 220px;
-    font-size: 15px;
+    flex: 1 1 13.75rem;
+    font-size: 0.9375rem;
     font-weight: 620;
   }
 
   .finding-top > code {
-    color: #7a8699;
+    color: var(--quiet);
   }
 
   .group {
@@ -1819,7 +2122,7 @@
     background: #eef2f8;
     color: #46536a;
     font:
-      600 11px/1.5 ui-monospace,
+      600 0.6875rem/1.5 ui-monospace,
       monospace;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -1838,7 +2141,7 @@
   .findings p {
     margin-top: 9px;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
 
   .evidence code {
@@ -1862,18 +2165,71 @@
     border: 1px solid var(--line);
     border-radius: 6px;
     color: #55627a;
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
 
   .report-tail h3 {
     margin-bottom: 7px;
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 620;
   }
 
   .report-tail p {
     color: var(--muted);
-    font-size: 13px;
+    font-size: 0.8125rem;
+  }
+
+  /* The report is a card in a two-column grid above 1150px and full width
+     below it, which makes it *narrower* on the wider viewport - 799px at a
+     1440px window, 986px at 1100px. Keyed to the viewport these rules ran
+     against the wrong axis. Keyed to the card's own inline size they follow the
+     box that actually has to hold the table.
+
+     The stacked layout above is the base, so the report stays readable with no
+     size query at all; every engine in this project's browserslist has had them
+     for years, and this is the direction the site own  recipe
+     recommends. */
+  @container report (width >= 640px) {
+    .report-bar {
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .report-bar p {
+      text-align: right;
+    }
+
+    .report-score {
+      padding-inline: 20px;
+    }
+
+    .report-tail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-inline: 20px;
+    }
+
+    .scorecard {
+      font-size: 0.8125rem;
+    }
+
+    .scorecard th,
+    .scorecard td {
+      padding: 12px 20px;
+    }
+
+    .findings > li,
+    .legend {
+      padding-inline: 20px;
+    }
+  }
+
+  /* Same reasoning for the before/after pair: the two panels share a row when
+     the pair has room for them, not when the window does. */
+  @container pair (width >= 640px) {
+    .pair-code {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   .audit-prompt {
@@ -1887,7 +2243,7 @@
   .audit-prompt p {
     color: #24344d;
     font:
-      13px/1.7 ui-monospace,
+      0.8125rem/1.7 ui-monospace,
       SFMono-Regular,
       Consolas,
       monospace;
@@ -1900,7 +2256,7 @@
     border-radius: 5px;
     margin-top: 14px;
     background: #fff;
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 
   .audit-prompt button:hover {
@@ -1914,7 +2270,7 @@
     border-radius: 8px;
     background: #e0ebff;
     color: #1a3155;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 650;
     gap: 28px;
   }
@@ -1927,7 +2283,7 @@
     display: block;
     margin-top: 18px;
     color: #b8c9e5;
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
 
   .prompt {
@@ -1940,7 +2296,7 @@
   .prompt p {
     color: #e0e8f5;
     font:
-      13px/1.7 ui-monospace,
+      0.8125rem/1.7 ui-monospace,
       monospace;
   }
 
@@ -1952,7 +2308,7 @@
     margin-top: 15px;
     background: #304462;
     color: #e0e8f5;
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 
   .sr-only,

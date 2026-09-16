@@ -1,0 +1,14 @@
+# Baseline Widely available: the features interoperable across the core browser
+# set for at least 30 months. Browserslist resolves this query itself, so the
+# target is stated in the same terms the compatibility decisions are made in
+# rather than as a hand-rolled version list that drifts out of step with them.
+#
+# This is the floor for what may be used *unguarded*, not the floor the site
+# works at. Popover, @starting-style, scroll-driven masking and view transitions
+# all sit behind a feature query or a runtime check, so engines below this line
+# still get a usable page - they are simply not what the linter reasons about.
+#
+# eslint-plugin-compat reads this. With no config at all it fell back to
+# `defaults`, which put Opera Mini in the target set and turned every result
+# into a warning about requestAnimationFrame.
+baseline widely available

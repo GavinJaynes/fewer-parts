@@ -1,0 +1,54 @@
+---
+import { recipes } from "../lib/recipes";
+
+/**
+ * The official Baseline badge. The icon artwork and its two colours come from
+ * the `baseline-status` web component published by the WebDX Community Group,
+ * drawn inline rather than pulled from the live component: this site knows each
+ * recipe's status at build time and has no reason to fetch it again per visit.
+ *
+ * @see https://web.dev/baseline
+ * @see https://github.com/web-platform-dx/baseline-status
+ */
+type Status = (typeof recipes)[number]["status"];
+
+interface Props {
+  status: Status;
+}
+
+const { status } = Astro.props;
+
+// Keyed by the status strings themselves, so a third status added to the
+// recipe data fails to compile here instead of silently drawing the wrong mark.
+const variants = {
+  "Widely available": "widely",
+  "Newly available": "newly",
+} as const satisfies Record<Status, string>;
+
+const variant = variants[status];
+---
+
+<span class:list={["baseline", variant]}>
+  {variant === "widely" ? (
+    <svg aria-hidden="true" class="baseline-icon" viewBox="0 0 36 20">
+      <path class="front" d="M18 8L20 10L18 12L16 10L18 8Z" />
+      <path class="front" d="M26 0L28 2L10 20L0 10L2 8L10 16L26 0Z" />
+      <path
+        class="back"
+        d="M28 2L26 4L32 10L26 16L22 12L20 14L26 20L36 10L28 2Z"
+      />
+      <path class="back" d="M10 0L2 8L4 10L10 4L14 8L16 6L10 0Z" />
+    </svg>
+  ) : (
+    <svg aria-hidden="true" class="baseline-icon" viewBox="0 0 36 20">
+      <path
+        class="back"
+        d="m10 0 2 2-2 2-2-2 2-2Zm4 4 2 2-2 2-2-2 2-2Zm16 0 2 2-2 2-2-2 2-2Zm4 4 2 2-2 2-2-2 2-2Zm-4 4 2 2-2 2-2-2 2-2Zm-4 4 2 2-2 2-2-2 2-2Zm-4-4 2 2-2 2-2-2 2-2ZM6 4l2 2-2 2-2-2 2-2Z"
+      />
+      <path class="front" d="m26 0 2 2-18 18L0 10l2-2 8 8L26 0Z" />
+    </svg>
+  )}
+  <span>
+    Baseline <strong>{status}</strong>
+  </span>
+</span>
