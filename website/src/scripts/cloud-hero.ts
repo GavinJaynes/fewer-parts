@@ -11,6 +11,17 @@ import cloudShader from "../shaders/clouds.wgsl";
 const clamp = (value: number, minimum = 0, maximum = 1) =>
   Math.min(Math.max(value, minimum), maximum);
 
+// The march is the expensive part of the hero, and how expensive depends
+// entirely on the GPU: a low-end integrated part can be an order of magnitude
+// off a discrete one. Rather than pick a setting that is either soft everywhere
+// or slow somewhere, start optimistic and step down when frames keep arriving
+// late. `quality` drives the number of raymarch slots in the shader.
+const qualitySteps = [1, 0.55, 0.15] as const;
+// The loop asks for 30fps. Sustained frames this far past that budget mean the
+// march is what is in the way, not the browser.
+const slowFrameMs = 46;
+const framesPerVerdict = 45;
+
 export async function mountCloudHero(root: HTMLElement) {
   const canvas = root.querySelector<HTMLCanvasElement>("[data-cloud-canvas]");
   if (!canvas || !("gpu" in navigator)) {
@@ -20,7 +31,6 @@ export async function mountCloudHero(root: HTMLElement) {
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const coarsePointer = window.matchMedia("(pointer: coarse)");
-  const pointer = { currentX: 0, currentY: 0, targetX: 0, targetY: 0 };
   let disposed = false;
   let visible = true;
   let scroll = 0;
@@ -31,15 +41,15 @@ export async function mountCloudHero(root: HTMLElement) {
 
   try {
     const output = surface(gpu, canvas, {
-      dpr: coarsePointer.matches ? 0.7 : 0.82,
+      dpr: coarsePointer.matches ? 0.72 : 0.75,
       label: "Above the clouds hero",
     });
+    let qualityStep = coarsePointer.matches ? 1 : 0;
     const scene = effect(gpu, cloudShader, {
       label: "Cloud atmosphere",
       set: {
         params: {
-          pointer: [0, 0],
-          quality: coarsePointer.matches ? 0.88 : 1,
+          quality: qualitySteps[qualityStep],
           reduced_motion: reduceMotion.matches ? 1 : 0,
           resolution: [canvas.clientWidth, canvas.clientHeight],
           scroll: 0,
@@ -49,6 +59,35 @@ export async function mountCloudHero(root: HTMLElement) {
     });
     const startedAt = performance.now();
     let firstFrame = true;
+    let lastFrameAt = 0;
+    let frameCount = 0;
+    let frameTotal = 0;
+
+    const observeFrameCost = (now: number) => {
+      const previous = lastFrameAt;
+      lastFrameAt = now;
+      // A long gap means the loop was parked (hidden tab, scrolled away), not
+      // that the GPU is struggling, so it should not count against quality.
+      if (previous === 0 || now - previous > 400) {
+        return;
+      }
+
+      frameTotal += now - previous;
+      frameCount += 1;
+      if (frameCount < framesPerVerdict) {
+        return;
+      }
+
+      const average = frameTotal / frameCount;
+      frameCount = 0;
+      frameTotal = 0;
+      if (average <= slowFrameMs || qualityStep >= qualitySteps.length - 1) {
+        return;
+      }
+
+      qualityStep += 1;
+      scene.set({ params: { quality: qualitySteps[qualityStep] } });
+    };
 
     const updateScroll = () => {
       const rect = root.getBoundingClientRect();
@@ -57,15 +96,16 @@ export async function mountCloudHero(root: HTMLElement) {
     };
 
     const render = (currentFrame = frame(gpu)) => {
-      pointer.currentX += (pointer.targetX - pointer.currentX) * 0.045;
-      pointer.currentY += (pointer.targetY - pointer.currentY) * 0.045;
+      const now = performance.now();
+      if (!reduceMotion.matches) {
+        observeFrameCost(now);
+      }
       const elapsed = reduceMotion.matches
         ? 0
-        : ((performance.now() - startedAt) / 1000) % 3600;
+        : ((now - startedAt) / 1000) % 3600;
 
       scene.set({
         params: {
-          pointer: [pointer.currentX, pointer.currentY],
           reduced_motion: reduceMotion.matches ? 1 : 0,
           scroll,
           time: elapsed,
@@ -85,6 +125,7 @@ export async function mountCloudHero(root: HTMLElement) {
     const stopLoop = () => {
       loop?.stop();
       loop = undefined;
+      lastFrameAt = 0;
     };
 
     const startLoop = () => {
@@ -94,20 +135,6 @@ export async function mountCloudHero(root: HTMLElement) {
         return;
       }
       loop = frameLoop(gpu, render, { fps: 30 });
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (reduceMotion.matches) return;
-      const rect = root.getBoundingClientRect();
-      pointer.targetX =
-        clamp((event.clientX - rect.left) / rect.width, 0, 1) * 2 - 1;
-      pointer.targetY =
-        (clamp((event.clientY - rect.top) / rect.height, 0, 1) * 2 - 1) * -1;
-    };
-
-    const handlePointerLeave = () => {
-      pointer.targetX = 0;
-      pointer.targetY = 0;
     };
 
     const handleVisibility = () => {
@@ -135,8 +162,6 @@ export async function mountCloudHero(root: HTMLElement) {
     updateScroll();
     observer.observe(root);
     window.addEventListener("scroll", updateScroll, { passive: true });
-    root.addEventListener("pointermove", handlePointerMove, { passive: true });
-    root.addEventListener("pointerleave", handlePointerLeave);
     document.addEventListener("visibilitychange", handleVisibility);
     reduceMotion.addEventListener("change", handleMotionChange);
     startLoop();
@@ -147,8 +172,6 @@ export async function mountCloudHero(root: HTMLElement) {
       observer.disconnect();
       removeResizeListener();
       window.removeEventListener("scroll", updateScroll);
-      root.removeEventListener("pointermove", handlePointerMove);
-      root.removeEventListener("pointerleave", handlePointerLeave);
       document.removeEventListener("visibilitychange", handleVisibility);
       reduceMotion.removeEventListener("change", handleMotionChange);
       gpu.dispose();
