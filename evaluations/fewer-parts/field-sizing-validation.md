@@ -1,6 +1,6 @@
 # Field-sizing recipe validation
 
-Checked 2026-09-14 using [the browser check](../../tests/modern-web-ui/field-sizing.cjs) against [the distributable demo](../../skills/modern-web-ui/assets/field-sizing.html).
+Checked 2026-09-14 using [the browser check](../../tests/fewer-parts/field-sizing.cjs) against [the distributable demo](../../skills/fewer-parts/assets/field-sizing.html).
 
 Chrome 152.0.7977.84 reported native field-sizing support. Passed:
 

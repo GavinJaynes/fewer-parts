@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
 export const GET = () => {
-  const archivePath = path.resolve(process.cwd(), "../dist/modern-web-ui.zip");
+  const archivePath = path.resolve(process.cwd(), "../dist/fewer-parts.zip");
   const built = statSync(archivePath).mtimeMs;
   const checkFresh = (target: string) => {
     if (statSync(target).isDirectory()) {
@@ -15,14 +15,14 @@ export const GET = () => {
       );
     }
   };
-  for (const entry of ["skills/modern-web-ui", "LICENSE", "NOTICE.md"]) {
+  for (const entry of ["skills/fewer-parts", "LICENSE", "NOTICE.md"]) {
     checkFresh(path.resolve(process.cwd(), "..", entry));
   }
   const archive = readFileSync(archivePath);
   return new Response(new Uint8Array(archive), {
     headers: {
       "Content-Type": "application/zip",
-      "Content-Disposition": 'attachment; filename="modern-web-ui.zip"',
+      "Content-Disposition": 'attachment; filename="fewer-parts.zip"',
     },
   });
 };

@@ -38,7 +38,7 @@ export const bandFor = function bandFor(score: number): ScoreBand {
 
 export const auditReport = {
   prompt:
-    "Audit this project's UI with $modern-web-ui. Read-only — no changes yet.",
+    "Audit this project's UI with $fewer-parts. Read-only — no changes yet.",
   scope:
     "14 components, 3 routes, the Tailwind v4 theme, and the shared stylesheet",
   score: "2.8",

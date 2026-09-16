@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "skill_name": "modern-web-ui",
-    "skill_path": "C:/projects/skills/skills/modern-web-ui",
+    "skill_name": "fewer-parts",
+    "skill_path": "C:/projects/skills/skills/fewer-parts",
     "executor_model": "claude-fable-5-1 (subagents inherit session model)",
     "analyzer_model": "<model-name>",
     "timestamp": "2026-09-03T05:37:26Z",
@@ -343,6 +343,6 @@
     "Baseline touches the skill did not produce: lh-unit min/max heights that reproduce the rows=4 height exactly; hyphens-auto and max-w-prose on the card; an explicit note that no @supports gate is needed.",
     "Cost: textarea with-skill used +36k tokens and +228s vs baseline; card with-skill used +2k tokens but finished 128s faster (baseline lost time to a port collision). Net time delta is dominated by environment noise.",
     "Test-harness issue: two concurrent runs bound the same port (8847) and one with-skill run briefly observed the other run's page; outputs were unaffected but future runs should assign distinct ports per run.",
-    "Eval design: these two briefs did not discriminate because the baseline model already knows the features. Better discriminators would be the boundary checks in modern-web-ui-evaluation.md (Tailwind v3 repo, Safari 15.6 constraint, no-network, small-edit scope, existing carousel with focus management)."
+    "Eval design: these two briefs did not discriminate because the baseline model already knows the features. Better discriminators would be the boundary checks in fewer-parts-evaluation.md (Tailwind v3 repo, Safari 15.6 constraint, no-network, small-edit scope, existing carousel with focus management)."
   ]
 }

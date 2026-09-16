@@ -39,7 +39,7 @@
     "stylelint-prettier": "^5.0.3",
     "ultracite": "^7.11.1"
   },
-  "name": "modern-web-ui-showcase",
+  "name": "fewer-parts-showcase",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build",

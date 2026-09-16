@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @source "./index.html";
-@source "../../skills/modern-web-ui/assets/tailwind-*.html";
+@source "../../skills/fewer-parts/assets/tailwind-*.html";
 
 @theme {
   --color-brand-600: oklch(0.48 0.15 260);

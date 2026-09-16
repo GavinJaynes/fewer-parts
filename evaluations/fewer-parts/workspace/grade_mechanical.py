@@ -1,4 +1,4 @@
-"""Mechanical checks for the modern-web-ui A/B runs.
+"""Mechanical checks for the fewer-parts A/B runs.
 
 Usage: python grade_mechanical.py <iteration-dir>
 Prints a JSON object keyed by "<eval>/<config>" with the results of the checks

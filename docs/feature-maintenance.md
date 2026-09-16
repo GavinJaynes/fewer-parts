@@ -1,6 +1,6 @@
-# Keeping Modern Web UI current
+# Keeping Fewer Parts current
 
-The installed skill does a focused live lookup for the current task. Repository maintenance discovers useful additions and keeps the dated [feature register](../skills/modern-web-ui/references/features.md) and runnable recipes current. Neither requires mirroring a documentation site or an MCP server.
+The installed skill does a focused live lookup for the current task. Repository maintenance discovers useful additions and keeps the dated [feature register](../skills/fewer-parts/references/features.md) and runnable recipes current. Neither requires mirroring a documentation site or an MCP server.
 
 ## Monthly discovery
 
@@ -18,7 +18,7 @@ For machine-readable comparisons, reuse the published [web-features dataset](htt
 4. Exercise relevant behavior, fallback, accessibility, and browser targets. Record engines/versions and limitations. For a support regression, revisit existing recipes and required fallbacks before adding new features.
 5. Run repository validation and packaging. Publish updated skill files through the normal repository release process; installed copies do not update automatically.
 
-Current examples: [field-sizing](../skills/modern-web-ui/references/field-sizing.md) and four [showcase recipes](../skills/modern-web-ui/references/showcase-recipes.md). Entries marked candidate remain ideas rather than completed implementations. The Astro gallery reads the assets directly; when support changes, update its dated labels in `website/src/lib/recipes.ts` as well as the register. Rebuild the skill archive before building the website so its download includes the current source.
+Current examples: [field-sizing](../skills/fewer-parts/references/field-sizing.md) and four [showcase recipes](../skills/fewer-parts/references/showcase-recipes.md). Entries marked candidate remain ideas rather than completed implementations. The Astro gallery reads the assets directly; when support changes, update its dated labels in `website/src/lib/recipes.ts` as well as the register. Rebuild the skill archive before building the website so its download includes the current source.
 
 ## Measure skill value
 

@@ -14,7 +14,7 @@ Look for concrete opportunities involving:
 - styling architecture, token reuse, duplication, specificity, and fit with the installed Tailwind or other styling system;
 - native HTML, CSS, or web APIs that can replace workarounds without losing application behavior;
 - semantics, keyboard interaction, focus, announcements, contrast, reduced motion, and fallback states;
-- browser compatibility and progressive enhancement against declared targets, or Baseline Widely Available when targets are absent;
+- browser compatibility and progressive enhancement against declared targets, or Baseline Widely Available when targets are absent, which is itself worth reporting where tooling already reads those targets;
 - consistency and maintainability across the inspected UI surface.
 
 Do not recommend novelty for its own sake. Validate each proposed feature against live sources and the project's actual constraints. Omit speculative findings that lack repository evidence.

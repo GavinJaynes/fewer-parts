@@ -1,4 +1,4 @@
-# Skill Benchmark: modern-web-ui
+# Skill Benchmark: fewer-parts
 
 **Recorded executor model**: claude-fable-5-1 (as recorded by the original harness)
 **Date**: 2026-09-03
@@ -11,4 +11,4 @@ This is the historical pilot for an earlier skill draft. It does not evaluate th
 | Resource card | 9/9 / 335.1 / 95,999 | 9/9 / 463.4 / 93,579 |
 | Message textarea | 9/9 / 469.6 / 105,396 | 8/9 / 241.4 / 69,473 |
 
-The single assertion difference concerned explicitly reporting a deleted-content check. Both configurations used the same primary native features. Two task pairs do not establish a consistent improvement; see the [evaluation narrative](../../modern-web-ui-evaluation.md).
+The single assertion difference concerned explicitly reporting a deleted-content check. Both configurations used the same primary native features. Two task pairs do not establish a consistent improvement; see the [evaluation narrative](../../fewer-parts-evaluation.md).

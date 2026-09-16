@@ -2,7 +2,7 @@
 
 2026-09-14: Astro 7.3.2 static build passed using Node 24.19.0. The website reads five HTML recipes from the skill assets and serves the generated skill ZIP through a static download endpoint. The site needs no server runtime in production. The interaction suite passed against both the development server and the production output served by a plain static HTTP server.
 
-Chrome 152.0.7977.84 passed the [showcase checks](../../tests/modern-web-ui/showcase.cjs):
+Chrome 152.0.7977.84 passed the [showcase checks](../../tests/fewer-parts/showcase.cjs):
 
 - Textarea native growth/deletion and forced fallback.
 - Container width changing the card's column layout.

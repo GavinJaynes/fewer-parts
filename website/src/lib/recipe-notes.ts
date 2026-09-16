@@ -3,7 +3,7 @@ import path from "node:path";
 
 const referencesDirectory = path.resolve(
   process.cwd(),
-  "../skills/modern-web-ui/references"
+  "../skills/fewer-parts/references"
 );
 
 const fieldSizingId = "field-sizing";

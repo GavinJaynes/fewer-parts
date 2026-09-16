@@ -10,7 +10,7 @@ const path = require('node:path');
     const page = await browser.newPage({ viewport: { width: 1200, height: 1000 } });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    const url = pathToFileURL(path.resolve(__dirname, '../../skills/modern-web-ui/assets/field-sizing.html')).href;
+    const url = pathToFileURL(path.resolve(__dirname, '../../skills/fewer-parts/assets/field-sizing.html')).href;
     await page.goto(url);
     const field = page.getByRole('textbox', { name: 'Your message' });
     const size = () => field.evaluate(el => ({ height: el.offsetHeight, scroll: el.scrollHeight, client: el.clientHeight }));

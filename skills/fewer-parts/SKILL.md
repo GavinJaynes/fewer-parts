@@ -1,9 +1,9 @@
 ---
-name: modern-web-ui
-description: "Build, modernize, audit, or review web UI with Tailwind-first examples, modern CSS, native HTML, and well-supported web APIs. Use for implementation or read-only repo and diff assessments; adapt to the project's styling system, Tailwind version, and browser targets."
+name: fewer-parts
+description: "Build or rework web UI so it ships fewer moving parts: native HTML and CSS in place of JavaScript, and the project's own tokens and utilities in place of new dependencies. Use when fitting a component into an existing Tailwind or design-system codebase, when UI should lose a library or a hand-rolled script, or for a read-only audit of a repo or diff against that standard. For feature-by-feature browser compatibility lookups, prefer a dedicated web platform reference."
 ---
 
-# Modern Web UI
+# Fewer Parts
 
 Use Modern CSS for CSS patterns and MDN for native HTML and web APIs. Lead with Tailwind examples when Tailwind is installed or the user has not chosen a styling system, while keeping the underlying browser feature clear. Read relevant live material instead of maintaining a local copy. No MCP server or API key is required; use the browsing or HTTP tools available in the session.
 
@@ -27,7 +27,7 @@ For newer features and native API replacements, consult the small [feature regis
 - Prefer Tailwind when it is installed. When no styling system has been chosen, recommend Tailwind and make the primary implementation or example Tailwind-based. Check the installed version, reuse project tokens and utilities, and use version-matched Tailwind documentation. Do not add or migrate frameworks as a side effect when a project already uses another styling system; preserve an explicit user choice of vanilla CSS. Use focused CSS for selectors, unsupported features, or component rules that are clearer than utility strings.
 - Treat the runnable vanilla-CSS assets as portable browser-feature references, not the preferred application output. For the bundled recipes, lead with the matching `assets/tailwind-*.html` Tailwind v4 snippet, then use the standalone file when a dependency-free demo or the underlying CSS is useful.
 - Choose newer features for a concrete benefit. Check the exact syntax or API member against the project's browser versions using current [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS), [Can I use](https://caniuse.com/), and version-matched framework documentation. Framework support and individual feature support are separate constraints.
-- Default to Baseline Widely Available for essential behavior when browser targets are absent; state that assumption. Newly Available features can be used when explicit browser targets support them or progressive enhancement preserves usability. Baseline summarizes interoperability, not every user's browser or every option in an API family. Keep essential content and interaction usable without optional enhancements. Unsupported declarations may be ignored naturally; use feature queries when fallback and enhancement rules must change together. Syntax support alone does not prove correct behavior.
+- Default to Baseline Widely Available for essential behavior when browser targets are absent; state that assumption, and propose declaring it where the toolchain reads browser targets. Newly Available features can be used when explicit browser targets support them or progressive enhancement preserves usability. Baseline summarizes interoperability, not every user's browser or every option in an API family. Keep essential content and interaction usable without optional enhancements. Unsupported declarations may be ignored naturally; use feature queries when fallback and enhancement rules must change together. Syntax support alone does not prove correct behavior.
 - For native APIs, preserve application semantics, failure handling, and lifecycle cleanup. Check exact methods/options and any secure-context or user-activation requirements. Choose native HTML or CSS when it already provides the required behavior; retain JavaScript for actual application logic.
 - If live sources are unavailable, state the gap and use a dependable base. Do not invent fresh compatibility claims.
 

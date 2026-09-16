@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fewer Parts"
+  short_description: "Build and review modern, Tailwind-first web UI"
+  default_prompt: "Use $fewer-parts to build, modernize, or audit/review this web UI using the project's styling system, suitable native HTML and web APIs, and live compatibility sources."

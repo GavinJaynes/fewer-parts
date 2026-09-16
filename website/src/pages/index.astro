@@ -9,7 +9,7 @@ import { recipes } from "../lib/recipes";
 import { transformations } from "../lib/transformations";
 import "../styles/site.css";
 const installPrompt =
-  "Use $modern-web-ui to build this interface with Tailwind where the project permits it, plus suitable native HTML and web APIs. Preserve the design and check the Tailwind version and browser targets.";
+  "Use $fewer-parts to build this interface with Tailwind where the project permits it, plus suitable native HTML and web APIs. Preserve the design and check the Tailwind version and browser targets.";
 // Nav "Examples" opens the recipe index, which lands on the first example.
 const examplesHref = `/recipes/${recipes[0].id}/`;
 const coverage = [
@@ -28,8 +28,8 @@ const coverage = [
 <html lang="en">
   <head>
     <SiteHead
-      description="A skill for coding agents: build interfaces on modern CSS, native HTML, and web APIs, or audit the UI you already have. Runnable demos, before-and-after code, and a scored review."
-      title="Modern Web UI — Native patterns for better interfaces"
+      description="A skill for coding agents: build interfaces from native HTML, CSS, and web APIs instead of dependencies, or audit the UI you already have. Runnable demos, before-and-after code, and a scored review."
+      title="Fewer Parts — Better interfaces, fewer moving parts"
     />
   </head>
   <body>
@@ -373,7 +373,7 @@ const coverage = [
             have. It reads live references while it works, adapts to your
             styling system, and needs no MCP server or API key.
           </p>
-          <a class="download" download href="/downloads/modern-web-ui.zip">
+          <a class="download" download href="/downloads/fewer-parts.zip">
             Download the skill <span aria-hidden="true">↓</span>
           </a>
           <a class="repo-link" href="https://github.com/GavinJaynes/skills">
@@ -384,9 +384,9 @@ const coverage = [
           <h3>Install in your project</h3>
           <p>
             Extract the download and copy the complete{" "}
-            <code>modern-web-ui</code> folder into:
+            <code>fewer-parts</code> folder into:
           </p>
-          <pre><code>.agents/skills/modern-web-ui/</code></pre>
+          <pre><code>.agents/skills/fewer-parts/</code></pre>
           <p>Then ask your agent:</p>
           <div class="prompt">
             <p id="install-prompt">{installPrompt}</p>
@@ -408,7 +408,7 @@ const coverage = [
     </main>
     <footer>
       <a class="brand" href="/">
-        modern web ui
+        fewer parts
       </a>
       <p>
         Original recipes, open source under MIT.

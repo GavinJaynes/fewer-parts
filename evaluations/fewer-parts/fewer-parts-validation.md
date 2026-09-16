@@ -1,4 +1,4 @@
-# Modern Web UI draft validation
+# Fewer Parts draft validation
 
 Checked on 2 September 2026. This is a reviewable skill draft; it has not been installed into the personal skill directory.
 

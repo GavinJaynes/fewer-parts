@@ -1472,19 +1472,18 @@
     white-space: nowrap;
   }
 
+  /* Square now the mark is a square. The old box was 2.25rem wide because it
+     held an `m`, which is wider than it is tall; a grid of rects is not.
+     `color` stays: the mark is drawn in currentColor. */
   .brand-mark {
     display: flex;
-    width: 2.25rem;
+    width: 2rem;
     height: 2rem;
     align-items: center;
     justify-content: center;
     border-radius: 7px;
     background: #192439;
     color: #fff;
-    font:
-      700 1.3125rem/1 ui-monospace,
-      monospace;
-    letter-spacing: 0;
   }
 
   .edition {

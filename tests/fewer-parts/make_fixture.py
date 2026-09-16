@@ -7,9 +7,9 @@ long_card = card.replace('Content can grow without widening the surrounding layo
 base_field = field.replace(' supports-[field-sizing:content]:field-sizing-content', '').replace('message', 'fallback-message')
 html = '''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Modern Web UI draft checks</title><link rel="stylesheet" href="/output.css"></head>
+<title>Fewer Parts draft checks</title><link rel="stylesheet" href="/output.css"></head>
 <body class="bg-slate-50 p-6 text-slate-950"><main class="space-y-8">
-<h1 class="text-2xl font-semibold">Modern Web UI draft checks</h1>
+<h1 class="text-2xl font-semibold">Fewer Parts draft checks</h1>
 <section aria-label="Card layouts" class="flex flex-wrap gap-6">
 <div style="width:300px;max-width:100%">''' + long_card + '''</div>
 <div style="width:720px;max-width:100%">''' + card + '''</div></section>

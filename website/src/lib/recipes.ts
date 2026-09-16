@@ -107,7 +107,7 @@ export const recipes = definitions.map((recipe) => {
   const tailwind = readFileSync(
     path.resolve(
       process.cwd(),
-      "../skills/modern-web-ui/assets",
+      "../skills/fewer-parts/assets",
       `tailwind-${recipe.id}.html`
     ),
     "utf-8"
@@ -115,7 +115,7 @@ export const recipes = definitions.map((recipe) => {
   const html = readFileSync(
     path.resolve(
       process.cwd(),
-      "../skills/modern-web-ui/assets",
+      "../skills/fewer-parts/assets",
       `${recipe.id}.html`
     ),
     "utf-8"

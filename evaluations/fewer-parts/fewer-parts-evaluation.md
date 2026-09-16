@@ -1,6 +1,6 @@
-# Modern Web UI evaluation briefs
+# Fewer Parts evaluation briefs
 
-These briefs evaluate the skill's decisions on realistic UI tasks. They are not instructions loaded by the skill. The first-draft checks and their limits are recorded separately in `modern-web-ui-validation.md`.
+These briefs evaluate the skill's decisions on realistic UI tasks. They are not instructions loaded by the skill. The first-draft checks and their limits are recorded separately in `fewer-parts-validation.md`.
 
 ## How to compare
 

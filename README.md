@@ -2,9 +2,9 @@
 
 Small, reusable skills for coding agents. Each folder under `skills/` can be installed independently.
 
-## Modern Web UI
+## Fewer Parts
 
-[Modern Web UI](skills/modern-web-ui/SKILL.md) helps an agent apply modern CSS, native HTML, and well-supported web APIs. It uses [Modern CSS](https://modern-css.com/)'s live cheatsheet and AI exports, plus MDN and Baseline sources. It requires an agent with web browsing or HTTP access; it has no MCP server, API key, or runtime dependency of its own.
+[Fewer Parts](skills/fewer-parts/SKILL.md) helps an agent apply modern CSS, native HTML, and well-supported web APIs. It uses [Modern CSS](https://modern-css.com/)'s live cheatsheet and AI exports, plus MDN and Baseline sources. It requires an agent with web browsing or HTTP access; it has no MCP server, API key, or runtime dependency of its own.
 
 The skill guides the agent to:
 
@@ -17,21 +17,21 @@ It does not bundle the site, prescribe a visual style, or promise that newer syn
 
 ## Install and use
 
-Copy the complete `skills/modern-web-ui/` folder into your target project's `.agents/skills/modern-web-ui/` directory. Keep its `SKILL.md`, `references/`, `assets/`, and `agents/` together. If that destination already exists, review the differences before replacing it.
+Copy the complete `skills/fewer-parts/` folder into your target project's `.agents/skills/fewer-parts/` directory. Keep its `SKILL.md`, `references/`, `assets/`, and `agents/` together. If that destination already exists, review the differences before replacing it.
 
 For Codex, invoke it with a request such as:
 
 ```text
-Use $modern-web-ui to simplify this component's CSS while preserving its layout, keyboard behavior, and browser requirements.
+Use $fewer-parts to simplify this component's CSS while preserving its layout, keyboard behavior, and browser requirements.
 ```
 
 Automatic selection is also enabled by default. See the [official skill documentation](https://learn.chatgpt.com/docs/build-skills) for supported installation locations and discovery behavior. For other agents, use that agent's skill installation mechanism. Do not replace your project's `AGENTS.md` with the upstream site's reference file.
 
 ## Recipes and current features
 
-Start from the [Tailwind field-sizing example](skills/modern-web-ui/assets/tailwind-field-sizing.html) when adapting the pattern to an application. Open the [standalone field-sizing demo](skills/modern-web-ui/assets/field-sizing.html) in a browser to try typing, deletion, long content, and the fallback. The standalone demo displays its actual component CSS and runs directly from disk without external scripts or fonts.
+Start from the [Tailwind field-sizing example](skills/fewer-parts/assets/tailwind-field-sizing.html) when adapting the pattern to an application. Open the [standalone field-sizing demo](skills/fewer-parts/assets/field-sizing.html) in a browser to try typing, deletion, long content, and the fallback. The standalone demo displays its actual component CSS and runs directly from disk without external scripts or fonts.
 
-The dated [feature register](skills/modern-web-ui/references/features.md) includes CSS, HTML, and web API candidates. The skill checks live support against project targets: Widely Available is the default for essential behavior, with Newly Available features permitted where targets or progressive enhancement allow them. Candidate entries are not completed recipes.
+The dated [feature register](skills/fewer-parts/references/features.md) includes CSS, HTML, and web API candidates. The skill checks live support against project targets: Widely Available is the default for essential behavior, with Newly Available features permitted where targets or progressive enhancement allow them. Candidate entries are not completed recipes.
 
 Follow [feature maintenance](docs/feature-maintenance.md) for monthly discovery using existing Baseline Alerts, adoption criteria, and recipe verification. Installing the skill does not subscribe you to alerts or automatically update installed copies.
 
@@ -45,7 +45,7 @@ python scripts/release.py check
 python scripts/release.py package
 ```
 
-Packaging validates the sources and writes `dist/modern-web-ui.zip` and `dist/SHA256SUMS`. The archive contains the skill folder plus its license and attribution notice. Tests, evaluation runs, dependencies, and local configuration are excluded. Identical inputs produce the same archive within the same Python/compression environment.
+Packaging validates the sources and writes `dist/fewer-parts.zip` and `dist/SHA256SUMS`. The archive contains the skill folder plus its license and attribution notice. Tests, evaluation runs, dependencies, and local configuration are excluded. Identical inputs produce the same archive within the same Python/compression environment.
 
 The GitHub Actions workflow runs skill validation, packaging, and the Astro production build on pushes, pull requests, and manual dispatches. It uploads packages as workflow artifacts; it does not publish a release automatically.
 
@@ -63,41 +63,41 @@ npm run dev
 
 For production, run `npm run build` in `website/`. Deploy the generated `website/dist/` directory to a static host. Build from the repository root checkout, keeping the sibling `skills/` and `dist/` paths available; do not deploy the repository itself. The download endpoint fails the build when the skill archive is older than its source files, so regenerate the ZIP after skill changes. No hosting provider is configured yet.
 
-With Playwright available to Node and Chrome installed, run `node tests/modern-web-ui/showcase.cjs` from the repository root while the website is running. It defaults to `http://127.0.0.1:4321`; set `SHOWCASE_URL` for another preview. This checks demo behavior, source copying, the actual downloadable archive, and narrow layouts. See [showcase validation](evaluations/modern-web-ui/showcase-validation.md).
+With Playwright available to Node and Chrome installed, run `node tests/fewer-parts/showcase.cjs` from the repository root while the website is running. It defaults to `http://127.0.0.1:4321`; set `SHOWCASE_URL` for another preview. This checks demo behavior, source copying, the actual downloadable archive, and narrow layouts. See [showcase validation](evaluations/fewer-parts/showcase-validation.md).
 
 ## Repository layout
 
 ```text
-skills/modern-web-ui/   Skill, references, runnable recipes, and agent metadata
+skills/fewer-parts/   Skill, references, runnable recipes, and agent metadata
 docs/                  Feature maintenance process
 website/               Astro showcase with shared recipe sources
 scripts/release.py     Validation and packaging
 requirements-dev.txt   Packaging/validation dependency
 .github/workflows/    CI configuration
 evaluations/           Historical observations and proposed comparisons
-tests/modern-web-ui/   Original browser smoke fixture
+tests/fewer-parts/   Original browser smoke fixture
 ```
 
 When adding a skill, put it in its own named folder, link any supporting references from `SKILL.md`, and run the validation/package command. The packager accepts Markdown and YAML skill files, and HTML recipes under `assets/`; other asset types need an explicit validation change.
 
 ## Evidence and limitations
 
-The [original pilot comparison](evaluations/modern-web-ui/modern-web-ui-evaluation.md) tested two tasks with and without an earlier draft. Both configurations chose similar native CSS. It does not establish a consistent output-quality improvement, and it was not a test of this basic version.
+The [original pilot comparison](evaluations/fewer-parts/fewer-parts-evaluation.md) tested two tasks with and without an earlier draft. Both configurations chose similar native CSS. It does not establish a consistent output-quality improvement, and it was not a test of this basic version.
 
-The [source coverage review](evaluations/modern-web-ui/upstream-integration-review.md) found that the full-text export omitted some live snippets. The skill therefore follows detailed pages and other site indexes when needed. Those observations are dated; feature support and source coverage remain live decisions.
+The [source coverage review](evaluations/fewer-parts/upstream-integration-review.md) found that the full-text export omitted some live snippets. The skill therefore follows detailed pages and other site indexes when needed. Those observations are dated; feature support and source coverage remain live decisions.
 
 The original manual smoke fixture can still be reproduced with Python, Node.js, and pnpm:
 
 ```sh
-python tests/modern-web-ui/make_fixture.py
-pnpm --dir tests/modern-web-ui install --frozen-lockfile --ignore-scripts
-pnpm --dir tests/modern-web-ui exec tailwindcss -i input.css -o output.css
-python -m http.server 8765 --bind 127.0.0.1 --directory tests/modern-web-ui
+python tests/fewer-parts/make_fixture.py
+pnpm --dir tests/fewer-parts install --frozen-lockfile --ignore-scripts
+pnpm --dir tests/fewer-parts exec tailwindcss -i input.css -o output.css
+python -m http.server 8765 --bind 127.0.0.1 --directory tests/fewer-parts
 ```
 
-Open [the local fixture](http://127.0.0.1:8765/) to inspect it. This fixture exercises the original examples; it does not evaluate the skill or certify cross-browser compatibility. Its original observations are in the [validation report](evaluations/modern-web-ui/modern-web-ui-validation.md).
+Open [the local fixture](http://127.0.0.1:8765/) to inspect it. This fixture exercises the original examples; it does not evaluate the skill or certify cross-browser compatibility. Its original observations are in the [validation report](evaluations/fewer-parts/fewer-parts-validation.md).
 
-The new recipe has a separate browser check at [field-sizing.cjs](tests/modern-web-ui/field-sizing.cjs). With Playwright available to Node and Chrome installed, run `node tests/modern-web-ui/field-sizing.cjs`. Set `BROWSER_CHANNEL=msedge` to exercise installed Edge instead. This checks actual behavior, including the fallback simulation and editing with JavaScript disabled. See the [recipe validation notes](evaluations/modern-web-ui/field-sizing-validation.md) for observed results and limits. Browser checks are currently manual; packaging CI does not run them.
+The new recipe has a separate browser check at [field-sizing.cjs](tests/fewer-parts/field-sizing.cjs). With Playwright available to Node and Chrome installed, run `node tests/fewer-parts/field-sizing.cjs`. Set `BROWSER_CHANNEL=msedge` to exercise installed Edge instead. This checks actual behavior, including the fallback simulation and editing with JavaScript disabled. See the [recipe validation notes](evaluations/fewer-parts/field-sizing-validation.md) for observed results and limits. Browser checks are currently manual; packaging CI does not run them.
 
 ## Publishing
 
