@@ -5,6 +5,7 @@ import SiteHead from "../../components/SiteHead.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
 import { recipes } from "../../lib/recipes";
 import { notesFor, stageWidthFor } from "../../lib/recipe-notes";
+import { transformationFor } from "../../lib/transformations";
 import "../../styles/site.css";
 
 export function getStaticPaths() {
@@ -21,6 +22,7 @@ const total = String(recipes.length).padStart(2, "0");
 const ordinal = String(position + 1).padStart(2, "0");
 const next = recipes[(position + 1) % recipes.length];
 const previous = recipes[(position - 1 + recipes.length) % recipes.length];
+const transformation = transformationFor(recipe.id);
 ---
 
 <!doctype html>
@@ -42,9 +44,9 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
     />
 
     <div class="shell">
-      <nav aria-labelledby="collection-heading" class="side">
-        <p class="eyebrow" id="collection-heading">
-          THE COLLECTION
+      <nav aria-labelledby="worked-examples-heading" class="side">
+        <p class="eyebrow" id="worked-examples-heading">
+          WORKED EXAMPLES
         </p>
         {/*
             The two state attributes are only ever written by the drag script,
@@ -92,6 +94,23 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
           </div>
         </section>
 
+        {transformation && (
+          <dl class="recipe-value" aria-label="What this decision changes">
+            <div>
+              <dt>Experience kept</dt>
+              <dd>{transformation.preserves}</dd>
+            </div>
+            <div>
+              <dt>Machinery removed</dt>
+              <dd>{transformation.removes}</dd>
+            </div>
+            <div>
+              <dt>Decision</dt>
+              <dd>{transformation.decision}</dd>
+            </div>
+          </dl>
+        )}
+
         <section aria-label={`${recipe.title} demo`} class="stage" id="demo">
           <div class="stage-bar">
             <span class="preview-label">
@@ -111,6 +130,34 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
             ></iframe>
           </div>
         </section>
+
+        {transformation && (
+          <section
+            aria-labelledby="reduction-heading"
+            class="recipe-comparison"
+          >
+            <div class="comparison-heading">
+              <p class="eyebrow">THE REDUCTION</p>
+              <h2 id="reduction-heading">Same outcome. Less to coordinate.</h2>
+              <p>{transformation.summary}</p>
+            </div>
+            <div class="pair-code">
+              <CodeBlock
+                id={`detail-before-${recipe.id}`}
+                label={transformation.before.label}
+                lang={transformation.before.lang}
+                source={transformation.before.source}
+              />
+              <CodeBlock
+                id={`detail-after-${recipe.id}`}
+                label={transformation.after.label}
+                lang={transformation.after.lang}
+                source={transformation.after.source}
+              />
+            </div>
+            <p class="pair-note">{transformation.note}</p>
+          </section>
+        )}
 
         <section aria-labelledby="decisions-heading" class="detail-body">
           <article class="explanation">
@@ -164,27 +211,27 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
           <div class="source-heading">
             <div>
               <p class="eyebrow">COPY, ADAPT, SHIP</p>
-              <h2 id="source-heading">The Tailwind example</h2>
+              <h2 id="source-heading">The dependency-free implementation</h2>
             </div>
-            <p>Tailwind CSS v4 · adapt utilities to your project tokens</p>
+            <p>HTML, CSS, and the JavaScript the interaction actually needs</p>
           </div>
           <CodeBlock
-            id={`source-${recipe.id}`}
-            label="TAILWIND HTML"
-            source={recipe.tailwind}
+            id={`standalone-source-${recipe.id}`}
+            label="STANDALONE HTML"
+            source={recipe.html}
           />
           <details class="source standalone-source">
             <summary>
-              View the dependency-free browser demo
+              Using Tailwind CSS v4 already? View the adapted example
               <span aria-hidden="true">+</span>
             </summary>
             <p class="code-caption">
-              Vanilla CSS · runnable directly from the skill assets
+              Optional integration · adapt utilities to your project tokens
             </p>
             <CodeBlock
-              id={`standalone-source-${recipe.id}`}
-              label="STANDALONE HTML"
-              source={recipe.html}
+              id={`tailwind-source-${recipe.id}`}
+              label="TAILWIND HTML"
+              source={recipe.tailwind}
             />
           </details>
         </section>
@@ -387,6 +434,38 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
           font-size: 0.9375rem;
         }
 
+        .recipe-value {
+          display: grid;
+          overflow: hidden;
+          margin: 0 0 30px;
+          border: 1px solid var(--line);
+          border-radius: 12px;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .recipe-value > div {
+          padding: 16px 18px;
+        }
+
+        .recipe-value > div + div {
+          border-left: 1px solid var(--line);
+        }
+
+        .recipe-value dt {
+          color: var(--quiet);
+          font:
+            0.6875rem/1.5 ui-monospace,
+            monospace;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .recipe-value dd {
+          margin-top: 7px;
+          color: #36445a;
+          font-size: 0.8125rem;
+        }
+
         .stage {
           padding: clamp(14px, 2vw, 22px);
           border: 1px solid #d9e0e9;
@@ -431,6 +510,40 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
           width: 100%;
           height: clamp(380px, 52vh, 540px);
           border: 0;
+        }
+
+        .recipe-comparison {
+          padding-block: 54px 64px;
+          border-top: 1px solid var(--line);
+        }
+
+        .comparison-heading {
+          display: grid;
+          max-width: 52rem;
+          margin-bottom: 24px;
+          gap: 9px;
+        }
+
+        .comparison-heading .eyebrow {
+          margin-bottom: 0;
+        }
+
+        .comparison-heading h2 {
+          font-size: clamp(1.5rem, 2.5vw, 2.125rem);
+          font-weight: 560;
+          letter-spacing: -0.035em;
+        }
+
+        .comparison-heading > p:last-child {
+          color: var(--muted);
+        }
+
+        .recipe-comparison .pair-code {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .recipe-comparison .pair-note {
+          margin-top: 18px;
         }
 
         .detail-body {
@@ -684,6 +797,15 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
             gap: 24px;
           }
 
+          .recipe-value {
+            grid-template-columns: 1fr;
+          }
+
+          .recipe-value > div + div {
+            border-top: 1px solid var(--line);
+            border-left: 0;
+          }
+
           .detail-meta {
             justify-items: start;
             justify-self: start;
@@ -714,6 +836,10 @@ const previous = recipes[(position - 1 + recipes.length) % recipes.length];
 
           .stage-frame iframe {
             height: 430px;
+          }
+
+          .recipe-comparison .pair-code {
+            grid-template-columns: 1fr;
           }
 
           .detail-next strong {

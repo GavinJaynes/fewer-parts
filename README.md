@@ -4,16 +4,16 @@ Small, reusable skills for coding agents. Each folder under `skills/` can be ins
 
 ## Fewer Parts
 
-[Fewer Parts](skills/fewer-parts/SKILL.md) helps an agent apply modern CSS, native HTML, and well-supported web APIs. It uses [Modern CSS](https://modern-css.com/)'s live cheatsheet and AI exports, plus MDN and Baseline sources. It requires an agent with web browsing or HTTP access; it has no MCP server, API key, or runtime dependency of its own.
+[Fewer Parts](skills/fewer-parts/SKILL.md) helps an agent deliver the same or better web UI experience with less project-specific machinery. It can simplify an existing interaction, build a polished one without unnecessary runtime code, or audit a UI without changing it. Dedicated platform guidance supplies feature candidates; Fewer Parts decides whether and how they belong in the actual project.
 
 The skill guides the agent to:
 
-- Find a relevant upstream example and read its caveats.
-- Lead with Tailwind examples when Tailwind is installed or no styling system has been chosen.
-- Check the exact feature against the project's browser requirements.
-- Preserve required interactions and verify the result.
+- Establish the existing behavior, design-system conventions, and browser requirements before proposing a replacement.
+- Compare native and conventional implementations by dependencies, client code, duplicated state, event machinery, fallbacks, interaction quality, and maintenance cost.
+- Use the installed styling system—including Tailwind when present—without introducing one as a side effect.
+- Preserve required interactions, verify the experience, and report the concrete reduction or why the current implementation should stay.
 
-It does not bundle the site, prescribe a visual style, or promise that newer syntax improves browser coverage. If online access is unavailable, the agent should disclose that limitation and use a dependable base implementation.
+It is not a competing feature catalogue, does not prescribe a visual style, and does not promise that native or newer syntax is automatically simpler. It uses [Modern Web Guidance](https://developer.chrome.com/docs/modern-web-guidance) when already available, or live Modern CSS, MDN, Baseline, Can I use, and framework sources as needed. It has no MCP server, API key, or runtime dependency of its own.
 
 ## Install and use
 
@@ -22,7 +22,7 @@ Copy the complete `skills/fewer-parts/` folder into your target project's `.agen
 For Codex, invoke it with a request such as:
 
 ```text
-Use $fewer-parts to simplify this component's CSS while preserving its layout, keyboard behavior, and browser requirements.
+Use $fewer-parts to deliver the same or better interaction with less project-specific machinery while preserving its design, accessibility, and browser requirements.
 ```
 
 Automatic selection is also enabled by default. See the [official skill documentation](https://learn.chatgpt.com/docs/build-skills) for supported installation locations and discovery behavior. For other agents, use that agent's skill installation mechanism. Do not replace your project's `AGENTS.md` with the upstream site's reference file.
@@ -53,7 +53,7 @@ The GitHub Actions workflow runs skill validation, packaging, and the Astro prod
 
 The [website](website/src/pages/index.astro) presents five interactive recipes, expandable source, support links, and the skill download. It uses Astro 7 with static output and small native browser scripts. Preview code is read from the skill's original HTML assets at build time, with only presentation overrides for the embedded textarea.
 
-The showcase presents Tailwind v4 as the primary copyable source while retaining the dependency-free vanilla-CSS assets for live, isolated previews. Use Node.js 24+ and npm. First build the skill ZIP using the Python packaging command above, then:
+For these examples, the showcase presents Tailwind v4 as the primary copyable source while retaining dependency-free vanilla-CSS assets for live, isolated previews. The skill uses Tailwind only when the target project already does. Use Node.js 24+ and npm. First build the skill ZIP using the Python packaging command above, then:
 
 ```sh
 cd website
@@ -83,6 +83,10 @@ When adding a skill, put it in its own named folder, link any supporting referen
 ## Evidence and limitations
 
 The [original pilot comparison](evaluations/fewer-parts/fewer-parts-evaluation.md) tested two tasks with and without an earlier draft. Both configurations chose similar native CSS. It does not establish a consistent output-quality improvement, and it was not a test of this basic version.
+
+The current evaluation suite targets the repositioned claim: remove legacy autosizing and modal machinery without regressions, preserve necessary carousel behavior, and construct a polished native disclosure without a runtime dependency. It treats behavior, accessibility, compatibility, and intended feel as gates before measuring what was removed. The replacement suite has not yet been run, so no uplift is claimed.
+
+The current evaluation suite targets the repositioned claim: remove legacy autosizing and modal machinery without regressions, preserve necessary carousel behavior, and construct a polished native disclosure without a runtime dependency. It treats behavior, accessibility, compatibility, and intended feel as gates before measuring what was removed. The replacement suite has not yet been run, so no uplift is claimed.
 
 The [source coverage review](evaluations/fewer-parts/upstream-integration-review.md) found that the full-text export omitted some live snippets. The skill therefore follows detailed pages and other site indexes when needed. Those observations are dated; feature support and source coverage remain live decisions.
 

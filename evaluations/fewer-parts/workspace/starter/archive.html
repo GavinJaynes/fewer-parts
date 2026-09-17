@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Archive resource - Acme Library</title>
+  <link rel="stylesheet" href="dist/output.css">
+</head>
+<body class="min-h-dvh bg-paper-50 text-ink-950">
+  <main class="mx-auto max-w-xl px-6 py-12">
+    <h1 class="text-2xl font-semibold">Resource settings</h1>
+    <p class="mt-2 text-ink-700">Archive resources that should no longer appear in the library.</p>
+    <button id="archive-trigger" class="mt-6 rounded bg-danger-600 px-4 py-2 font-medium text-white">
+      Archive resource
+    </button>
+    <p id="archive-status" class="mt-4 text-sm text-ink-700" role="status"></p>
+  </main>
+
+  <div id="archive-overlay" class="fixed inset-0 z-50 grid place-items-center bg-black/50 p-6" hidden>
+    <section aria-labelledby="archive-title" aria-modal="true" class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl" role="dialog">
+      <h2 id="archive-title" class="text-xl font-semibold">Archive this resource?</h2>
+      <p class="mt-2 text-ink-700">It will disappear from search results, but an administrator can restore it.</p>
+      <div class="mt-6 flex justify-end gap-3">
+        <button id="archive-cancel" class="rounded border border-ink-500/40 px-4 py-2">Cancel</button>
+        <button id="archive-confirm" class="rounded bg-danger-600 px-4 py-2 font-medium text-white">Archive</button>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="src/archive-dialog.js"></script>
+</body>
+</html>

@@ -1,6 +1,19 @@
 // Contact form: client-side validation on submit, then POST to the messages endpoint.
 const form = document.getElementById('contact-form');
 const status = document.getElementById('form-status');
+const message = document.getElementById('message');
+
+// Legacy autosizing. This predates native content sizing and must not grow
+// beyond the CSS max-height. The form still needs its separate input handler
+// below for validation state.
+function resizeMessage() {
+  message.style.height = 'auto';
+  message.style.height = `${Math.min(message.scrollHeight, 288)}px`;
+}
+
+message.addEventListener('input', resizeMessage);
+window.addEventListener('resize', resizeMessage);
+resizeMessage();
 
 const validators = {
   name: (value) => (value.trim() ? '' : 'Enter your name.'),

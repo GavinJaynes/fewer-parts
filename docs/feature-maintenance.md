@@ -22,4 +22,10 @@ Current examples: [field-sizing](../skills/fewer-parts/references/field-sizing.m
 
 ## Measure skill value
 
-Use the same brief and browser targets with and without the skill. Compare observable behavior, accessibility, compatibility, unnecessary JavaScript, and visual quality. Track time/token cost alongside benefits. Keep demonstration code separate from evaluation prompts so a comparison tests the agent's decisions. Prior pilot results do not establish improvement for this revision.
+Use the same brief and browser targets with and without the skill. Prefer cases with a real decision boundary:
+
+- **Reduction:** remove a dependency, measurement loop, duplicated state, or event plumbing without losing behavior.
+- **Construction:** deliver a polished interaction with less runtime machinery than the conventional library answer.
+- **Restraint:** recognise when existing code owns necessary semantics or interaction and should remain.
+
+Treat required behavior, accessibility, compatibility, and intended feel as gates. Only then compare dependencies, shipped client code, duplicated state, listeners, lifecycle cleanup, fallback branches, and maintainability. Raw line count is supporting evidence, not a score. Track time/token cost alongside benefits and penalise research that repeats guidance already retrieved in the session. Keep demonstration code separate from evaluation prompts so a comparison tests the agent's decisions. Prior pilot results do not establish improvement for this revision.

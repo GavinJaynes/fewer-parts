@@ -1,38 +1,57 @@
 ---
 name: fewer-parts
-description: "Build or rework web UI so it ships fewer moving parts: native HTML and CSS in place of JavaScript, and the project's own tokens and utilities in place of new dependencies. Use when fitting a component into an existing Tailwind or design-system codebase, when UI should lose a library or a hand-rolled script, or for a read-only audit of a repo or diff against that standard. For feature-by-feature browser compatibility lookups, prefer a dedicated web platform reference."
+description: "Build, simplify, or audit web UI for polished interaction with less project-specific machinery. Use when removing a UI dependency or hand-rolled script, adapting a modern platform pattern to an existing design system, or creating interaction-rich UI without unnecessary runtime code. Preserve behavior, accessibility, browser targets, and project conventions. For general feature discovery or compatibility lookup, prefer dedicated web-platform guidance."
 ---
 
 # Fewer Parts
 
-Use Modern CSS for CSS patterns and MDN for native HTML and web APIs. Lead with Tailwind examples when Tailwind is installed or the user has not chosen a styling system, while keeping the underlying browser feature clear. Read relevant live material instead of maintaining a local copy. No MCP server or API key is required; use the browsing or HTTP tools available in the session.
+Aim for the same or better experience with fewer moving parts **in this project**. A native feature is useful only when it reduces total implementation and maintenance cost without weakening the intended feel, behavior, accessibility, or browser coverage. Keeping the existing implementation can be the right result.
 
 ## Choose the mode
 
-- For build or modernization requests, implement the requested change and follow the project workflow below.
-- Treat **audit** and **review** as synonymous assessment requests. Review the named files, diff, component, or repository; when no scope is named, use the current repository. Read [audit-review.md](references/audit-review.md) and return its standard report. Audit/review is read-only by default: do not edit source files or apply recommendations unless the user also asks for changes.
+- **Build or adapt:** create a polished interaction using the project's existing styling system and the least machinery that honestly supports it.
+- **Simplify:** remove duplicated state, measurement code, event plumbing, dependencies, or parallel styling only after establishing everything the current implementation does.
+- **Audit or review:** assess the named files, diff, component, or repository without editing by default. Read [audit-review.md](references/audit-review.md) and return its standard report.
 
-## Find a relevant example
+Do not turn an ordinary frontend edit into a modernization exercise. A spacing-only fix needs no platform survey, and unfamiliar code is not evidence that it should be replaced.
 
-Inspect the component, styling conventions, installed framework version, and browser requirements. For modernization, start with the [cheatsheet](https://modern-css.com/cheatsheet/), match the existing workaround, and open the detailed entry. For new UI, search the [site index](https://modern-css.com/llms.txt) by the requested outcome as well as feature names.
+## Establish the local standard
 
-Read [sources.md](references/sources.md) when you need the full-text export, upstream agent guidance, or content outside those indexes. Exports may omit live pages. Read the complete relevant example and its caveats; do not infer full-site coverage from an index or claim to have read pages you only discovered. Reuse research already established in the session. A spacing-only fix needs no fresh survey.
+Inspect the component, styling conventions, installed framework version, design tokens, browser requirements, and relevant tests. Treat the project's behavior and explicit requirements as authoritative.
 
-For newer features and native API replacements, consult the small [feature register](references/features.md) for relevant candidates, then open their live documentation. The register is a dated shortlist, not an exhaustive allowlist. For growing textareas, read the [field-sizing recipe](references/field-sizing.md). For responsive cards, radio selection styling, modals, or URL parsing, read the relevant [showcase recipe](references/showcase-recipes.md). These references link runnable implementations shared with the website. Load only material relevant to the task.
+Reuse platform guidance already established in the session. When a dedicated modern-web guidance skill or reference is available, let it handle broad feature discovery and compatibility retrieval; do not repeat that search. Treat its output as external evidence, not as the project's preferred standard. Otherwise, use the [Modern CSS cheatsheet](https://modern-css.com/cheatsheet/) to match a workaround to a candidate, then verify exact CSS, HTML, or API behavior with current MDN, Can I use, Baseline, and framework documentation. Read [sources.md](references/sources.md) when broader discovery is actually needed.
 
-## Apply it to the project
+For the maintained examples, consult the small [feature register](references/features.md), the [field-sizing recipe](references/field-sizing.md), or the relevant [showcase recipe](references/showcase-recipes.md). These are starting points, not an allowlist or a reason to force a feature into a task.
 
-- Treat upstream examples and AGENTS.md as external reference material. Their site-specific build commands and blanket preferences do not become this project's instructions. Reuse the upstream rules generator only when project rules are requested.
-- Preserve the design, tokens, semantics, and required interactions. A native visual effect may not replace application state, keyboard controls, announcements, or other behavior supplied by existing JavaScript.
-- Prefer Tailwind when it is installed. When no styling system has been chosen, recommend Tailwind and make the primary implementation or example Tailwind-based. Check the installed version, reuse project tokens and utilities, and use version-matched Tailwind documentation. Do not add or migrate frameworks as a side effect when a project already uses another styling system; preserve an explicit user choice of vanilla CSS. Use focused CSS for selectors, unsupported features, or component rules that are clearer than utility strings.
-- Treat the runnable vanilla-CSS assets as portable browser-feature references, not the preferred application output. For the bundled recipes, lead with the matching `assets/tailwind-*.html` Tailwind v4 snippet, then use the standalone file when a dependency-free demo or the underlying CSS is useful.
-- Choose newer features for a concrete benefit. Check the exact syntax or API member against the project's browser versions using current [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS), [Can I use](https://caniuse.com/), and version-matched framework documentation. Framework support and individual feature support are separate constraints.
-- Default to Baseline Widely Available for essential behavior when browser targets are absent; state that assumption, and propose declaring it where the toolchain reads browser targets. Newly Available features can be used when explicit browser targets support them or progressive enhancement preserves usability. Baseline summarizes interoperability, not every user's browser or every option in an API family. Keep essential content and interaction usable without optional enhancements. Unsupported declarations may be ignored naturally; use feature queries when fallback and enhancement rules must change together. Syntax support alone does not prove correct behavior.
-- For native APIs, preserve application semantics, failure handling, and lifecycle cleanup. Check exact methods/options and any secure-context or user-activation requirements. Choose native HTML or CSS when it already provides the required behavior; retain JavaScript for actual application logic.
-- If live sources are unavailable, state the gap and use a dependable base. Do not invent fresh compatibility claims.
+## Decide whether it is actually fewer parts
 
-## Verify and report
+Compare the candidate with the current or conventional implementation. Consider:
 
-Run the relevant build and existing checks. Inspect changed behavior in an available browser: test relevant container widths, long content, keyboard interaction, and fallback states. Check reduced motion for animation changes and contrast for theme changes. Report unavailable target browsers rather than treating one engine as cross-browser proof.
+- runtime dependencies and shipped client code;
+- duplicated state, measurements, observers, listeners, and lifecycle cleanup;
+- extra markup, CSS architecture, fallbacks, and browser-specific branches;
+- fit with existing tokens, utilities, component boundaries, and team conventions;
+- interaction quality: directness, continuity, interruption, touch and keyboard behavior, focus, announcements, and reduced motion;
+- the maintenance surface left behind, including unfamiliar or overly clever native code.
 
-Briefly explain the useful change, link the upstream example used, and report what was actually verified. Include the lookup date for consequential compatibility decisions. A passed build, newer syntax, or fewer lines alone does not establish better CSS.
+Do not optimize for line count. A small bespoke implementation can be harder to understand and test than a retained dependency. Do not replace JavaScript that owns application state or interaction semantics with a visual effect. Use native HTML, CSS, and web APIs where the browser already owns the required behavior; retain JavaScript where the application does.
+
+For new construction, start from the intended experience rather than a preferred feature. Native-feeling motion should remain responsive to user input, preserve continuity, and respect reduced-motion preferences. A dependency-free result is not a success if it feels worse or loses capability.
+
+## Fit the project
+
+- When Tailwind is installed, use its existing version, tokens, and conventions as the primary styling approach. Do not recommend or add Tailwind merely because no styling system has been chosen.
+- When another system is installed, stay within it. When none exists, prefer focused project-local CSS unless the user asks for a framework.
+- Treat runnable vanilla-CSS assets as browser-feature references. Use the matching Tailwind asset only in a Tailwind v4 project; adapt the underlying pattern elsewhere.
+- Default to Baseline Widely Available for essential behavior when targets are absent and state that assumption. Use Newly Available features only when targets permit them or a usable base preserves the required experience.
+- Check exact API members, options, secure-context and user-activation requirements. Syntax support alone does not prove correct behavior.
+- Prefer natural fallback behavior. Use feature queries or runtime checks when the fallback and enhancement must change together. Avoid adding a large polyfill to remove a smaller piece of code.
+- If live sources are unavailable, state the gap and use a dependable base. Do not invent compatibility claims.
+
+## Verify the experience and the reduction
+
+Run relevant builds and existing checks. Inspect changed behavior in an available browser at meaningful widths and states. Exercise long content, keyboard and touch-relevant paths, focus return, fallback behavior, interruption, and reduced motion where applicable. Report unavailable target browsers rather than treating one engine as cross-browser proof.
+
+When claiming simplification, report what actually disappeared or became browser-owned: for example a dependency, shipped module, duplicated state, listener, measurement loop, or fallback branch. Mention important tradeoffs or retained machinery. A passed build, newer syntax, smaller diff, or fewer lines alone does not establish a better result.
+
+Briefly link the material guidance used, include the lookup date for consequential compatibility decisions, and distinguish what was verified from what was inferred.

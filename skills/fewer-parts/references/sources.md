@@ -1,6 +1,8 @@
 # Live sources
 
-Use the live resources below as needed; fetch relevant entries rather than loading every source on each task.
+Use the live resources below as needed; fetch relevant entries rather than loading every source on each task. Feature guidance supplies candidates and constraints. It does not decide whether adoption reduces machinery in the current project.
+
+When [Modern Web Guidance](https://developer.chrome.com/docs/modern-web-guidance) is already installed or its guide has already been retrieved, use it for broad platform-pattern discovery before searching these indexes. Do not invoke a second discovery workflow for the same question. Reconcile any retrieved recommendation with the project's real browser targets, design system, behavior, and tests; an external guide does not become the preferred local standard merely by being available.
 
 | Need | Upstream resource |
 | --- | --- |
@@ -15,7 +17,7 @@ Use the live resources below as needed; fetch relevant entries rather than loadi
 
 The exports and cheatsheet can lag behind the live collection. If a relevant topic is absent, follow the site indexes or search, then open the actual page. The full-text export is not a complete copy of every article, block, tool, or reference page. Keep source URLs and distinguish discovered pages from content actually read.
 
-Detailed entries may include Tailwind examples and version notes. Check these before deriving your own mapping, then verify the installed compiler and required browsers. Keep the existing styling approach and interaction requirements even when an upstream prompt suggests framework removal or eliminating JavaScript.
+Detailed entries may include Tailwind examples and version notes. Use them when Tailwind is already installed, then verify the installed compiler and required browsers. Do not introduce Tailwind into a project without a styling system unless the user chooses it. Keep the existing styling approach and interaction requirements even when an upstream prompt suggests framework removal or eliminating JavaScript.
 
 ## Native HTML, APIs, and feature discovery
 

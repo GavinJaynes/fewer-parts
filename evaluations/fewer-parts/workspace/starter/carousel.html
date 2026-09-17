@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Featured collections - Acme Library</title>
+  <link rel="stylesheet" href="dist/output.css">
+</head>
+<body class="min-h-dvh bg-paper-50 text-ink-950">
+  <main class="mx-auto max-w-3xl px-6 py-12">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold">Featured collections</h1>
+        <p class="mt-2 text-ink-700">Browse curated starting points from the librarians.</p>
+      </div>
+      <div class="flex gap-2">
+        <button id="previous-slide" class="rounded border border-ink-500/40 px-3 py-2" aria-label="Previous collection">←</button>
+        <button id="next-slide" class="rounded border border-ink-500/40 px-3 py-2" aria-label="Next collection">→</button>
+      </div>
+    </div>
+
+    <div id="collection-carousel" class="mt-6 flex snap-x snap-mandatory overflow-x-auto" tabindex="0">
+      <article class="w-full shrink-0 snap-start rounded-lg bg-white p-6" data-slide>
+        <h2 class="text-xl font-semibold">Design systems</h2>
+        <p class="mt-2 text-ink-700">Tokens, component architecture, and practical governance.</p>
+        <a class="mt-4 inline-block text-accent-600 underline" href="/collections/design-systems">Open collection</a>
+      </article>
+      <article class="w-full shrink-0 snap-start rounded-lg bg-white p-6" data-slide>
+        <h2 class="text-xl font-semibold">Accessible forms</h2>
+        <p class="mt-2 text-ink-700">Patterns for labels, errors, validation, and completion.</p>
+        <a class="mt-4 inline-block text-accent-600 underline" href="/collections/forms">Open collection</a>
+      </article>
+      <article class="w-full shrink-0 snap-start rounded-lg bg-white p-6" data-slide>
+        <h2 class="text-xl font-semibold">Performance field notes</h2>
+        <p class="mt-2 text-ink-700">Investigations and fixes drawn from production systems.</p>
+        <a class="mt-4 inline-block text-accent-600 underline" href="/collections/performance">Open collection</a>
+      </article>
+    </div>
+    <p id="carousel-status" class="mt-3 text-sm text-ink-700" aria-live="polite">Collection 1 of 3</p>
+  </main>
+  <script type="module" src="src/carousel.js"></script>
+</body>
+</html>

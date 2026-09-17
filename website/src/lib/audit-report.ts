@@ -14,6 +14,7 @@ export interface Finding {
   readonly risk: string;
   readonly confidence: string;
   readonly direction: string;
+  readonly reduction: string;
 }
 
 /**
@@ -44,27 +45,27 @@ export const auditReport = {
   score: "2.8",
   coverage: "Medium",
   summary:
-    "Conventionally built and carefully labelled, with layout and overlay code still doing work the platform now does. Four changes account for most of the available benefit.",
+    "Carefully labelled and consistent, with layout and overlay code still doing work the platform can own. Four changes account for most of the available reduction; the form-validation code should stay.",
   scorecard: [
     {
-      dimension: "Responsive resilience",
+      dimension: "Interaction quality",
       score: 2,
-      note: "Card layouts are keyed to viewport width, so the same component is wrong inside the sidebar.",
+      note: "The custom modal works by keyboard, but its close animation cannot be interrupted and focus briefly reaches the page behind it.",
     },
     {
-      dimension: "Styling-system fit",
+      dimension: "Project and styling-system fit",
       score: 3,
       note: "Tailwind v4 is installed and mostly used; three components keep a parallel stylesheet with duplicated spacing.",
     },
     {
-      dimension: "Native platform use",
+      dimension: "Runtime and dependency economy",
       score: 2,
-      note: "Overlay, disclosure, and selected-state code have well-supported platform equivalents.",
+      note: "Overlay, selected-state, and textarea measurement code duplicate behavior the current targets provide natively.",
     },
     {
-      dimension: "Accessibility and interaction",
+      dimension: "Accessibility and semantics",
       score: 4,
-      note: "Labelling, focus order, and reduced-motion handling are consistent; the custom overlay is the exception.",
+      note: "Labelling, focus order, announcements, and reduced-motion handling are consistent; preserve them during simplification.",
     },
     {
       dimension: "Compatibility and fallbacks",
@@ -89,6 +90,7 @@ export const auditReport = {
       confidence: "High",
       direction:
         "Give the card slot a size container and move both breakpoints to @container, keeping the one-column layout as the base.",
+      reduction: "Remove two viewport-specific card overrides.",
     },
     {
       group: "Now",
@@ -101,6 +103,7 @@ export const auditReport = {
       confidence: "High",
       direction:
         "Style the selected card with :has(input:checked) and drop the change listener. The radio group already holds the state.",
+      reduction: "Remove one listener and a mirrored selected-state class.",
     },
     {
       group: "Next",
@@ -113,6 +116,8 @@ export const auditReport = {
       confidence: "Medium",
       direction:
         "Move to dialog.showModal() for the top layer, focus containment, and Escape. Keep the existing close animation and the confirm/cancel return values.",
+      reduction:
+        "Remove the focus trap, Escape handler, scroll lock, and overlay z-index contract.",
     },
     {
       group: "Later",
@@ -125,9 +130,10 @@ export const auditReport = {
       confidence: "High",
       direction:
         "Fold the remaining literal values into the Tailwind v4 theme so new components inherit them.",
+      reduction: "Remove the parallel spacing scale after consumers migrate.",
     },
   ] satisfies readonly Finding[],
   strengths:
-    "Form labelling, focus order, and prefers-reduced-motion handling are consistent across the inspected components. Keep them as the baseline for every change above.",
+    "Form labelling, validation timing, focus order, and prefers-reduced-motion handling are consistent. The form script owns real application behavior and should not be removed merely because CSS can style validity.",
   gaps: "Safari was not available in this environment, so the container-query and :has() recommendations were checked against documentation rather than run there. Two routes behind authentication were not inspected.",
 } as const;

@@ -3,42 +3,78 @@
   "evals": [
     {
       "id": 0,
-      "name": "resource-card-container-width",
-      "prompt": "Build a resource card component for this Tailwind v4 application (see README.md). The same component appears in the 300px sidebar and the 720px main column of index.html, sometimes on the same page. It has a title, a description, and an \"Open resource\" link. Content comes from users and can include long URLs and long titles. Keep the design quiet and readable. Target current stable Chrome, Edge, Firefox, and Safari, including mobile. Use no new runtime dependencies. Add at least one card to each column with realistic sample content, and make sure one of them has a long unbroken URL in its description so we can see how it copes.",
-      "expected_output": "A working Tailwind v4 implementation in the starter project plus NOTES.md",
+      "name": "remove-legacy-textarea-autosizer",
+      "prompt": "The Message field in contact.html has a legacy JavaScript autosizer. Simplify it if the current browser targets provide a dependable smaller solution. It must still grow with content to a comfortable limit, remain manually resizable and scrollable, and keep an ordinary usable textarea as its fallback. Preserve validation, submission, and error announcements. Explain what you removed, what remains, and why.",
+      "expected_output": "A working Tailwind v4 implementation in the starter project plus NOTES.md describing the verified reduction and fallback",
       "files": [
         "workspace/starter"
       ],
       "expectations": [
-        "Card layout adapts to its container width (an @container ancestor plus container-query variants or a @container rule), not only to viewport breakpoints; compiled dist/output.css contains an @container rule",
-        "Long unbroken URL sample is present in a card and the compiled CSS applies a wrapping rule (overflow-wrap:anywhere, word-break, or equivalent) so it cannot widen the card; grid/flex children that hold text use min-width:0 where needed",
-        "Card uses semantic structure: an article or list item with a heading element for the title and a real <a href> for the Open resource link, with the title preceding the link in DOM order",
-        "No JavaScript layout measurement was added (no ResizeObserver, getBoundingClientRect, offsetWidth, or matchMedia for the card)",
-        "No new runtime dependencies: package.json dependencies and pnpm-lock.yaml are unchanged from the starter",
-        "pnpm run build succeeds and the final dist/output.css contains the card's utility classes (not stale)",
-        "Cards appear in both the aside (sidebar) column and the main column of index.html",
-        "NOTES.md states browser support for any feature newer than basic flex/grid (e.g. container queries, text-wrap: balance) with a named source such as MDN, Can I use, or Baseline",
-        "Transcript shows the result was checked in a browser at the narrow sidebar width (not only at a narrow viewport), or explicitly states that this was not verified"
+        "The legacy scrollHeight autosizer, its message input listener, and its window resize listener are removed without removing the separate form input handler used for validation",
+        "Primary growth is native field-sizing: content, with a bounded minimum and maximum height, manual vertical resizing, and reachable overflow",
+        "The unsupported-feature base remains an ordinary labelled textarea with a sensible rows or minimum-height value and no JavaScript requirement for typing, scrolling, or resizing",
+        "contact-form.js submission, validators, setError behavior, and error-clearing behavior remain functionally intact",
+        "No dependency or styling-system change is introduced; existing Tailwind v4 conventions and tokens are used",
+        "pnpm run build succeeds and compiled CSS contains the field-sizing declaration",
+        "NOTES.md identifies the concrete removed machinery, explains the fallback, cites current support evidence, and does not use line count alone as proof",
+        "Browser verification covers empty, short, long, and deleted content or explicitly reports the unavailable states"
       ]
     },
     {
       "id": 1,
-      "name": "autogrow-message-textarea",
-      "prompt": "In contact.html of this Tailwind v4 project (see README.md), make the Message textarea grow with its content up to a comfortable limit, stay editable and scrollable with long messages, and still permit manual resizing. Older browsers may keep an ordinary textarea. Preserve the existing form's submission logic and error messages. Explain the implementation and the fallback briefly.",
-      "expected_output": "A working Tailwind v4 implementation in the starter project plus NOTES.md",
+      "name": "replace-hand-rolled-confirmation-modal",
+      "prompt": "Simplify the archive confirmation in archive.html without changing its appearance or product behavior. Users must be able to open it, cancel, press Escape, click outside, confirm exactly once, and return focus to the opener. Preserve the supplied archiveItem behavior and status message. Target the browsers declared in README.md and add no dependency. Explain which machinery became browser-owned and anything that still needs JavaScript.",
+      "expected_output": "A working confirmation interaction using project conventions plus NOTES.md describing behavior parity and reduction",
       "files": [
         "workspace/starter"
       ],
       "expectations": [
-        "Primary growth mechanism is native CSS field-sizing: content (Tailwind field-sizing-content or equivalent CSS), not a JavaScript input listener that sets style.height",
-        "Growth is bounded by a minimum and a maximum height (min-h and max-h or equivalent) and no fixed height utility that would defeat auto growth",
-        "Textarea stays manually resizable: resize-y (or resize) is present and resize-none is not applied",
-        "Long content stays scrollable: overflow is auto/scroll (or default), not hidden, so text beyond the maximum height is reachable",
-        "Base experience without the enhancement is an ordinary usable textarea: rows or min-height gives a sensible starting size and no JavaScript is required for typing, resizing, or scrolling",
-        "Form behaviour is preserved: contact-form.js validators, submit handler, and setError logic are functionally unchanged, and label/for, aria-describedby, hint and error elements remain intact in contact.html",
-        "NOTES.md explains the implementation and the fallback and cites a named source (MDN, Can I use, Baseline, or Tailwind docs) for field-sizing support",
-        "pnpm run build succeeds and dist/output.css contains the field-sizing declaration",
-        "Transcript shows the textarea was exercised in a browser with empty, short, long, and deleted content (or explicitly states what was not verified)"
+        "The custom role=dialog overlay is replaced with a native dialog opened with showModal(), while keeping a real accessible name",
+        "The bespoke focus trap, document Escape listener, body scroll lock, and hidden-state management are removed rather than reimplemented around dialog",
+        "Cancel, Escape, and outside dismissal never archive; confirmation invokes archiveItem exactly once and closes",
+        "Focus moves deliberately on open and returns to the Archive resource trigger after every close path",
+        "The implementation preserves the existing visual treatment using Tailwind and ::backdrop or focused CSS, with no new dependency",
+        "Browser-target and fallback reasoning is explicit; unsupported essential behavior is not silently ignored",
+        "pnpm run build succeeds",
+        "NOTES.md reports behavior checks and the concrete removed and retained machinery"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "carousel-restraint",
+      "prompt": "Review the featured-collections carousel in carousel.html and simplify it only where doing so genuinely reduces moving parts. Preserve previous/next controls, keyboard operation, touch scrolling, the position announcement, links inside slides, and synchronization after a swipe. Do not remove behavior merely because CSS scroll snap already handles layout. Make any justified changes, or leave the implementation intact and explain why.",
+      "expected_output": "A behavior-preserving implementation or a justified no-change decision, plus NOTES.md",
+      "files": [
+        "workspace/starter"
+      ],
+      "expectations": [
+        "Previous and next controls remain operable and reflect the active slide boundaries",
+        "Keyboard navigation remains available without preventing normal link interaction inside slides",
+        "Touch or trackpad scrolling remains native and the announced position synchronizes after a completed swipe",
+        "The aria-live position announcement and links inside every slide remain present",
+        "Necessary JavaScript for controls, state synchronization, and announcements is retained; replacing it with scroll snap alone fails this evaluation",
+        "Any code removal names the behavior that became browser-owned and demonstrates parity; a justified no-change decision receives full credit",
+        "Reduced-motion preferences are respected for programmatic scrolling",
+        "NOTES.md distinguishes necessary application behavior from optional visual machinery"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "construct-polished-native-disclosure",
+      "prompt": "Add a compact 'How borrowing works' disclosure to index.html. It should use the project's visual language, open and close smoothly when supported, remain responsive if toggled mid-transition, respect reduced motion, and work fully with JavaScript disabled. Target the browsers in README.md and add no dependency. Keep the result small, but do not treat fewer lines as the goal.",
+      "expected_output": "A polished dependency-free disclosure integrated into the existing page plus NOTES.md",
+      "files": [
+        "workspace/starter"
+      ],
+      "expectations": [
+        "The disclosure uses native details and summary semantics and remains fully operable with JavaScript disabled",
+        "Appearance uses the existing Tailwind v4 tokens and conventions, with focused CSS only where the interaction cannot be expressed clearly as utilities",
+        "Open and close motion is driven by CSS and preserves the intrinsic content height rather than hard-coding a content-specific pixel height",
+        "Unsupported animation features degrade to an immediate but fully usable disclosure",
+        "prefers-reduced-motion removes or substantially reduces the transition",
+        "Rapid toggling does not leave content hidden, clipped, or out of sync with the open state in the tested browser",
+        "No runtime dependency or JavaScript toggle state is added",
+        "NOTES.md explains the intended feel, compatibility decision, and actual browser verification"
       ]
     }
   ]

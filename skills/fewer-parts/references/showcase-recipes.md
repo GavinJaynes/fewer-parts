@@ -1,6 +1,6 @@
 # Small native UI recipes
 
-Use the Tailwind v4 example as the primary application starting point when the project permits Tailwind. The matching standalone file exposes the underlying CSS, runs without a build step, and powers the Astro preview; its presentation styles and demo controls are illustrative. Support observations checked 2026-09-14; consult version-matched Tailwind documentation, live browser documentation, and project targets before adoption.
+Use the Tailwind v4 example as the primary application starting point when the project already uses Tailwind v4. The matching standalone file exposes the underlying CSS, runs without a build step, and powers the Astro preview; its presentation styles and demo controls are illustrative. Support observations checked 2026-09-14; consult version-matched Tailwind documentation, live browser documentation, and project targets before adoption.
 
 | Recipe | Tailwind example | Standalone demo | Source | Important decisions |
 | --- | --- | --- | --- | --- |

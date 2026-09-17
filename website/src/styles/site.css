@@ -82,13 +82,13 @@
      the threshold where anyone would name it. The arriving page carries the
      move. */
   ::view-transition-old(root) {
-    transform-origin: center;
     animation: 180ms cubic-bezier(0.4, 0, 1, 1) both page-recede;
+    transform-origin: center;
   }
 
   ::view-transition-new(root) {
-    transform-origin: center;
     animation: 380ms 40ms cubic-bezier(0.2, 0.8, 0.2, 1) both page-advance;
+    transform-origin: center;
   }
 
   /* Back is not the forward move reversed. The router sets the direction on
@@ -465,6 +465,27 @@
     text-shadow: 0 1px 20px rgb(10 19 42 / 55%);
   }
 
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 20px;
+  }
+
+  .hero-primary {
+    display: inline-flex;
+    padding: 11px 16px;
+    border-radius: 8px;
+    background: #f5f8ff;
+    color: #17233a;
+    font-size: 0.8125rem;
+    font-weight: 650;
+  }
+
+  .hero-primary:hover {
+    background: #fff;
+  }
+
   .hero-scroll {
     display: inline-flex;
     align-items: center;
@@ -522,6 +543,114 @@
     100% {
       transform: translateX(100%);
     }
+  }
+
+  .what-is {
+    display: grid;
+    border-top: 1px solid var(--line);
+    gap: 42px clamp(40px, 7vw, 104px);
+    padding-block: clamp(56px, 8vw, 112px);
+    grid-template-columns: minmax(0, 1.05fr) minmax(18rem, 0.95fr);
+  }
+
+  .what-intro h2,
+  .proof-heading h2 {
+    font-size: clamp(2rem, 4vw, 3.75rem);
+    font-weight: 540;
+    letter-spacing: -0.055em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  .what-copy {
+    align-self: end;
+    color: var(--muted);
+  }
+
+  .what-copy p + p {
+    margin-top: 18px;
+  }
+
+  .what-copy .what-lede {
+    color: #2c3a50;
+    font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  }
+
+  .modes {
+    display: grid;
+    border-block: 1px solid var(--line);
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .modes article {
+    display: grid;
+    padding: 24px clamp(18px, 3vw, 34px);
+    gap: 7px;
+    grid-template-columns: 1.75rem 1fr;
+  }
+
+  .modes article + article {
+    border-left: 1px solid var(--line);
+  }
+
+  .modes span {
+    color: var(--quiet);
+    font:
+      0.6875rem/1.6 ui-monospace,
+      monospace;
+  }
+
+  .modes h3 {
+    font-size: 1rem;
+    font-weight: 650;
+  }
+
+  .modes p {
+    color: var(--muted);
+    font-size: 0.8125rem;
+    grid-column: 2;
+  }
+
+  .proof-points {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: -12px 0 0;
+    gap: 8px;
+    grid-column: 1 / -1;
+    list-style: none;
+  }
+
+  .proof-points li {
+    padding: 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: #46536a;
+    font-size: 0.75rem;
+  }
+
+  .source-line {
+    max-width: 76ch;
+    color: var(--muted);
+    font-size: 0.8125rem;
+    grid-column: 1 / -1;
+  }
+
+  .proof-heading {
+    display: grid;
+    max-width: 68rem;
+    margin-bottom: 30px;
+    gap: 14px;
+  }
+
+  .proof-heading .eyebrow {
+    margin-bottom: 0;
+  }
+
+  .proof-heading > p:last-child {
+    max-width: 62ch;
+    color: var(--muted);
   }
 
   .section-bar {
@@ -770,6 +899,19 @@
     font-size: 0.875rem;
   }
 
+  .recipe-info .recipe-reduction {
+    padding-top: 13px;
+    border-top: 1px solid var(--line);
+    margin-top: 15px;
+    color: #46536a;
+    font-size: 0.75rem;
+  }
+
+  .recipe-reduction strong {
+    color: #2d3a4f;
+    font-weight: 650;
+  }
+
   .recipe-meta {
     display: flex;
     flex-wrap: wrap;
@@ -802,6 +944,11 @@
   }
 
   #before-after {
+    padding-top: 64px;
+    border-top: 1px solid var(--line);
+  }
+
+  #examples {
     margin-top: 96px;
   }
 
@@ -833,6 +980,43 @@
     margin-top: 14px;
     container: pair / inline-size;
     gap: 22px;
+  }
+
+  .decision-grid {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .decision-grid > div {
+    padding: 16px;
+  }
+
+  .decision-grid > div + div {
+    border-left: 1px solid var(--line);
+  }
+
+  .decision-grid dt,
+  .decision-kind {
+    color: var(--quiet);
+    font:
+      0.6875rem/1.5 ui-monospace,
+      monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .decision-grid dd {
+    margin-top: 7px;
+    color: #36445a;
+    font-size: 0.8125rem;
+  }
+
+  .pair-keep .decision-grid {
+    border-color: #cad9d0;
+    background: #f6faf7;
   }
 
   /* Base: every pair is visible and the chips are hidden, so the section still
@@ -1328,6 +1512,29 @@
       margin-block: var(--page-gutter);
     }
 
+    .what-is {
+      gap: 30px;
+      grid-template-columns: 1fr;
+    }
+
+    .what-copy,
+    .modes,
+    .proof-points,
+    .source-line {
+      grid-column: 1;
+    }
+
+    .modes,
+    .decision-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .modes article + article,
+    .decision-grid > div + div {
+      border-top: 1px solid var(--line);
+      border-left: 0;
+    }
+
     .hero-aside {
       width: min(100%, 21.875rem);
       justify-self: start;
@@ -1472,18 +1679,20 @@
     white-space: nowrap;
   }
 
-  /* Square now the mark is a square. The old box was 2.25rem wide because it
-     held an `m`, which is wider than it is tall; a grid of rects is not.
-     `color` stays: the mark is drawn in currentColor. */
+  /* The wordmark uses the three pieces on their own. The favicon retains its
+     dark tile because a browser tab gives the mark no reliable backdrop. */
   .brand-mark {
     display: flex;
     width: 2rem;
     height: 2rem;
     align-items: center;
     justify-content: center;
-    border-radius: 7px;
-    background: #192439;
-    color: #fff;
+    color: #192439;
+  }
+
+  .brand-mark svg {
+    width: 1.75rem;
+    height: 1.75rem;
   }
 
   .edition {
@@ -1908,6 +2117,15 @@
     color: #fff;
   }
 
+  .switch-keep > span {
+    border-style: dashed;
+  }
+
+  .switch-keep:has(input:checked) > span {
+    border-color: #24583f;
+    background: #24583f;
+  }
+
   .switch input:focus-visible + span {
     outline: 3px solid var(--focus-ring);
     outline-offset: 3px;
@@ -1917,6 +2135,14 @@
     font-size: 1.1875rem;
     font-weight: 600;
     letter-spacing: -0.025em;
+  }
+
+  .pair-head .decision-kind {
+    color: #536178;
+  }
+
+  .pair-keep .decision-kind {
+    color: #286044;
   }
 
   .pair-head p {

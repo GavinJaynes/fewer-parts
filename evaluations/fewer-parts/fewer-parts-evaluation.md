@@ -6,47 +6,32 @@ These briefs evaluate the skill's decisions on realistic UI tasks. They are not 
 
 For a future comparison, give fresh agent runs the same starting files, model settings, tools, browser targets, and brief. Enable this skill in one run and omit it in the other. Do not expose the reviewer criteria below to either run. Keep generated work isolated. Judge outcomes rather than the number of modern properties used. One pair is illustrative; repeat before claiming consistent improvement.
 
-## Brief 1: Reusable resource card
+## Current suite: reduction, restraint, and construction
 
-> Build a resource card for a Tailwind v4 application. The same component appears in a 300px sidebar and a 720px main column, sometimes on the same page. It has a title, description, and an Open resource link. Content comes from users and can include long URLs and titles. Keep the design quiet and readable. Target current stable Chrome, Edge, Firefox, and Safari, including mobile. Use no new runtime dependencies.
+The runnable prompts and assertions are in `evals.json`; the shared starting project is `workspace/starter`. The suite deliberately avoids asking for a named feature so it tests the decision rather than recall.
 
-Reviewer criteria:
+### Remove a legacy textarea autosizer
 
-- Responds to available component width, including a narrow sidebar on a wide screen.
-- Retains sensible semantic structure, keyboard access, and reading order.
-- Long content remains reachable without page overflow.
-- Tailwind is the primary styling approach; any extension has a clear purpose.
-- Support claims are current and specific. No JavaScript layout measurement without a demonstrated need.
+The starter includes `scrollHeight` measurement plus input and resize listeners alongside unrelated form validation. A successful run removes only the sizing machinery, preserves the application behavior, supplies a usable base, and reports what actually disappeared.
 
-## Brief 2: Message form
+### Replace a hand-rolled confirmation modal
 
-> Build a labeled message textarea in an existing Tailwind v4 form. It should grow with its content up to a comfortable limit, remain editable and scrollable with long messages, and permit manual resizing. Older browsers may keep an ordinary textarea. Preserve the existing form's submission logic and error messages. Explain the implementation and the fallback briefly.
+The starter manually manages visibility, scroll locking, focus containment, Escape, outside dismissal, and focus return. A successful run moves browser-owned modality to the platform while preserving every product path, the existing visual language, and the single archive action.
 
-Reviewer criteria:
+### Exercise restraint on a carousel
 
-- Considers native content sizing and checks relevant support.
-- Keeps an ordinary usable textarea in the base experience.
-- Tests empty, short, long, and deleted content; bounds do not prevent the intended growth.
-- Preserves labels, descriptions, validation timing, and application logic.
-- Does not equate CSS validation styling with accessible error reporting.
+The starter already uses scroll snap for physical movement, while JavaScript owns controls, keyboard input, state synchronization, and announcements. A successful run keeps necessary application behavior. A justified no-change result can receive full credit; deleting JavaScript merely because scroll snap exists cannot.
 
-## Brief 3: Interactive confirmation panel
+### Construct a polished disclosure
 
-> Add an archive-confirmation modal to a Tailwind v4 app. Users open it with Archive item, can cancel or press Escape, and return to the opener afterward. Confirmation invokes the supplied `archiveItem()` action once. Target current stable Chrome, Edge, Firefox, and Safari. Keep motion optional and avoid adding a dependency unless needed for the interaction.
-
-Reviewer criteria:
-
-- Chooses a modal mechanism that meets the behavior; assesses native dialog before rebuilding it.
-- Uses a real accessible name and appropriate initial focus. Tests keyboard dismissal and restoration.
-- Separates closing the panel from performing the archive action; cancel and Escape never archive.
-- Uses Tailwind for appearance and JavaScript where behavior needs it.
-- Optional animation never blocks visibility or completion of the action.
+The starter needs a small disclosure that works without JavaScript and feels deliberate when enhanced. A successful run uses native semantics, project tokens, interruptible CSS motion where supported, reduced-motion handling, and an honest fallback without adding a dependency.
 
 ## Boundary checks
 
 Use these follow-ups to expose scope or compatibility mistakes:
 
-- **Version constraint:** the repository uses Tailwind v3. Adapt using its existing conventions; do not insert v4 directives or upgrade automatically.
+- **No styling system:** use focused project-local CSS; do not introduce Tailwind as the default.
+- **Version constraint:** when a repository uses Tailwind v3, adapt using its existing conventions; do not insert v4 directives or upgrade automatically.
 - **Browser constraint:** the repository must support Safari 15.6. Check both the framework and proposed feature requirements before implementation; a utility class is not evidence of browser support.
 - **No network:** preserve essential behavior and label any support assumption that cannot be verified.
 - **Small edit:** change only a card's spacing. Do not redesign the component, survey every release, or add a library.
@@ -54,11 +39,11 @@ Use these follow-ups to expose scope or compatibility mistakes:
 
 ## Scoring
 
-Score each dimension from 0 (fails), through 1 (partly meets), to 2 (meets): required behavior, native-feature fit, Tailwind integration, support/fallback reasoning, accessibility, maintainability, and verification evidence. A functional or accessibility regression cannot be offset by a higher feature count. Record concrete observations and limitations rather than a single unqualified total.
+Treat required behavior, accessibility, browser compatibility, and intended feel as gates. A regression in any gate cannot be offset by a higher feature count or a smaller diff. Then score project fit, removed or retained machinery, maintainability, source use, and verification evidence from 0 (fails), through 1 (partly meets), to 2 (meets). Raw line count is not a dimension. Record concrete observations and limitations rather than a single unqualified total.
 
 ## Results: iteration 1 (3 September 2026)
 
-Pilot comparison, one run per configuration, Claude Fable 5.1 subagents with identical prompts, tools, and a shared starter project (`workspace/starter`, Tailwind 4.3.3). Runs, transcripts, grading, and the review page are under `workspace/iteration-1/`; the eval prompts and assertions are in `evals.json`.
+Pilot comparison, one run per configuration, Claude Fable 5.1 subagents with identical prompts, tools, and a shared Tailwind 4.3.3 starter. Runs, transcripts, grading, and the review page are under `workspace/iteration-1/`. These historical runs used the original resource-card and add-autosizing prompts recorded in their transcripts; `evals.json` now holds the replacement suite above.
 
 | Eval | With skill | Without skill |
 | --- | --- | --- |
@@ -70,10 +55,10 @@ Observations:
 - The baseline reached the same native choices unprompted: container queries with `@md:` variants and `overflow-wrap: anywhere` for the card; `field-sizing: content` with min/max bounds and `resize-y` for the textarea. Both configurations cited MDN and Can I use with matching version data.
 - The one failed baseline assertion was a verification-reporting gap (no explicit deleted-content check), not an implementation defect.
 - Skill-attributable differences: reading the references first, the `supports-[field-sizing:content]:` gate (redundant, as the baseline noted), `@container` on a wrapper element, and keyboard-focus and contrast checks on the card. Baseline-only touches: `lh`-based height bounds matching `rows="4"` exactly, `hyphens-auto`, `max-w-prose`.
-- These two briefs do not discriminate on this model. The boundary checks above (Tailwind v3, Safari 15.6, no network, small edit, custom carousel) are the better next test.
+- These two briefs do not discriminate on this model. That result motivated the current reduction, restraint, and construction suite.
 - Harness note: concurrent runs shared port 8847 and one run briefly observed another run's page. Assign distinct ports per run in future iterations.
 
-## Concrete next cases from the cheatsheet (12 September 2026)
+## Earlier candidate cases from the cheatsheet (12 September 2026)
 
 The [live cheatsheet](https://modern-css.com/cheatsheet/) provides discovery cues for these proposed cases. These are not completed evaluations or runnable fixtures. Prepare identical starting projects and compare no skill, the upstream agent reference alone, and the local live-source skill. Give implementing agents the user brief and starting project; keep the candidate technique and reviewer checks private so the prompt does not supply the answer.
 
