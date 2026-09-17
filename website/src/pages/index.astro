@@ -10,6 +10,23 @@ import { recipes } from "../lib/recipes";
 import "../styles/site.css";
 const installPrompt =
   "Use $fewer-parts to deliver the same or better interaction with less project-specific machinery. Preserve the design, behavior, accessibility, browser targets, and existing styling conventions.";
+const installCommands = [
+  {
+    command: "npx skills add GavinJaynes/skills --skill fewer-parts",
+    id: "install-command-npx",
+    label: "npm / npx",
+  },
+  {
+    command: "pnpm dlx skills add GavinJaynes/skills --skill fewer-parts",
+    id: "install-command-pnpm",
+    label: "pnpm",
+  },
+  {
+    command: "bunx skills add GavinJaynes/skills --skill fewer-parts",
+    id: "install-command-bun",
+    label: "Bun",
+  },
+];
 // Nav "Examples" opens the recipe index, which lands on the first example.
 const examplesHref = `/recipes/${recipes[0].id}/`;
 ---
@@ -243,12 +260,30 @@ const examplesHref = `/recipes/${recipes[0].id}/`;
           </a>
         </div>
         <div class="install-steps">
-          <h3>Install in your project</h3>
+          <h3>Install with one command</h3>
           <p>
-            Extract the download and copy the complete <code>fewer-parts</code>{" "}
-            folder into:
+            Run one of these from your project root. The installer finds your
+            coding agents and lets you choose where to add the skill.
           </p>
-          <pre><code>.agents/skills/fewer-parts/</code></pre>
+          <div
+            aria-label="Package manager install commands"
+            class="install-commands"
+          >
+            {installCommands.map(({ command, id, label }) => (
+              <div class="install-command">
+                <span>{label}</span>
+                <code id={id}>{command}</code>
+                <button aria-controls={id} data-copy type="button">
+                  Copy
+                </button>
+              </div>
+            ))}
+          </div>
+          <p class="manual-install">
+            Prefer a manual install? Download the ZIP, extract it, and copy the
+            complete <code>fewer-parts</code> folder to{" "}
+            <code>.agents/skills/fewer-parts/</code>.
+          </p>
           <p>Then ask your agent:</p>
           <div class="prompt">
             <p id="install-prompt">{installPrompt}</p>

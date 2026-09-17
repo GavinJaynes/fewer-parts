@@ -1206,13 +1206,72 @@
     font-size: 0.875rem;
   }
 
-  .install-steps pre {
-    padding: 13px 17px;
+  .install-commands {
+    display: grid;
+    overflow: hidden;
     border: 1px solid #354158;
-    border-radius: 8px;
+    border-radius: 10px;
+    margin-block: 18px 22px;
     background: #1d2c46;
+  }
+
+  .install-command {
+    display: grid;
+    min-width: 0;
+    align-items: center;
+    padding: 10px 10px 10px 14px;
+    gap: 8px 12px;
+    grid-template-columns: 4.25rem minmax(0, 1fr) auto;
+  }
+
+  .install-command + .install-command {
+    border-top: 1px solid #354158;
+  }
+
+  .install-command > span {
+    color: #9fb2ce;
+    font:
+      0.6875rem/1.5 ui-monospace,
+      monospace;
+  }
+
+  .install-command code {
+    overflow: auto;
+    color: #edf3fd;
+    font:
+      0.75rem/1.65 ui-monospace,
+      SFMono-Regular,
+      Consolas,
+      monospace;
+    scrollbar-width: thin;
+    white-space: nowrap;
+  }
+
+  .install-command button {
+    padding: 7px 10px;
+    border: 1px solid #4a6286;
+    border-radius: 6px;
+    background: #304462;
+    color: #e0e8f5;
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+
+  .install-command button:hover {
+    border-color: #7991b4;
+    background: #3a5275;
+  }
+
+  .install-steps .manual-install {
+    max-width: none;
+    margin-block: 0 22px;
+    color: #aebed4;
+    font-size: 0.75rem;
+  }
+
+  .manual-install code {
+    color: #e0e8f5;
     overflow-wrap: anywhere;
-    white-space: pre-wrap;
   }
 
   .install-steps .install-note {
@@ -1651,6 +1710,26 @@
       margin-bottom: 40px;
       gap: 35px;
       grid-template-columns: 1fr;
+    }
+
+    .install-command {
+      grid-template-columns: 1fr auto;
+    }
+
+    .install-command > span {
+      grid-column: 1;
+    }
+
+    .install-command code {
+      overflow: visible;
+      grid-column: 1 / -1;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    .install-command button {
+      grid-column: 2;
+      grid-row: 1;
     }
 
     body > footer {
