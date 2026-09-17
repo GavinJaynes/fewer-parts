@@ -549,8 +549,8 @@
     display: grid;
     border-top: 1px solid var(--line);
     gap: 42px clamp(40px, 7vw, 104px);
-    padding-block: clamp(56px, 8vw, 112px);
     grid-template-columns: minmax(0, 1.05fr) minmax(18rem, 0.95fr);
+    padding-block: clamp(56px, 8vw, 112px);
   }
 
   .what-intro h2,
@@ -1211,8 +1211,8 @@
     overflow: hidden;
     border: 1px solid #354158;
     border-radius: 10px;
-    margin-block: 18px 22px;
     background: #1d2c46;
+    margin-block: 18px 22px;
   }
 
   .install-command {
@@ -1264,9 +1264,9 @@
 
   .install-steps .manual-install {
     max-width: none;
-    margin-block: 0 22px;
     color: #aebed4;
     font-size: 0.75rem;
+    margin-block: 0 22px;
   }
 
   .manual-install code {
