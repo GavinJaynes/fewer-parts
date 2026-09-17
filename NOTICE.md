@@ -7,3 +7,5 @@ The repository's MIT license applies to its original skill instructions, tooling
 The skill retrieves relevant public material when used. Its distribution does not contain a copy of the Modern CSS website or its AI exports. Historical evaluation artifacts and smoke fixtures document this project's earlier experiments and are not included in the skill package.
 
 Feature discovery and compatibility references link to MDN Web Docs, web.dev, Web Platform Status, and the W3C WebDX web-features project. Those sources retain their own terms. The field-sizing demo is an original implementation; this repository does not bundle the third-party documentation or compatibility dataset.
+
+The website's hero is rendered with [vgpu](https://vgpu.sh), an MIT-licensed WebGPU library by Matias Gonzalez, together with its `@vgpu/wgsl` loader and `@vgpu/wgsl-std` shader standard library. Those are dependencies of the site, not bundled into this repository, and they retain their own license. The cloud shader itself is original work.

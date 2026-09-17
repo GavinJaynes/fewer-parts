@@ -538,6 +538,33 @@
     display: inline;
   }
 
+  /* The separator hangs off the state label rather than the credit, so it stays
+     inside the aria-hidden span instead of being read out as part of the link
+     name. */
+  .hero[data-renderer="webgpu"] .hero-renderer-live::after {
+    content: "·";
+    margin-inline: 0.5em;
+  }
+
+  /* Only shown when the render is actually running - on the static fallback
+     vgpu has drawn nothing, so there is nothing to credit. The link sits
+     brighter than the 46% the rest of the line rides at: at 10px, label opacity
+     reads as more chrome rather than as something to click. */
+  .hero-renderer-credit {
+    display: none;
+    color: rgb(226 233 249 / 78%);
+  }
+
+  .hero[data-renderer="webgpu"] .hero-renderer-credit {
+    display: inline;
+  }
+
+  .hero-renderer-credit:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   @keyframes hero-scroll-line {
     45%,
     100% {
@@ -1297,6 +1324,11 @@
 
   footer > a:last-child {
     font-size: 0.8125rem;
+  }
+
+  footer p a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   @media (width <=1150px) {
