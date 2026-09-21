@@ -265,13 +265,34 @@ const examplesHref = `/recipes/${recipes[0].id}/`;
             Run one of these from your project root. The installer finds your
             coding agents and lets you choose where to add the skill.
           </p>
-          <ul
-            aria-label="Package manager install commands"
-            class="install-commands"
-          >
-            {installCommands.map(({ command, id, label }) => (
-              <li class="install-command">
-                <span>{label}</span>
+          <div class="install-commands">
+            <div
+              aria-label="Choose a package manager"
+              class="install-command-tabs"
+              role="tablist"
+            >
+              {installCommands.map(({ id, label }, index) => (
+                <button
+                  aria-controls={`${id}-panel`}
+                  aria-selected={index === 0 ? "true" : "false"}
+                  class="install-command-tab"
+                  id={`${id}-tab`}
+                  role="tab"
+                  tabindex={index === 0 ? 0 : -1}
+                  type="button"
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            {installCommands.map(({ command, id, label }, index) => (
+              <div
+                aria-labelledby={`${id}-tab`}
+                class="install-command"
+                hidden={index !== 0}
+                id={`${id}-panel`}
+                role="tabpanel"
+              >
                 {/* The command is one long unbroken line in a box narrower
                      than it, so it scrolls. A scroll container holding nothing
                      focusable needs to take focus itself to be reachable. */}
@@ -286,9 +307,9 @@ const examplesHref = `/recipes/${recipes[0].id}/`;
                 >
                   Copy
                 </button>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
           <p class="manual-install">
             Prefer a manual install? Download the ZIP, extract it, and copy the
             complete <code>fewer-parts</code> folder to{" "}
@@ -327,5 +348,58 @@ const examplesHref = `/recipes/${recipes[0].id}/`;
       <a href="https://modern-css.com/ai/">Modern CSS resources ↗</a>
     </footer>
     <output class="sr-only" id="copy-status"></output>
+    <script>
+      const selectInstallTab = (tab: HTMLButtonElement, focus = false) => {
+        const tablist = tab.closest<HTMLElement>(".install-command-tabs");
+        const tabs =
+          tablist?.querySelectorAll<HTMLButtonElement>("[role='tab']");
+        const commands = tablist?.parentElement;
+        if (!tabs || !commands) return;
+
+        for (const candidate of tabs) {
+          const selected = candidate === tab;
+          candidate.setAttribute("aria-selected", String(selected));
+          candidate.tabIndex = selected ? 0 : -1;
+
+          const panelId = candidate.getAttribute("aria-controls");
+          const panel = panelId ? commands.querySelector(`#${panelId}`) : null;
+          if (panel instanceof HTMLElement) panel.hidden = !selected;
+        }
+
+        if (focus) tab.focus();
+      };
+
+      document.addEventListener("click", (event) => {
+        const target = event.target as Element | null;
+        const tab = target?.closest<HTMLButtonElement>(".install-command-tab");
+        if (tab) selectInstallTab(tab);
+      });
+
+      document.addEventListener("keydown", (event) => {
+        const target = event.target as Element | null;
+        const tab = target?.closest<HTMLButtonElement>(".install-command-tab");
+        if (!tab) return;
+
+        const tabs = Array.from(
+          tab
+            .closest<HTMLElement>(".install-command-tabs")
+            ?.querySelectorAll<HTMLButtonElement>("[role='tab']") ?? []
+        );
+        const currentIndex = tabs.indexOf(tab);
+        let nextIndex = currentIndex;
+
+        if (event.key === "ArrowRight")
+          nextIndex = (currentIndex + 1) % tabs.length;
+        else if (event.key === "ArrowLeft") {
+          nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        } else if (event.key === "Home") nextIndex = 0;
+        else if (event.key === "End") nextIndex = tabs.length - 1;
+        else return;
+
+        event.preventDefault();
+        const nextTab = tabs[nextIndex];
+        if (nextTab) selectInstallTab(nextTab, true);
+      });
+    </script>
   </body>
 </html>
