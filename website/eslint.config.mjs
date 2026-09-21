@@ -27,13 +27,14 @@ export default [
     },
     rules: {
       // A scroll container holding nothing focusable is unreachable by keyboard
-      // unless it takes focus itself, so the named <section> wrapping the
-      // scorecard carries tabindex="0" deliberately. The <pre> in a code panel
-      // needs the same thing, but its tabindex is injected in lib/highlight.ts
-      // because the markup comes from the highlighter, not from a component.
+      // unless it takes focus itself. Two carry tabindex="0" deliberately: the
+      // named <section> wrapping the scorecard, and the <code> holding an
+      // install command too long for its box. The <pre> in a code panel needs
+      // the same thing, but its tabindex is injected in lib/highlight.ts
+      // because that markup comes from the highlighter, not from a component.
       "astro/jsx-a11y/no-noninteractive-tabindex": [
         "error",
-        { tags: ["section"] },
+        { tags: ["section", "code"] },
       ],
       // Astro compiles <script> in a .astro file rather than injecting a
       // string. Revisit if this site ever ships a Content-Security-Policy.

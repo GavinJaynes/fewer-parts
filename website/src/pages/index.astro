@@ -265,20 +265,30 @@ const examplesHref = `/recipes/${recipes[0].id}/`;
             Run one of these from your project root. The installer finds your
             coding agents and lets you choose where to add the skill.
           </p>
-          <div
+          <ul
             aria-label="Package manager install commands"
             class="install-commands"
           >
             {installCommands.map(({ command, id, label }) => (
-              <div class="install-command">
+              <li class="install-command">
                 <span>{label}</span>
-                <code id={id}>{command}</code>
-                <button aria-controls={id} data-copy type="button">
+                {/* The command is one long unbroken line in a box narrower
+                     than it, so it scrolls. A scroll container holding nothing
+                     focusable needs to take focus itself to be reachable. */}
+                <code id={id} tabindex="0">
+                  {command}
+                </code>
+                <button
+                  aria-controls={id}
+                  aria-label={`Copy ${label} command`}
+                  data-copy
+                  type="button"
+                >
                   Copy
                 </button>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
           <p class="manual-install">
             Prefer a manual install? Download the ZIP, extract it, and copy the
             complete <code>fewer-parts</code> folder to{" "}

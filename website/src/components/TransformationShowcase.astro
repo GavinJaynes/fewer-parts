@@ -20,7 +20,7 @@ import { transformations } from "../lib/transformations";
           class:list={["switch", { "switch-keep": item.outcome === "keep" }]}
         >
           <input
-            aria-label={item.title}
+            aria-label={`${item.feature}: ${item.title}`}
             checked={i === 0}
             class="sr-only"
             name="pattern"

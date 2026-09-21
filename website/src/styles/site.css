@@ -216,7 +216,8 @@
      border, so their ring is drawn inside the padding instead of 5px outside
      it, where it would be cut off. */
   .scorecard-scroll:focus-visible,
-  .highlighted-code pre:focus-visible {
+  .highlighted-code pre:focus-visible,
+  .install-command code:focus-visible {
     outline-offset: -3px;
   }
 
@@ -605,19 +606,22 @@
 
   .modes {
     display: grid;
+    padding: 0;
+    margin: 0;
     border-block: 1px solid var(--line);
     grid-column: 1 / -1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    list-style: none;
   }
 
-  .modes article {
+  .modes li {
     display: grid;
     padding: 24px clamp(18px, 3vw, 34px);
     gap: 7px;
     grid-template-columns: 1.75rem 1fr;
   }
 
-  .modes article + article {
+  .modes li + li {
     border-left: 1px solid var(--line);
   }
 
@@ -1046,6 +1050,13 @@
     background: #f6faf7;
   }
 
+  /* --quiet is calibrated against white, where it clears 4.5:1. The keep
+     panel tints the grid and takes it to 4.4, so this one term steps down to
+     --muted rather than the tint being lightened to suit one label. */
+  .pair-keep .decision-grid dt {
+    color: var(--muted);
+  }
+
   /* Base: every pair is visible and the chips are hidden, so the section still
      reads as a list where the relational selector is unavailable. */
   @supports selector(:has(*)) {
@@ -1236,9 +1247,11 @@
   .install-commands {
     display: grid;
     overflow: hidden;
+    padding: 0;
     border: 1px solid #354158;
     border-radius: 10px;
     background: #1d2c46;
+    list-style: none;
     margin-block: 18px 22px;
   }
 
@@ -1620,7 +1633,7 @@
       grid-template-columns: 1fr;
     }
 
-    .modes article + article,
+    .modes li + li,
     .decision-grid > div + div {
       border-top: 1px solid var(--line);
       border-left: 0;
