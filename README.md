@@ -1,6 +1,8 @@
-# Agent skills
+# Fewer Parts
 
-Small, reusable skills for coding agents. Each folder under `skills/` can be installed independently.
+An installable judgment skill that helps coding agents preserve the experience while removing frontend machinery that no longer earns its place.
+
+[Visit fewerparts.dev](https://fewerparts.dev/) or explore the skill source in [`skills/fewer-parts/`](skills/fewer-parts/).
 
 ## Fewer Parts
 
@@ -17,7 +19,13 @@ It is not a competing feature catalogue, does not prescribe a visual style, and 
 
 ## Install and use
 
-Copy the complete `skills/fewer-parts/` folder into your target project's `.agents/skills/fewer-parts/` directory. Keep its `SKILL.md`, `references/`, `assets/`, and `agents/` together. If that destination already exists, review the differences before replacing it.
+Install it from the repository with your preferred package runner:
+
+```sh
+npx skills add GavinJaynes/skills --skill fewer-parts
+```
+
+For a manual install, copy the complete `skills/fewer-parts/` folder into your target project's `.agents/skills/fewer-parts/` directory. Keep its `SKILL.md`, `references/`, `assets/`, and `agents/` together. If that destination already exists, review the differences before replacing it.
 
 For Codex, invoke it with a request such as:
 
@@ -61,7 +69,7 @@ npm ci --ignore-scripts
 npm run dev
 ```
 
-For production, run `npm run build` in `website/`. Deploy the generated `website/dist/` directory to a static host. Build from the repository root checkout, keeping the sibling `skills/` and `dist/` paths available; do not deploy the repository itself. The download endpoint fails the build when the skill archive is older than its source files, so regenerate the ZIP after skill changes. No hosting provider is configured yet.
+For production, run `npm run build` in `website/`. Deploy the generated `website/dist/` directory to a static host. Build from the repository root checkout, keeping the sibling `skills/` and `dist/` paths available; do not deploy the repository itself. The download endpoint fails the build when the skill archive is older than its source files, so regenerate the ZIP after skill changes. The public site is [fewerparts.dev](https://fewerparts.dev/).
 
 With Playwright available to Node and Chrome installed, run `node tests/fewer-parts/showcase.cjs` from the repository root while the website is running. It defaults to `http://127.0.0.1:4321`; set `SHOWCASE_URL` for another preview. This checks demo behavior, source copying, the actual downloadable archive, and narrow layouts. See [showcase validation](evaluations/fewer-parts/showcase-validation.md).
 
@@ -86,8 +94,6 @@ The [original pilot comparison](evaluations/fewer-parts/fewer-parts-evaluation.m
 
 The current evaluation suite targets the repositioned claim: remove legacy autosizing and modal machinery without regressions, preserve necessary carousel behavior, and construct a polished native disclosure without a runtime dependency. It treats behavior, accessibility, compatibility, and intended feel as gates before measuring what was removed. The replacement suite has not yet been run, so no uplift is claimed.
 
-The current evaluation suite targets the repositioned claim: remove legacy autosizing and modal machinery without regressions, preserve necessary carousel behavior, and construct a polished native disclosure without a runtime dependency. It treats behavior, accessibility, compatibility, and intended feel as gates before measuring what was removed. The replacement suite has not yet been run, so no uplift is claimed.
-
 The [source coverage review](evaluations/fewer-parts/upstream-integration-review.md) found that the full-text export omitted some live snippets. The skill therefore follows detailed pages and other site indexes when needed. Those observations are dated; feature support and source coverage remain live decisions.
 
 The original manual smoke fixture can still be reproduced with Python, Node.js, and pnpm:
@@ -107,4 +113,4 @@ The new recipe has a separate browser check at [field-sizing.cjs](tests/fewer-pa
 
 Run the package command and review the files Git will include before the first push. Commit the repository sources, configure your chosen remote, and push. Attach the generated ZIP and checksum file to a release when ready. Generated archives and installed dependencies are ignored by Git.
 
-This repository currently ships one basic skill. Its original material is licensed under [MIT](LICENSE). See [NOTICE.md](NOTICE.md) for Modern CSS attribution and third-party content boundaries.
+This repository ships Fewer Parts as an open-source skill under [MIT](LICENSE). See [NOTICE.md](NOTICE.md) for Modern CSS attribution and third-party content boundaries.

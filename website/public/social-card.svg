@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Fewer Parts</title>
+  <desc id="description">Same experience, fewer moving parts. A frontend judgment skill for coding agents.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14213a"/>
+      <stop offset="0.58" stop-color="#1d3158"/>
+      <stop offset="1" stop-color="#6e87b6"/>
+    </linearGradient>
+    <radialGradient id="haze" cx="0.78" cy="0.26" r="0.66">
+      <stop offset="0" stop-color="#b8c9e8" stop-opacity="0.46"/>
+      <stop offset="1" stop-color="#b8c9e8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#sky)"/>
+  <rect width="1200" height="630" fill="url(#haze)"/>
+  <path d="M700 500c92-130 158-158 266-151 80 5 143 54 234 146v135H624c14-41 36-84 76-130Z" fill="#dce6f5" opacity="0.1"/>
+  <g transform="translate(72 64)" fill="#eef3fb">
+    <rect width="22" height="22" rx="3"/>
+    <rect y="32" width="22" height="22" rx="3"/>
+    <rect x="32" y="32" width="22" height="22" rx="3"/>
+  </g>
+  <text x="146" y="105" fill="#eef3fb" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" letter-spacing="-1">fewer parts</text>
+  <text x="73" y="225" fill="#b9c8df" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" letter-spacing="3">A FRONTEND JUDGMENT SKILL FOR CODING AGENTS</text>
+  <text x="70" y="333" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="600" letter-spacing="-4">Same experience.</text>
+  <text x="70" y="420" fill="#d9e5fa" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="600" letter-spacing="-4">Fewer moving parts.</text>
+  <text x="73" y="527" fill="#bdcce3" font-family="Arial, Helvetica, sans-serif" font-size="25">Build, simplify, and audit web UI with proportionate machinery.</text>
+  <text x="73" y="578" fill="#eef3fb" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">fewerparts.dev</text>
+</svg>
